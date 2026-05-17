@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import QueryProvider from "@/providers/QueryProvider";
+import { CartProvider } from "@/providers/CartProvider";
 import "./globals.css";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { Footer } from '@/components/Footer';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,8 +33,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <CartProvider>
+            {children}
+            <Footer />
+          </CartProvider>
+        </QueryProvider>
       </body>
     </html>
   );
 }
+

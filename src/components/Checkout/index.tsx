@@ -10,3 +10,4 @@ export default function CheckoutComponent({ id }: CheckoutComponentProps) {
     </div>
   );
 }
+
