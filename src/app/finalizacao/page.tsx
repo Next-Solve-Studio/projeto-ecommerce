@@ -28,7 +28,7 @@ function OrderSuccessContent() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-[#F2F3F4] py-12">
       <div className="container mx-auto px-4 max-w-3xl">
         <div className="bg-white p-8 md:p-12 rounded-lg border shadow-sm text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">

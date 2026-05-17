@@ -34,7 +34,7 @@ export function Footer() {
                   </defs>
                 </svg>
               </div>
-              <span className="text-2xl font-bold text-white tracking-tight">NextStore</span>
+              <span className="text-2xl font-bold text-white tracking-tight">ElectronicSolve Store</span>
             </div>
             <p className="text-sm text-gray-400 mt-2 leading-relaxed">
               Sua loja especializada em tecnologia. Trazemos os melhores eletrônicos do mercado global diretamente para você, com rapidez e segurança.
@@ -78,7 +78,7 @@ export function Footer() {
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                 <Mail size={18} />
-                <span>contato@nextstore.com.br</span>
+                <span>contato@electrsolve.com.br</span>
               </div>
             </div>
             <div className="flex items-center gap-4 mt-4">
@@ -116,7 +116,7 @@ export function Footer() {
         <div className="border-t border-gray-800 pt-6 mt-12">
           <p className="text-xs text-gray-500 text-center
             ">
-            &copy; {new Date().getFullYear()} NextStore Comércio de Eletrônicos Ltda. Todos os direitos reservados.
+            &copy; {new Date().getFullYear()} ElectronicSolve Store Comércio de Eletrônicos Ltda. Todos os direitos reservados.
           </p>
         </div>
       </div>

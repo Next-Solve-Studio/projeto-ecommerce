@@ -79,7 +79,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 overflow-hidden">
+    <div className="min-h-screen bg-[#F2F3F4] pb-20 overflow-hidden">
       <Header />
       <style>{`
         .slick-prev:before, .slick-next:before {

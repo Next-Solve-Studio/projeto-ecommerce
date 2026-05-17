@@ -64,7 +64,7 @@ export function Header() {
     : [];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white">
+    <header id="header" className="sticky top-0 z-50 w-full bg-white pb-0 mb-0 border-none">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4 md:gap-6">
           <Link href="/" className="shrink-0 flex items-center">
@@ -83,7 +83,7 @@ export function Header() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="pl-10 h-10 w-full bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+                className="pl-10 h-10 w-full bg-gray-50 border-gray-200 focus:bg-white text-black transition-colors"
               />
             </form>
             
@@ -98,7 +98,7 @@ export function Header() {
                           <button
                             type="button"
                             onClick={() => handleSelectCategory(category)}
-                            className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors text-sm"
+                            className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors text-sm text-black"
                           >
                             {category}
                           </button>
@@ -138,14 +138,14 @@ export function Header() {
             <div className="relative" ref={profileRef}>
               <button 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md transition-colors"
+                className="group flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md transition-colors text-gray-600 hover:text-black"
               >
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
+                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 group-hover:text-black transition-colors">
                   <User size={18} />
                 </div>
                 <div className="hidden lg:flex items-center gap-1">
                   <span className="text-sm font-medium">Minha Conta</span>
-                  <ChevronDown size={14} className="text-gray-500" />
+                  <ChevronDown size={14} className="text-gray-500 group-hover:text-black transition-colors" />
                 </div>
               </button>
 
@@ -185,7 +185,7 @@ export function Header() {
 
             <Link
               href="/atendimento"
-              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-gray-600"
+              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-gray-600 hover:text-black"
               title="Atendimento"
             >
               <HeadphonesIcon size={20} />
@@ -193,7 +193,7 @@ export function Header() {
 
             <Link
               href="/favoritos"
-              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-gray-600"
+              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-gray-600 hover:text-black"
               title="Favoritos"
             >
               <Heart size={20} />
@@ -215,7 +215,7 @@ export function Header() {
         </div>
         
         {/* Mobile Search */}
-        <div className="md:hidden pb-4" ref={suggestionRef}>
+        <div className="md:hidden pb-0 mb-0" ref={suggestionRef}>
           <form onSubmit={handleSearch} className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
             <Input
@@ -227,7 +227,7 @@ export function Header() {
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              className="pl-10 h-10 w-full bg-gray-50 border-gray-200 focus:bg-white transition-colors"
+              className="pl-10 h-10 w-full bg-gray-50 border-gray-200 focus:bg-white text-black transition-colors"
             />
           </form>
           {showSuggestions && searchQuery.length >= 2 && (filteredProducts.length > 0 || filteredCategories.length > 0) && (
@@ -241,7 +241,7 @@ export function Header() {
                         <button
                           type="button"
                           onClick={() => handleSelectCategory(category)}
-                          className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors text-sm"
+                          className="w-full text-left px-4 py-2 hover:bg-gray-50 focus:bg-gray-50 focus:outline-none transition-colors text-sm text-black"
                         >
                           {category}
                         </button>

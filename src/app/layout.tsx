@@ -32,7 +32,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-[#F2F3F4]">
         <QueryProvider>
           <CartProvider>
             {children}
@@ -43,4 +43,3 @@ export default function RootLayout({
     </html>
   );
 }
-
