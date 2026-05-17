@@ -138,14 +138,14 @@ export function Header() {
             <div className="relative" ref={profileRef}>
               <button 
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="group flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md transition-colors text-gray-600 hover:text-black"
+                className="group flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md transition-colors text-white hover:text-black"
               >
-                <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 group-hover:text-black transition-colors">
+                <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white transition-colors">
                   <User size={18} />
                 </div>
                 <div className="hidden lg:flex items-center gap-1">
                   <span className="text-sm font-medium">Minha Conta</span>
-                  <ChevronDown size={14} className="text-gray-500 group-hover:text-black transition-colors" />
+                  <ChevronDown size={14} className="text-white group-hover:text-black transition-colors" />
                 </div>
               </button>
 
@@ -185,7 +185,7 @@ export function Header() {
 
             <Link
               href="/atendimento"
-              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-gray-600 hover:text-black"
+              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-white hover:text-black"
               title="Atendimento"
             >
               <HeadphonesIcon size={20} />
@@ -193,7 +193,7 @@ export function Header() {
 
             <Link
               href="/favoritos"
-              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-gray-600 hover:text-black"
+              className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-white hover:text-black"
               title="Favoritos"
             >
               <Heart size={20} />
