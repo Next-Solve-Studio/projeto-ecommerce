@@ -6,10 +6,10 @@ export function Footer() {
     <footer className="bg-gray-900 text-gray-300 pt-16 pb-8 border-t border-gray-800 mt-auto">
       <div className="container mx-auto px-4">
         {/* Desktop 4 columns */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 justify-items-center">
           
           {/* Col 1: Logo and Description */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-fit items-start">
             <div className="flex items-center gap-2">
               {/* Generic NextJS Logo SVG */}
               <div className="bg-white rounded-full p-1 w-10 h-10 flex items-center justify-center">
@@ -36,13 +36,13 @@ export function Footer() {
               </div>
               <span className="text-2xl font-bold text-white tracking-tight">ElectronicSolve Store</span>
             </div>
-            <p className="text-sm text-gray-400 mt-2 leading-relaxed">
+            <p className="text-sm text-gray-400 mt-2 leading-relaxed text-justify">
               Sua loja especializada em tecnologia. Trazemos os melhores eletrônicos do mercado global diretamente para você, com rapidez e segurança.
             </p>
           </div>
 
           {/* Col 2: Institutional Links */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-fit items-start">
             <h3 className="text-white font-semibold mb-2">Institucional</h3>
             <ul className="space-y-3">
               <li>
@@ -69,7 +69,7 @@ export function Footer() {
           </div>
 
           {/* Col 3: Social Media and Contacts */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-fit items-start">
             <h3 className="text-white font-semibold mb-2">Atendimento e Redes</h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
@@ -81,24 +81,24 @@ export function Footer() {
                 <span>contato@electrsolve.com.br</span>
               </div>
             </div>
-            <div className="flex items-center gap-4 mt-4">
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                <Globe size={20} />
+            <div className="flex items-center gap-3 mt-4">
+              <a href="#" className="transition-all hover:opacity-80">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                <Share2 size={20} />
+              <a href="#" className="transition-all hover:opacity-80">
+                <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="Twitter" className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                <MessageCircle size={20} />
+              <a href="#" className="transition-all hover:opacity-80">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" className="w-5 h-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors">
-                <Users size={20} />
+              <a href="#" className="transition-all hover:opacity-80">
+                <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="YouTube" className="w-5 h-5" />
               </a>
             </div>
           </div>
 
           {/* Col 4: Physical Address */}
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 w-fit items-start">
             <h3 className="text-white font-semibold mb-2">Nossa Loja Física</h3>
             <div className="flex items-start gap-3 text-sm text-gray-400">
               <MapPin size={20} className="shrink-0 mt-0.5 text-blue-400" />

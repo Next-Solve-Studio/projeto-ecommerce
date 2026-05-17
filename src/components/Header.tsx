@@ -8,7 +8,7 @@ import { ShoppingCart, Search, User, ChevronDown, Heart, HeadphonesIcon } from '
 import { useCart } from '@/providers/CartProvider';
 import { Input } from './ui/input';
 import { products, categories } from '@/data/products';
-import logoImg from '../imports/Horizontal_Lockup_on_Blue_Background-removebg-preview.png';
+import logoImg from '../../public/Horizontal_Lockup_on_Blue_Background-removebg-preview.png';
 
 export function Header() {
   const { getItemCount } = useCart();

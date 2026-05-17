@@ -63,7 +63,7 @@ export const products: Product[] = [
     rating: 4.7,
     description: "Sensor óptico de 20K DPI e switches ópticos.",
     category: "Setup Gamer",
-    images: ["https://images.unsplash.com/photo-1615663245857-ac93bb9c551c?w=800"],
+    images: ["https://upload.wikimedia.org/wikipedia/commons/f/fe/1426-razer-deathadder-essential-raton-gaming-6400-dpi-negro.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20230607122556"],
     tags: ["gamer", "ofertas"]
   },
   {
@@ -137,7 +137,7 @@ export const products: Product[] = [
     rating: 4.9,
     description: "O mais avançado iPhone já criado. Chip A17 Pro.",
     category: "Smartphones",
-    images: ["https://images.unsplash.com/photo-1696446702183-cbd88e2adae8?w=800"],
+    images: ["https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX679_.jpg"],
     tags: ["ofertas", "populares"]
   },
   {

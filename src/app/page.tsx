@@ -2,15 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Smartphone, Laptop, Tablet, Headphones, Watch, Usb, Gamepad } from 'lucide-react';
+import { useRef } from 'react';
+import { Smartphone, Laptop, Tablet, Headphones, Watch, Usb, Gamepad, ChevronLeft, ChevronRight, Flame, ChartNoAxesCombined, Gamepad2 } from 'lucide-react';
 import Slider from 'react-slick';
 import { products, categories } from '@/data/products';
 import { ProductCard } from '@/components/ProductCard';
 import { Header } from '@/components/Header';
 
-import banner1 from '../imports/1.png';
-import banner2 from '../imports/2.png';
-import banner3 from '../imports/3.png';
+import banner1 from '../../public/3.png';
+import banner2 from '../../public/3.png';
+import banner3 from '../../public/3.png';
 
 const categoryIcons = {
   "Smartphones": Smartphone,
@@ -22,32 +23,13 @@ const categoryIcons = {
   "Setup Gamer": Gamepad
 };
 
-function CustomNextArrow(props: any) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "flex", alignItems: "center", justifyItems: "center", background: "#000", borderRadius: "50%", width: "32px", height: "32px", right: "-10px", zIndex: 10 }}
-      onClick={onClick}
-    />
-  );
-}
-
-function CustomPrevArrow(props: any) {
-  const { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style, display: "flex", alignItems: "center", justifyItems: "center", background: "#000", borderRadius: "50%", width: "32px", height: "32px", left: "-10px", zIndex: 10 }}
-      onClick={onClick}
-    />
-  );
-}
-
 export default function HomePage() {
   const ofertas = products.filter(p => p.tags?.includes('ofertas'));
   const populares = products.filter(p => p.tags?.includes('populares'));
   const gamer = products.filter(p => p.tags?.includes('gamer'));
+  const ofertasSlider = useRef<any>(null);
+  const popularesSlider = useRef<any>(null);
+  const gamerSlider = useRef<any>(null);
 
   const bannerSettings = {
     dots: true,
@@ -67,8 +49,7 @@ export default function HomePage() {
     speed: 500,
     slidesToShow: 6,
     slidesToScroll: 2,
-    nextArrow: <CustomNextArrow />,
-    prevArrow: <CustomPrevArrow />,
+    arrows: false,
     responsive: [
       { breakpoint: 1536, settings: { slidesToShow: 5, slidesToScroll: 2 } },
       { breakpoint: 1280, settings: { slidesToShow: 4, slidesToScroll: 2 } },
@@ -123,6 +104,9 @@ export default function HomePage() {
           color: white;
           opacity: 1;
         }
+        .icon-destaque {
+          color: #011C40;
+        }
       `}</style>
       
       {/* Banner Slider */}
@@ -160,51 +144,114 @@ export default function HomePage() {
         {/* Ofertas em destaque */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Ofertas em destaque</h2>
-            <Link href="/produtos" className="text-sm font-medium text-blue-600 hover:underline">Ver todas</Link>
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <Flame className="icon-destaque" />
+              Ofertas em destaque
+            </h2>
+            <Link href="/produtos" className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline">
+              Ver todas <ChevronRight size={16} />
+            </Link>
           </div>
-          <div className="px-2">
-            <Slider {...sliderSettings}>
-              {ofertas.map((product) => (
-                <div key={product.id} className="pb-4">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </Slider>
+          <div className="grid grid-cols-[22px_minmax(0,1fr)_22px] items-center gap-3 px-2">
+            <button
+              type="button"
+              onClick={() => ofertasSlider.current?.slickPrev()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <div className="min-w-0">
+              <Slider ref={ofertasSlider} {...sliderSettings}>
+                {ofertas.map((product) => (
+                  <div key={product.id} className="pb-4">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            <button
+              type="button"
+              onClick={() => ofertasSlider.current?.slickNext()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </section>
 
         {/* Produtos populares */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Produtos populares</h2>
-            <Link href="/produtos" className="text-sm font-medium text-blue-600 hover:underline">Ver todos</Link>
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <ChartNoAxesCombined className="icon-destaque" />
+              Produtos populares
+            </h2>
+            <Link href="/produtos" className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline">
+              Ver todas <ChevronRight size={16} />
+            </Link>
           </div>
-          <div className="px-2">
-            <Slider {...sliderSettings}>
-              {populares.map((product) => (
-                <div key={product.id} className="pb-4">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </Slider>
+          <div className="grid grid-cols-[22px_minmax(0,1fr)_22px] items-center gap-3 px-2">
+            <button
+              type="button"
+              onClick={() => popularesSlider.current?.slickPrev()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <div className="min-w-0">
+              <Slider ref={popularesSlider} {...sliderSettings}>
+                {populares.map((product) => (
+                  <div key={product.id} className="pb-4">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            <button
+              type="button"
+              onClick={() => popularesSlider.current?.slickNext()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </section>
 
         {/* Monte seu Setup Gamer */}
         <section>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Monte seu Setup Gamer</h2>
-            <Link href="/produtos?categoria=Setup%20Gamer" className="text-sm font-medium text-blue-600 hover:underline">Explorar Setup</Link>
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <Gamepad2 className="icon-destaque" />
+              Monte seu Setup Gamer
+            </h2>
+            <Link href="/produtos?categoria=Setup%20Gamer" className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline">
+              Explorar Setup <ChevronRight size={16} />
+            </Link>
           </div>
-          <div className="px-2">
-            <Slider {...sliderSettings}>
-              {gamer.map((product) => (
-                <div key={product.id} className="pb-4">
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </Slider>
+          <div className="grid grid-cols-[22px_minmax(0,1fr)_22px] items-center gap-3 px-2">
+            <button
+              type="button"
+              onClick={() => gamerSlider.current?.slickPrev()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <div className="min-w-0">
+              <Slider ref={gamerSlider} {...sliderSettings}>
+                {gamer.map((product) => (
+                  <div key={product.id} className="pb-4">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            <button
+              type="button"
+              onClick={() => gamerSlider.current?.slickNext()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </section>
       </div>
