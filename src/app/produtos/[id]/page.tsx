@@ -1,4 +1,5 @@
 import DetalheProdutoComponent from "@/components/Produtos/DetalheProduto";
+import { products } from "@/data/products";
 
 export default async function DetalheProduto({
   params,
@@ -9,10 +10,7 @@ export default async function DetalheProduto({
 
   // Para futuras implementações...
   // const produto = await getProduto(id)
+  const product = products.find((p) => p.id === id);
 
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center">
-      <DetalheProdutoComponent id={id} />
-    </div>
-  );
+  return <DetalheProdutoComponent product={product} />;
 }

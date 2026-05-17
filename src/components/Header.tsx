@@ -57,7 +57,7 @@ export function Header() {
   };
 
   const handleSelectProduct = (productId: string) => {
-    router.push(`/produto/${productId}`);
+    router.push(`/produtos/${productId}`);
     setShowSuggestions(false);
     setSearchQuery("");
   };

@@ -24,7 +24,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="group bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-all w-full max-w-[230px] h-[366px] flex flex-col mx-auto">
-      <Link href={`/produto/${product.id}`} className="block flex-shrink-0">
+      <Link href={`/produtos/${product.id}`} className="block flex-shrink-0">
         <div className="h-[180px] w-full overflow-hidden bg-gray-50 flex items-center justify-center p-4">
           <img
             src={product.images[0]}
@@ -36,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
       <div className="p-3 flex flex-col flex-grow justify-between">
         <div className="space-y-1">
-          <Link href={`/produto/${product.id}`} className="block">
+          <Link href={`/produtos/${product.id}`} className="block">
             <h3 className="font-medium text-sm text-gray-900 leading-tight line-clamp-2 h-[40px] hover:text-blue-600 transition-colors">
               {product.name}
             </h3>

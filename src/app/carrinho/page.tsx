@@ -60,7 +60,7 @@ export default function CartPage() {
                   <div className="flex-1 space-y-3">
                     <div>
                       <Link
-                        href={`/produto/${item.product.id}`}
+                        href={`/produtos/${item.product.id}`}
                         className="hover:underline"
                       >
                         <h3 className="text-xl font-semibold">
