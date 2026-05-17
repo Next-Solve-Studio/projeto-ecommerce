@@ -19,7 +19,7 @@ import type { Product } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
-  product: Product;
+  product?: Product;
 }
 
 export default function DetalheProdutoComponent({
