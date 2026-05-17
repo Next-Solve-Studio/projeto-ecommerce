@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { Header } from '@/components/Header';
 
 export default function PaymentRedirectPage() {
   const router = useRouter();
@@ -12,8 +13,11 @@ export default function PaymentRedirectPage() {
   }, [router]);
 
   return (
-    <div className="container mx-auto px-4 py-12 text-center min-h-[calc(100vh-64px)] flex items-center justify-center">
-      <p className="text-gray-600">Redirecionando para pagamento...</p>
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="container mx-auto px-4 py-12 text-center min-h-[calc(100vh-64px)] flex items-center justify-center">
+        <p className="text-gray-600">Redirecionando para pagamento...</p>
+      </div>
     </div>
   );
 }

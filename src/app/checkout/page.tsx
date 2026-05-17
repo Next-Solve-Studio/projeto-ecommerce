@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useCart } from '@/providers/CartProvider';
+import { Header } from '@/components/Header';
 
 const schema = yup.object().shape({
   nome: yup.string().required('Nome é obrigatório'),
@@ -43,7 +44,9 @@ export default function CheckoutPage() {
   const total = subtotal; // Assuming shipping is calculated later
 
   return (
-    <div className="min-h-screen bg-[#F2F3F4] py-12">
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <h1 className="text-3xl font-bold mb-8">Checkout - Dados Pessoais</h1>
         
@@ -171,6 +174,7 @@ export default function CheckoutPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

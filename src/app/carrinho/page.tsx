@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '@/providers/CartProvider';
 import { Button } from '@/components/ui/button';
+import { Header } from '@/components/Header';
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, getTotal } = useCart();
@@ -14,8 +15,10 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-[#F2F3F4] flex items-center justify-center">
-        <div className="text-center space-y-4">
+      <div className="min-h-screen bg-[#F2F3F4]">
+        <Header />
+        <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+          <div className="text-center space-y-4">
           <ShoppingBag size={64} className="mx-auto text-gray-300" />
           <h1 className="text-2xl font-bold">Seu carrinho está vazio</h1>
           <p className="text-gray-600">Adicione produtos para começar suas compras</p>
@@ -24,6 +27,7 @@ export default function CartPage() {
               Continuar Comprando
             </Button>
           </Link>
+          </div>
         </div>
       </div>
     );
@@ -31,6 +35,7 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-8">Carrinho de Compras</h1>
 

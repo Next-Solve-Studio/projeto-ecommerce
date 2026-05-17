@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/providers/CartProvider';
 import { CheckCircle2, Package, Truck, CreditCard, User } from 'lucide-react';
+import { Header } from '@/components/Header';
 
 function OrderSuccessContent() {
   const { items, getTotal, clearCart } = useCart();
@@ -28,7 +29,9 @@ function OrderSuccessContent() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#F2F3F4] py-12">
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="py-12">
       <div className="container mx-auto px-4 max-w-3xl">
         <div className="bg-white p-8 md:p-12 rounded-lg border shadow-sm text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -106,6 +109,7 @@ function OrderSuccessContent() {
           </Link>
 
         </div>
+      </div>
       </div>
     </div>
   );

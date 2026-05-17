@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useCart } from '@/providers/CartProvider';
 import { QrCode, CreditCard, Loader2 } from 'lucide-react';
+import { Header } from '@/components/Header';
 
 const schema = yup.object().shape({
   cardNumber: yup.string().required('Número do cartão é obrigatório').matches(/^[0-9\s]{19}$/, 'Formato inválido. Use 0000 0000 0000 0000'),
@@ -63,7 +64,9 @@ export default function CreditCardPaymentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F3F4] py-12">
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <h1 className="text-3xl font-bold mb-8">Pagamento</h1>
         
@@ -198,6 +201,7 @@ export default function CreditCardPaymentPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

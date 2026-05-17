@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/providers/CartProvider';
 import { Copy, CheckCircle2, Loader2, QrCode, CreditCard } from 'lucide-react';
 import { toast } from 'sonner';
+import { Header } from '@/components/Header';
 
 export default function PixPaymentPage() {
   const router = useRouter();
@@ -37,7 +38,9 @@ export default function PixPaymentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F3F4] py-12">
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <h1 className="text-3xl font-bold mb-8">Pagamento</h1>
         
@@ -144,6 +147,7 @@ export default function PixPaymentPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

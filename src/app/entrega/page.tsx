@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useCart } from '@/providers/CartProvider';
 import { Truck, Zap } from 'lucide-react';
+import { Header } from '@/components/Header';
 
 export default function DeliveryPage() {
   const router = useRouter();
@@ -23,7 +24,9 @@ export default function DeliveryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F2F3F4] py-12">
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="py-12">
       <div className="container mx-auto px-4 max-w-6xl">
         <h1 className="text-3xl font-bold mb-8">Opções de Entrega</h1>
         
@@ -107,6 +110,7 @@ export default function DeliveryPage() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

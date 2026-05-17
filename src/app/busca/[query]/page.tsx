@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { products } from '@/data/products';
 import { ProductCard } from '@/components/ProductCard';
+import { Header } from '@/components/Header';
 
 export default function SearchPage() {
   const params = useParams();
@@ -17,7 +18,9 @@ export default function SearchPage() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-12 min-h-[calc(100vh-64px)]">
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="container mx-auto px-4 py-12 min-h-[calc(100vh-64px)]">
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Resultados da Busca</h1>
         <p className="text-gray-600">
@@ -40,6 +43,7 @@ export default function SearchPage() {
           </p>
         </div>
       )}
+      </div>
     </div>
   );
 }

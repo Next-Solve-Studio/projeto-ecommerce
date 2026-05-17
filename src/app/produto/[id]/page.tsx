@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { toast } from 'sonner';
+import { Header } from '@/components/Header';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -25,12 +26,15 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#F2F3F4] flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Produto não encontrado</h1>
-          <Link href="/produtos">
-            <Button>Voltar para produtos</Button>
-          </Link>
+      <div className="min-h-screen bg-[#F2F3F4]">
+        <Header />
+        <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Produto não encontrado</h1>
+            <Link href="/produtos">
+              <Button>Voltar para produtos</Button>
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -58,6 +62,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
       {showAddedFeedback && (
         <div className="fixed top-20 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 animate-in slide-in-from-right">
           <Check size={24} />

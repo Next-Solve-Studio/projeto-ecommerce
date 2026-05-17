@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Header } from '@/components/Header';
 
 function ProductsPageContent() {
   const searchParams = useSearchParams();
@@ -56,6 +57,7 @@ function ProductsPageContent() {
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2">Catálogo de Produtos</h1>

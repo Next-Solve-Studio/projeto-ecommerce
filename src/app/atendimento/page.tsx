@@ -1,18 +1,21 @@
 import { HeadphonesIcon, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Header } from '@/components/Header';
 
 export default function SupportPage() {
   return (
-    <div className="container mx-auto px-4 py-16">
-      <div className="max-w-3xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="bg-gray-100 p-6 rounded-full inline-block mb-6">
-            <HeadphonesIcon size={48} className="text-gray-900" />
+    <div className="min-h-screen bg-[#F2F3F4]">
+      <Header />
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="bg-gray-100 p-6 rounded-full inline-block mb-6">
+              <HeadphonesIcon size={48} className="text-gray-900" />
+            </div>
+            <h1 className="text-3xl font-bold mb-4">Atendimento ao Cliente</h1>
+            <p className="text-gray-600">
+              Estamos aqui para ajudar. Escolha uma das opções abaixo para entrar em contato com nossa equipe.
+            </p>
           </div>
-          <h1 className="text-3xl font-bold mb-4">Atendimento ao Cliente</h1>
-          <p className="text-gray-600">
-            Estamos aqui para ajudar. Escolha uma das opções abaixo para entrar em contato com nossa equipe.
-          </p>
-        </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           <div className="bg-white p-6 rounded-lg border text-center hover:shadow-md transition-shadow">
@@ -37,6 +40,7 @@ export default function SupportPage() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
