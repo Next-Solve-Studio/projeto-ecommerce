@@ -23,7 +23,9 @@ export default function CheckoutSucessoComponent() {
 
           <div className="bg-gray-50 p-6 rounded-lg mb-8 text-left space-y-3">
             <div className="flex justify-between border-b pb-3">
-              <span className="text-gray-500 font-medium">Número do Pedido</span>
+              <span className="text-gray-500 font-medium">
+                Número do Pedido
+              </span>
               <span className="font-bold">#{orderNumber}</span>
             </div>
             <div className="flex justify-between border-b pb-3">
