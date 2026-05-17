@@ -1,11 +1,11 @@
 "use client";
 
-import Link from 'next/link';
-import { ShoppingCart, Star } from 'lucide-react';
-import { Product } from '@/data/products';
-import { useCart } from '@/providers/CartProvider';
-import { Button } from './ui/button';
-import { toast } from 'sonner';
+import { ShoppingCart, Star } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
+import type { Product } from "@/data/products";
+import { useCart } from "@/providers/CartProvider";
+import { Button } from "./ui/button";
 
 interface ProductCardProps {
   product: Product;
@@ -48,7 +48,7 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="font-medium">{product.rating.toFixed(1)}</span>
             </div>
             <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-            <span>{product.salesCount.toLocaleString('pt-BR')} vendidos</span>
+            <span>{product.salesCount.toLocaleString("pt-BR")} vendidos</span>
           </div>
         </div>
 
@@ -56,11 +56,17 @@ export function ProductCard({ product }: ProductCardProps) {
           {hasDiscount ? (
             <div className="flex flex-col">
               <span className="text-xs text-gray-400 line-through">
-                R$ {product.oldPrice!.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                R${" "}
+                {product.oldPrice!.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-gray-900 leading-none">
-                  R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  R${" "}
+                  {product.price.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
                 </span>
                 <span className="text-xs font-bold text-green-600 bg-green-100 px-1.5 py-0.5 rounded">
                   -{product.discountPercentage}%
@@ -70,7 +76,10 @@ export function ProductCard({ product }: ProductCardProps) {
           ) : (
             <div className="flex flex-col justify-end h-[36px]">
               <span className="text-lg font-bold text-gray-900 leading-none">
-                R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                R${" "}
+                {product.price.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
               </span>
             </div>
           )}

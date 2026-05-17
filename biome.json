@@ -13,7 +13,8 @@
       "!.next",
       "!dist",
       "!build",
-      "!src/dataconnect-generated"
+      "!src/dataconnect-generated",
+      "!src/components/ui"
     ]
   },
   "formatter": {
@@ -26,7 +27,23 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noUnknownAtRules": "off"
+        "noUnknownAtRules": "off",
+        "noArrayIndexKey": "warn"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "warn"
+      },
+      "style": {
+        "useTemplate": "off"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "warn",
+        "noStaticElementInteractions": "warn",
+        "noSvgWithoutTitle": "warn",
+        "useValidAnchor": "off"
+      },
+      "performance": {
+        "noImgElement": "warn"
       }
     },
     "domains": {

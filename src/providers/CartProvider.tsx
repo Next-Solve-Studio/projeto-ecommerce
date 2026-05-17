@@ -1,7 +1,7 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from 'react';
-import { Product } from '../data/products';
+import { createContext, type ReactNode, useContext, useState } from "react";
+import type { Product } from "../data/products";
 
 interface CartItem {
   product: Product;
@@ -11,7 +11,11 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product, quantity: number, variants?: Record<string, string>) => void;
+  addToCart: (
+    product: Product,
+    quantity: number,
+    variants?: Record<string, string>,
+  ) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   getTotal: () => number;
@@ -24,11 +28,16 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  const addToCart = (product: Product, quantity: number, variants?: Record<string, string>) => {
-    setItems(prev => {
-      const existingIndex = prev.findIndex(item =>
-        item.product.id === product.id &&
-        JSON.stringify(item.selectedVariants) === JSON.stringify(variants)
+  const addToCart = (
+    product: Product,
+    quantity: number,
+    variants?: Record<string, string>,
+  ) => {
+    setItems((prev) => {
+      const existingIndex = prev.findIndex(
+        (item) =>
+          item.product.id === product.id &&
+          JSON.stringify(item.selectedVariants) === JSON.stringify(variants),
       );
 
       if (existingIndex > -1) {
@@ -42,7 +51,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const removeFromCart = (productId: string) => {
-    setItems(prev => prev.filter(item => item.product.id !== productId));
+    setItems((prev) => prev.filter((item) => item.product.id !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -50,13 +59,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeFromCart(productId);
       return;
     }
-    setItems(prev => prev.map(item =>
-      item.product.id === productId ? { ...item, quantity } : item
-    ));
+    setItems((prev) =>
+      prev.map((item) =>
+        item.product.id === productId ? { ...item, quantity } : item,
+      ),
+    );
   };
 
   const getTotal = () => {
-    return items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    return items.reduce(
+      (sum, item) => sum + item.product.price * item.quantity,
+      0,
+    );
   };
 
   const getItemCount = () => {
@@ -68,15 +82,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <CartContext.Provider value={{
-      items,
-      addToCart,
-      removeFromCart,
-      updateQuantity,
-      getTotal,
-      getItemCount,
-      clearCart
-    }}>
+    <CartContext.Provider
+      value={{
+        items,
+        addToCart,
+        removeFromCart,
+        updateQuantity,
+        getTotal,
+        getItemCount,
+        clearCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
@@ -85,7 +101,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within CartProvider');
+    throw new Error("useCart must be used within CartProvider");
   }
   return context;
 }

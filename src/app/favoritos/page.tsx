@@ -1,7 +1,7 @@
-import { Heart } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Header } from '@/components/Header';
+import { Heart } from "lucide-react";
+import Link from "next/link";
+import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
 
 export default function FavoritesPage() {
   return (
@@ -13,7 +13,8 @@ export default function FavoritesPage() {
         </div>
         <h1 className="text-3xl font-bold mb-4">Meus Favoritos</h1>
         <p className="text-gray-600 max-w-md mb-8">
-          Você ainda não adicionou nenhum produto aos favoritos. Explore nossa loja e salve os itens que você mais gosta!
+          Você ainda não adicionou nenhum produto aos favoritos. Explore nossa
+          loja e salve os itens que você mais gosta!
         </p>
         <Link href="/produtos">
           <Button className="bg-black text-white hover:bg-gray-800 h-12 px-8">

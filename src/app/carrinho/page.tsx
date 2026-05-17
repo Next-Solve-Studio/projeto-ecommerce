@@ -1,10 +1,10 @@
 "use client";
 
-import Link from 'next/link';
-import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
-import { useCart } from '@/providers/CartProvider';
-import { Button } from '@/components/ui/button';
-import { Header } from '@/components/Header';
+import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/providers/CartProvider";
 
 export default function CartPage() {
   const { items, updateQuantity, removeFromCart, getTotal } = useCart();
@@ -19,14 +19,16 @@ export default function CartPage() {
         <Header />
         <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
           <div className="text-center space-y-4">
-          <ShoppingBag size={64} className="mx-auto text-gray-300" />
-          <h1 className="text-2xl font-bold">Seu carrinho está vazio</h1>
-          <p className="text-gray-600">Adicione produtos para começar suas compras</p>
-          <Link href="/produtos">
-            <Button className="bg-black hover:bg-gray-800">
-              Continuar Comprando
-            </Button>
-          </Link>
+            <ShoppingBag size={64} className="mx-auto text-gray-300" />
+            <h1 className="text-2xl font-bold">Seu carrinho está vazio</h1>
+            <p className="text-gray-600">
+              Adicione produtos para começar suas compras
+            </p>
+            <Link href="/produtos">
+              <Button className="bg-black hover:bg-gray-800">
+                Continuar Comprando
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -42,7 +44,10 @@ export default function CartPage() {
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
-              <div key={`${item.product.id}-${JSON.stringify(item.selectedVariants)}`} className="bg-white p-6 rounded-lg border">
+              <div
+                key={`${item.product.id}-${JSON.stringify(item.selectedVariants)}`}
+                className="bg-white p-6 rounded-lg border"
+              >
                 <div className="flex gap-6">
                   <div className="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <img
@@ -54,20 +59,31 @@ export default function CartPage() {
 
                   <div className="flex-1 space-y-3">
                     <div>
-                      <Link href={`/produto/${item.product.id}`} className="hover:underline">
-                        <h3 className="text-xl font-semibold">{item.product.name}</h3>
+                      <Link
+                        href={`/produto/${item.product.id}`}
+                        className="hover:underline"
+                      >
+                        <h3 className="text-xl font-semibold">
+                          {item.product.name}
+                        </h3>
                       </Link>
-                      <p className="text-sm text-gray-600">{item.product.category}</p>
+                      <p className="text-sm text-gray-600">
+                        {item.product.category}
+                      </p>
 
-                      {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
-                        <div className="mt-2 space-y-1">
-                          {Object.entries(item.selectedVariants).map(([type, value]) => (
-                            <p key={type} className="text-sm text-gray-600">
-                              {type}: <span className="font-medium">{value}</span>
-                            </p>
-                          ))}
-                        </div>
-                      )}
+                      {item.selectedVariants &&
+                        Object.keys(item.selectedVariants).length > 0 && (
+                          <div className="mt-2 space-y-1">
+                            {Object.entries(item.selectedVariants).map(
+                              ([type, value]) => (
+                                <p key={type} className="text-sm text-gray-600">
+                                  {type}:{" "}
+                                  <span className="font-medium">{value}</span>
+                                </p>
+                              ),
+                            )}
+                          </div>
+                        )}
                     </div>
 
                     <div className="flex items-center justify-between">
@@ -75,7 +91,9 @@ export default function CartPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                          onClick={() =>
+                            updateQuantity(item.product.id, item.quantity - 1)
+                          }
                           disabled={item.quantity <= 1}
                         >
                           <Minus size={16} />
@@ -86,7 +104,9 @@ export default function CartPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                          onClick={() =>
+                            updateQuantity(item.product.id, item.quantity + 1)
+                          }
                         >
                           <Plus size={16} />
                         </Button>
@@ -94,10 +114,18 @@ export default function CartPage() {
 
                       <div className="text-right">
                         <p className="text-2xl font-bold">
-                          R$ {(item.product.price * item.quantity).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          R${" "}
+                          {(item.product.price * item.quantity).toLocaleString(
+                            "pt-BR",
+                            { minimumFractionDigits: 2 },
+                          )}
                         </p>
                         <p className="text-sm text-gray-600">
-                          R$ {item.product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} cada
+                          R${" "}
+                          {item.product.price.toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                          })}{" "}
+                          cada
                         </p>
                       </div>
                     </div>
@@ -123,8 +151,16 @@ export default function CartPage() {
 
               <div className="space-y-3 pb-4 border-b">
                 <div className="flex justify-between text-gray-600">
-                  <span>Subtotal ({items.reduce((sum, item) => sum + item.quantity, 0)} itens)</span>
-                  <span>R$ {subtotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                  <span>
+                    Subtotal (
+                    {items.reduce((sum, item) => sum + item.quantity, 0)} itens)
+                  </span>
+                  <span>
+                    R${" "}
+                    {subtotal.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Frete</span>
@@ -134,7 +170,10 @@ export default function CartPage() {
 
               <div className="flex justify-between text-2xl font-bold pt-2">
                 <span>Total</span>
-                <span>R$ {total.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                <span>
+                  R${" "}
+                  {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                </span>
               </div>
 
               <Link href="/checkout" className="block">

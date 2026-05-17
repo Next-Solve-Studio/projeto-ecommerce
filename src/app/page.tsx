@@ -1,32 +1,45 @@
 "use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRef } from 'react';
-import { Smartphone, Laptop, Tablet, Headphones, Watch, Usb, Gamepad, ChevronLeft, ChevronRight, Flame, ChartNoAxesCombined, Gamepad2 } from 'lucide-react';
-import Slider from 'react-slick';
-import { products, categories } from '@/data/products';
-import { ProductCard } from '@/components/ProductCard';
-import { Header } from '@/components/Header';
+import {
+  ChartNoAxesCombined,
+  ChevronLeft,
+  ChevronRight,
+  Flame,
+  Gamepad,
+  Gamepad2,
+  Headphones,
+  Laptop,
+  Smartphone,
+  Tablet,
+  Usb,
+  Watch,
+} from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRef } from "react";
+import Slider from "react-slick";
+import { Header } from "@/components/Header";
+import { ProductCard } from "@/components/ProductCard";
+import { categories, products } from "@/data/products";
 
-import banner1 from '../../public/3.png';
-import banner2 from '../../public/3.png';
-import banner3 from '../../public/3.png';
+import banner1 from "../../public/3.png";
+import banner2 from "../../public/3.png";
+import banner3 from "../../public/3.png";
 
 const categoryIcons = {
-  "Smartphones": Smartphone,
-  "Notebooks": Laptop,
-  "Tablets": Tablet,
-  "Acessórios": Usb,
-  "Smartwatches": Watch,
+  Smartphones: Smartphone,
+  Notebooks: Laptop,
+  Tablets: Tablet,
+  Acessórios: Usb,
+  Smartwatches: Watch,
   "Fones de Ouvido": Headphones,
-  "Setup Gamer": Gamepad
+  "Setup Gamer": Gamepad,
 };
 
 export default function HomePage() {
-  const ofertas = products.filter(p => p.tags?.includes('ofertas'));
-  const populares = products.filter(p => p.tags?.includes('populares'));
-  const gamer = products.filter(p => p.tags?.includes('gamer'));
+  const ofertas = products.filter((p) => p.tags?.includes("ofertas"));
+  const populares = products.filter((p) => p.tags?.includes("populares"));
+  const gamer = products.filter((p) => p.tags?.includes("gamer"));
   const ofertasSlider = useRef<any>(null);
   const popularesSlider = useRef<any>(null);
   const gamerSlider = useRef<any>(null);
@@ -56,7 +69,7 @@ export default function HomePage() {
       { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 2 } },
       { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 1 } },
       { breakpoint: 640, settings: { slidesToShow: 1, slidesToScroll: 1 } },
-    ]
+    ],
   };
 
   return (
@@ -108,7 +121,7 @@ export default function HomePage() {
           color: #011C40;
         }
       `}</style>
-      
+
       {/* Banner Slider */}
       <section className="w-full mb-8 relative">
         <Slider {...bannerSettings} className="banner-slider">
@@ -134,7 +147,9 @@ export default function HomePage() {
               className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-3"
             >
               <Icon size={32} className="text-gray-700" />
-              <span className="text-sm font-medium text-center text-gray-900">{name}</span>
+              <span className="text-sm font-medium text-center text-gray-900">
+                {name}
+              </span>
             </Link>
           ))}
         </div>
@@ -148,7 +163,10 @@ export default function HomePage() {
               <Flame className="icon-destaque" />
               Ofertas em destaque
             </h2>
-            <Link href="/produtos" className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline">
+            <Link
+              href="/produtos"
+              className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline"
+            >
               Ver todas <ChevronRight size={16} />
             </Link>
           </div>
@@ -186,7 +204,10 @@ export default function HomePage() {
               <ChartNoAxesCombined className="icon-destaque" />
               Produtos populares
             </h2>
-            <Link href="/produtos" className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline">
+            <Link
+              href="/produtos"
+              className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline"
+            >
               Ver todas <ChevronRight size={16} />
             </Link>
           </div>
@@ -224,7 +245,10 @@ export default function HomePage() {
               <Gamepad2 className="icon-destaque" />
               Monte seu Setup Gamer
             </h2>
-            <Link href="/produtos?categoria=Setup%20Gamer" className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline">
+            <Link
+              href="/produtos?categoria=Setup%20Gamer"
+              className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline"
+            >
               Explorar Setup <ChevronRight size={16} />
             </Link>
           </div>

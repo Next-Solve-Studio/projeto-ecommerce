@@ -1,26 +1,35 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { ArrowLeft, ShoppingCart, Minus, Plus, Check, Heart } from 'lucide-react';
-import { products } from '@/data/products';
-import { useCart } from '@/providers/CartProvider';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { toast } from 'sonner';
-import { Header } from '@/components/Header';
+import {
+  ArrowLeft,
+  Check,
+  Heart,
+  Minus,
+  Plus,
+  ShoppingCart,
+} from "lucide-react";
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Header } from "@/components/Header";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { products } from "@/data/products";
+import { useCart } from "@/providers/CartProvider";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const id = params?.id as string;
-  const product = products.find(p => p.id === id);
+  const product = products.find((p) => p.id === id);
   const { addToCart } = useCart();
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
+  const [selectedVariants, setSelectedVariants] = useState<
+    Record<string, string>
+  >({});
   const [showAddedFeedback, setShowAddedFeedback] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -42,9 +51,13 @@ export default function ProductDetailPage() {
 
   const handleAddToCart = () => {
     if (product.variants) {
-      const missingVariants = product.variants.filter(v => !selectedVariants[v.type]);
+      const missingVariants = product.variants.filter(
+        (v) => !selectedVariants[v.type],
+      );
       if (missingVariants.length > 0) {
-        toast.error(`Por favor, selecione: ${missingVariants.map(v => v.type).join(', ')}`);
+        toast.error(
+          `Por favor, selecione: ${missingVariants.map((v) => v.type).join(", ")}`,
+        );
         return;
       }
     }
@@ -57,7 +70,7 @@ export default function ProductDetailPage() {
   };
 
   const handleVariantChange = (type: string, value: string) => {
-    setSelectedVariants(prev => ({ ...prev, [type]: value }));
+    setSelectedVariants((prev) => ({ ...prev, [type]: value }));
   };
 
   return (
@@ -71,7 +84,10 @@ export default function ProductDetailPage() {
       )}
 
       <div className="container mx-auto px-4 py-8">
-        <Link href="/produtos" className="inline-flex items-center gap-2 text-gray-600 hover:text-black mb-6">
+        <Link
+          href="/produtos"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-black mb-6"
+        >
           <ArrowLeft size={20} />
           Voltar para produtos
         </Link>
@@ -91,10 +107,13 @@ export default function ProductDetailPage() {
                 <div className="grid grid-cols-4 gap-4">
                   {product.images.map((image, index) => (
                     <button
+                      type="button"
                       key={index}
                       onClick={() => setSelectedImage(index)}
                       className={`aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index ? 'border-black' : 'border-transparent'
+                        selectedImage === index
+                          ? "border-black"
+                          : "border-transparent"
                       }`}
                     >
                       <img
@@ -113,53 +132,64 @@ export default function ProductDetailPage() {
                 <p className="text-sm text-gray-500 mb-2">{product.category}</p>
                 <div className="flex items-start justify-between gap-4">
                   <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
-                  <button 
+                  <button
+                    type="button"
                     onClick={() => setIsFavorite(!isFavorite)}
                     className="p-3 rounded-full hover:bg-gray-100 transition-colors shrink-0"
                     title="Adicionar aos favoritos"
                   >
-                    <Heart 
-                      size={28} 
-                      className={`transition-colors ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}`} 
+                    <Heart
+                      size={28}
+                      className={`transition-colors ${isFavorite ? "fill-red-500 text-red-500" : "text-gray-400 hover:text-red-500"}`}
                     />
                   </button>
                 </div>
-                <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                <p className="text-gray-700 leading-relaxed">
+                  {product.description}
+                </p>
               </div>
 
               <div className="border-t border-b py-6">
                 <p className="text-4xl font-bold">
-                  R$ {product.price.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                  R${" "}
+                  {product.price.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
                 </p>
               </div>
 
-              {product.variants && product.variants.map((variant) => (
-                <div key={variant.type} className="space-y-3">
-                  <Label className="text-lg font-semibold">{variant.type}</Label>
-                  <RadioGroup
-                    value={selectedVariants[variant.type] || ''}
-                    onValueChange={(value) => handleVariantChange(variant.type, value)}
-                  >
-                    <div className="grid grid-cols-2 gap-3">
-                      {variant.options.map((option) => (
-                        <div key={option} className="relative">
-                          <RadioGroupItem
-                            value={option}
-                            id={`${variant.type}-${option}`}
-                            className="peer sr-only"
-                          />
-                          <Label
-                            htmlFor={`${variant.type}-${option}`}
-                            className="flex items-center justify-center px-4 py-3 border rounded-lg cursor-pointer transition-all peer-data-[state=checked]:border-black peer-data-[state=checked]:bg-black peer-data-[state=checked]:text-white hover:border-gray-400"
-                          >
-                            {option}
-                          </Label>
-                        </div>
-                      ))}
-                    </div>
-                  </RadioGroup>
-                </div>
-              ))}
+              {product.variants &&
+                product.variants.map((variant) => (
+                  <div key={variant.type} className="space-y-3">
+                    <Label className="text-lg font-semibold">
+                      {variant.type}
+                    </Label>
+                    <RadioGroup
+                      value={selectedVariants[variant.type] || ""}
+                      onValueChange={(value) =>
+                        handleVariantChange(variant.type, value)
+                      }
+                    >
+                      <div className="grid grid-cols-2 gap-3">
+                        {variant.options.map((option) => (
+                          <div key={option} className="relative">
+                            <RadioGroupItem
+                              value={option}
+                              id={`${variant.type}-${option}`}
+                              className="peer sr-only"
+                            />
+                            <Label
+                              htmlFor={`${variant.type}-${option}`}
+                              className="flex items-center justify-center px-4 py-3 border rounded-lg cursor-pointer transition-all peer-data-[state=checked]:border-black peer-data-[state=checked]:bg-black peer-data-[state=checked]:text-white hover:border-gray-400"
+                            >
+                              {option}
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                  </div>
+                ))}
 
               <div className="space-y-3">
                 <Label className="text-lg font-semibold">Quantidade</Label>
@@ -172,7 +202,9 @@ export default function ProductDetailPage() {
                   >
                     <Minus size={16} />
                   </Button>
-                  <span className="text-2xl font-bold w-12 text-center">{quantity}</span>
+                  <span className="text-2xl font-bold w-12 text-center">
+                    {quantity}
+                  </span>
                   <Button
                     variant="outline"
                     size="icon"

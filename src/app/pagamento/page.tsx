@@ -1,15 +1,15 @@
 "use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { Header } from '@/components/Header';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { Header } from "@/components/Header";
 
 export default function PaymentRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
     // Redireciona para o método de pagamento padrão
-    router.push('/checkout/pix');
+    router.push("/checkout/pix");
   }, [router]);
 
   return (
