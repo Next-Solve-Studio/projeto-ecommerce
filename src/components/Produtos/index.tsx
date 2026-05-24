@@ -74,34 +74,36 @@ function ProdutosComponentContent() {
   });
 
   return (
-    <div className="min-h-screen bg-[#F2F3F4]">
+    <div className="min-h-screen bg-[#F2F3F4] text-black">
       <Header />
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Catálogo de Produtos</h1>
-          <p className="text-gray-600">
+          <h1 className="text-4xl font-bold mb-2 text-black">Catálogo de Produtos</h1>
+          <p className="text-gray-800">
             Encontre os melhores eletrônicos para você
           </p>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           <aside className="lg:w-64 space-y-6">
-            <div className="bg-white p-6 rounded-lg border">
+            <div className="py-2">
               <div className="flex items-center gap-2 mb-4">
                 <SlidersHorizontal size={20} />
-                <h2 className="font-bold text-lg">Filtros</h2>
+                <h2 className="font-bold text-lg text-[#202020]">Filtros</h2>
               </div>
+
+              <hr className="my-4 border-gray-300" />
 
               <div className="space-y-6">
                 <div>
-                  <Label className="mb-3 block font-semibold">Categoria</Label>
+                  <Label className="mb-3 block font-semibold text-[#202020]">Categoria</Label>
                   <RadioGroup
                     value={selectedCategory}
                     onValueChange={setSelectedCategory}
                   >
                     <div className="flex items-center space-x-2 mb-2">
                       <RadioGroupItem value="Todas" id="cat-all" />
-                      <Label htmlFor="cat-all" className="cursor-pointer">
+                      <Label htmlFor="cat-all" className="cursor-pointer text-[#202020]">
                         Todas
                       </Label>
                     </div>
@@ -116,7 +118,7 @@ function ProdutosComponentContent() {
                         />
                         <Label
                           htmlFor={`cat-${category}`}
-                          className="cursor-pointer"
+                          className="cursor-pointer text-[#202020]"
                         >
                           {category}
                         </Label>
@@ -125,8 +127,10 @@ function ProdutosComponentContent() {
                   </RadioGroup>
                 </div>
 
+                <hr className="my-6 border-gray-300" />
+
                 <div>
-                  <Label className="mb-3 block font-semibold">
+                  <Label className="mb-3 block font-semibold text-[#202020]">
                     Faixa de Preço
                   </Label>
                   <div className="space-y-4">
@@ -186,7 +190,7 @@ function ProdutosComponentContent() {
             </div>
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {filteredProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
