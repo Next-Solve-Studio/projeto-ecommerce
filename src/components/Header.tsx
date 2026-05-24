@@ -25,20 +25,24 @@ export function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const suggestionRef = useRef<HTMLDivElement>(null);
+  const desktopSuggestionRef = useRef<HTMLDivElement>(null);
+  const mobileSuggestionRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        suggestionRef.current &&
-        !suggestionRef.current.contains(event.target as Node)
-      ) {
+      const target = event.target as Node;
+      const isOutsideDesktop =
+        desktopSuggestionRef.current && !desktopSuggestionRef.current.contains(target);
+      const isOutsideMobile =
+        mobileSuggestionRef.current && !mobileSuggestionRef.current.contains(target);
+
+      if (isOutsideDesktop && isOutsideMobile) {
         setShowSuggestions(false);
       }
       if (
         profileRef.current &&
-        !profileRef.current.contains(event.target as Node)
+        !profileRef.current.contains(target)
       ) {
         setIsProfileOpen(false);
       }
@@ -49,8 +53,23 @@ export function Header() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/busca/${encodeURIComponent(searchQuery.trim())}`);
+    const query = searchQuery.trim();
+    if (query) {
+      const exactCategory = categories.find(
+        (c) => c.toLowerCase() === query.toLowerCase(),
+      );
+      const exactProduct = products.find(
+        (p) => p.name.toLowerCase() === query.toLowerCase(),
+      );
+
+      if (exactCategory) {
+        router.push(`/produtos?categoria=${encodeURIComponent(exactCategory)}`);
+      } else if (exactProduct) {
+        router.push(`/produtos/${exactProduct.id}`);
+      } else {
+        router.push(`/busca/${encodeURIComponent(query)}`);
+      }
+
       setShowSuggestions(false);
       setSearchQuery("");
     }
@@ -101,7 +120,7 @@ export function Header() {
 
           <div
             className="flex-1 max-w-2xl hidden md:block relative"
-            ref={suggestionRef}
+            ref={desktopSuggestionRef}
           >
             <form onSubmit={handleSearch} className="relative">
               <Search
@@ -272,12 +291,11 @@ export function Header() {
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden pb-0 mb-0" ref={suggestionRef}>
+        <div className="md:hidden pb-0 mb-0" ref={mobileSuggestionRef}>
           <form onSubmit={handleSearch} className="relative">
-            <Search
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              size={20}
-            />
+            <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors z-10 cursor-pointer" title="Buscar">
+              <Search size={20} />
+            </button>
             <Input
               type="text"
               placeholder="Buscar produtos ou categorias..."

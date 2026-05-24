@@ -23,8 +23,9 @@ import { categories, products } from "@/data/products";
 function ProdutosComponentContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("categoria");
+  const buscaParam = searchParams.get("busca");
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(buscaParam || "");
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categoryParam || "Todas",
   );
@@ -38,6 +39,12 @@ function ProdutosComponentContent() {
       setSelectedCategory(categoryParam);
     }
   }, [categoryParam]);
+
+  useEffect(() => {
+    if (buscaParam !== null && buscaParam !== searchQuery) {
+      setSearchQuery(buscaParam);
+    }
+  }, [buscaParam]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
