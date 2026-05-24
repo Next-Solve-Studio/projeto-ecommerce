@@ -2,14 +2,13 @@
 
 export const dynamic = "force-dynamic";
 
-import { Search, SlidersHorizontal } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { Search, SlidersHorizontal, Check } from "lucide-react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -22,6 +21,7 @@ import { categories, products } from "@/data/products";
 
 function ProdutosComponentContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const categoryParam = searchParams.get("categoria");
   const buscaParam = searchParams.get("busca");
 
@@ -33,6 +33,15 @@ function ProdutosComponentContent() {
   const [sortBy, setSortBy] = useState("name-asc");
 
   const maxPrice = Math.max(...products.map((p) => p.price));
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    if (category === "Todas") {
+      router.push("/produtos");
+    } else {
+      router.push(`/produtos?categoria=${encodeURIComponent(category)}`);
+    }
+  };
 
   useEffect(() => {
     if (categoryParam && categoryParam !== selectedCategory) {
@@ -76,7 +85,7 @@ function ProdutosComponentContent() {
   return (
     <div className="min-h-screen bg-[#F2F3F4] text-black">
       <Header />
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-[1250px] w-full mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-2 text-black">Catálogo de Produtos</h1>
           <p className="text-gray-800">
@@ -85,7 +94,7 @@ function ProdutosComponentContent() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          <aside className="lg:w-64 space-y-6">
+          <aside className="lg:w-48 space-y-6">
             <div className="py-2">
               <div className="flex items-center gap-2 mb-4">
                 <SlidersHorizontal size={20} />
@@ -97,34 +106,33 @@ function ProdutosComponentContent() {
               <div className="space-y-6">
                 <div>
                   <Label className="mb-3 block font-semibold text-[#202020]">Categoria</Label>
-                  <RadioGroup
-                    value={selectedCategory}
-                    onValueChange={setSelectedCategory}
-                  >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <RadioGroupItem value="Todas" id="cat-all" />
-                      <Label htmlFor="cat-all" className="cursor-pointer text-[#202020]">
+                  <div className="flex flex-col">
+                    <div 
+                      className="flex items-center space-x-2 mb-2 cursor-pointer"
+                      onClick={() => handleCategoryChange("Todas")}
+                    >
+                      <div className="w-[13px] h-[13px] bg-white border border-gray-400 rounded-[1px] flex items-center justify-center shrink-0">
+                        {selectedCategory === "Todas" && <Check size={10} strokeWidth={4} className="text-blue-600" />}
+                      </div>
+                      <Label className="cursor-pointer text-[#202020] pointer-events-none">
                         Todas
                       </Label>
                     </div>
                     {categories.map((category) => (
                       <div
                         key={category}
-                        className="flex items-center space-x-2 mb-2"
+                        className="flex items-center space-x-2 mb-2 cursor-pointer"
+                        onClick={() => handleCategoryChange(category)}
                       >
-                        <RadioGroupItem
-                          value={category}
-                          id={`cat-${category}`}
-                        />
-                        <Label
-                          htmlFor={`cat-${category}`}
-                          className="cursor-pointer text-[#202020]"
-                        >
+                        <div className="w-[13px] h-[13px] bg-white border border-gray-400 rounded-[1px] flex items-center justify-center shrink-0">
+                          {selectedCategory === category && <Check size={10} strokeWidth={4} className="text-blue-600" />}
+                        </div>
+                        <Label className="cursor-pointer text-[#202020] pointer-events-none">
                           {category}
                         </Label>
                       </div>
                     ))}
-                  </RadioGroup>
+                  </div>
                 </div>
 
                 <hr className="my-6 border-gray-300" />
@@ -155,7 +163,7 @@ function ProdutosComponentContent() {
           </aside>
 
           <main className="flex-1">
-            <div className="bg-white p-4 rounded-lg border mb-6">
+            <div className="bg-[#EDEDED] p-2 rounded-[2px] mb-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="flex-1 relative">
                   <Search
@@ -190,9 +198,11 @@ function ProdutosComponentContent() {
             </div>
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              <div className="flex flex-wrap gap-[10px]">
                 {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <div key={product.id} className="w-[190px]">
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
             ) : (

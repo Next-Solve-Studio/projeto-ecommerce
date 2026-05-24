@@ -122,11 +122,10 @@ export function Header() {
             className="flex-1 max-w-2xl hidden md:block relative"
             ref={desktopSuggestionRef}
           >
-            <form onSubmit={handleSearch} className="relative">
-              <Search
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-                size={20}
-              />
+            <form onSubmit={handleSearch} className="relative group">
+              <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-gray-500 hover:text-white group-focus-within:hover:text-black transition-colors z-10 cursor-pointer" title="Buscar">
+                <Search size={20} />
+              </button>
               <Input
                 type="text"
                 placeholder="Buscar produtos ou categorias..."
@@ -136,7 +135,7 @@ export function Header() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="pl-10 h-10 w-full bg-gray-50 border-gray-200 focus:bg-white text-black transition-colors"
+                className="pl-10 h-10 w-full bg-white/10 border-none text-white placeholder:text-gray-300 focus:bg-white focus:text-black focus:placeholder:text-gray-500 transition-colors"
               />
             </form>
 
@@ -292,8 +291,8 @@ export function Header() {
 
         {/* Mobile Search */}
         <div className="md:hidden pb-0 mb-0" ref={mobileSuggestionRef}>
-          <form onSubmit={handleSearch} className="relative">
-            <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black transition-colors z-10 cursor-pointer" title="Buscar">
+          <form onSubmit={handleSearch} className="relative group">
+            <button type="submit" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-gray-500 hover:text-white group-focus-within:hover:text-black transition-colors z-10 cursor-pointer" title="Buscar">
               <Search size={20} />
             </button>
             <Input
@@ -305,7 +304,7 @@ export function Header() {
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              className="pl-10 h-10 w-full bg-gray-50 border-gray-200 focus:bg-white text-black transition-colors"
+              className="pl-10 h-10 w-full bg-white/10 border-none text-white placeholder:text-gray-300 focus:bg-white focus:text-black focus:placeholder:text-gray-500 transition-colors"
             />
           </form>
           {showSuggestions &&
