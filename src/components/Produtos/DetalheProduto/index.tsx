@@ -2,20 +2,25 @@
 
 import {
   ArrowLeft,
+  ChartNoAxesCombined,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Heart,
   Minus,
   Plus,
   ShoppingCart,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Slider from "react-slick";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
+import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import type { Product } from "@/data/products";
+import { products, type Product } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
@@ -34,6 +39,25 @@ export default function DetalheProdutoComponent({
   >({});
   const [showAddedFeedback, setShowAddedFeedback] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const populares = products.filter((p) => p.tags?.includes("populares"));
+  const popularesSlider = useRef<any>(null);
+
+  const sliderSettings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 6,
+    slidesToScroll: 2,
+    arrows: false,
+    responsive: [
+      { breakpoint: 1536, settings: { slidesToShow: 5, slidesToScroll: 2 } },
+      { breakpoint: 1280, settings: { slidesToShow: 4, slidesToScroll: 2 } },
+      { breakpoint: 1024, settings: { slidesToShow: 3, slidesToScroll: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 2, slidesToScroll: 1 } },
+      { breakpoint: 640, settings: { slidesToShow: 1, slidesToScroll: 1 } },
+    ],
+  };
 
   if (!product) {
     return (
@@ -94,7 +118,7 @@ export default function DetalheProdutoComponent({
           Voltar para produtos
         </Link>
 
-        <div className="bg-white rounded-lg border p-8">
+        <div className="bg-white rounded-lg border p-8 mb-12">
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="space-y-4">
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
@@ -242,6 +266,66 @@ export default function DetalheProdutoComponent({
             </div>
           </div>
         </div>
+
+        {/* Produtos populares */}
+        <section>
+          <style>{`
+            .slick-slide {
+              height: auto;
+              display: flex;
+              justify-content: center;
+              padding: 0 8px;
+            }
+            .slick-list {
+              margin: 0 -8px;
+            }
+            .slick-slide > div {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+            }
+            .icon-destaque {
+              color: #011C40;
+            }
+          `}</style>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+              <ChartNoAxesCombined className="icon-destaque" />
+              Produtos populares
+            </h2>
+            <Link
+              href="/produtos"
+              className="flex items-center gap-1 text-sm font-bold text-blue-600 hover:underline"
+            >
+              Ver todas <ChevronRight size={16} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-[22px_minmax(0,1fr)_22px] items-center gap-3 px-2">
+            <button
+              type="button"
+              onClick={() => popularesSlider.current?.slickPrev()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <div className="min-w-0">
+              <Slider ref={popularesSlider} {...sliderSettings}>
+                {populares.map((product) => (
+                  <div key={product.id} className="pb-4">
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </Slider>
+            </div>
+            <button
+              type="button"
+              onClick={() => popularesSlider.current?.slickNext()}
+              className="w-[22px] h-[22px] rounded-full bg-black text-white flex items-center justify-center shadow-lg hover:bg-zinc-800 transition-colors"
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        </section>
       </div>
     </div>
   );

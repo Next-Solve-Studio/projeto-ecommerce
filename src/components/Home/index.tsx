@@ -22,8 +22,8 @@ import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { categories, products } from "@/data/products";
 
-import banner1 from "../../../public/3.png";
-import banner2 from "../../../public/3.png";
+import banner1 from "../../../public/1.png";
+import banner2 from "../../../public/2.png";
 import banner3 from "../../../public/3.png";
 
 const categoryIcons = {

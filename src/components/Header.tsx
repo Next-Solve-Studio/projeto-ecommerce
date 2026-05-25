@@ -107,7 +107,7 @@ export function Header() {
       className="sticky top-0 z-50 w-full bg-white pb-0 mb-0 border-none"
     >
       <div className="container mx-auto px-4">
-        <div className="flex h-16 items-center justify-between gap-4 md:gap-6">
+        <div className="flex h-20 items-center justify-between gap-4 md:gap-6">
           <Link href="/" className="shrink-0 flex items-center">
             <Image
               src={logoImg}
@@ -135,7 +135,7 @@ export function Header() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="pl-10 h-10 w-full bg-white/10 border-none text-white placeholder:text-gray-300 focus:bg-white focus:text-black focus:placeholder:text-gray-500 transition-colors"
+                className="pl-10 h-10 w-full border-none text-white placeholder:text-gray-300 focus:placeholder:text-gray-500 transition-colors header-search-input"
               />
             </form>
 
@@ -304,7 +304,7 @@ export function Header() {
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              className="pl-10 h-10 w-full bg-white/10 border-none text-white placeholder:text-gray-300 focus:bg-white focus:text-black focus:placeholder:text-gray-500 transition-colors"
+              className="pl-10 h-10 w-full border-none text-white placeholder:text-gray-300 focus:placeholder:text-gray-500 transition-colors header-search-input"
             />
           </form>
           {showSuggestions &&
