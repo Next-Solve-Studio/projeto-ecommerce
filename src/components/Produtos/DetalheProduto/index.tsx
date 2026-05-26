@@ -9,6 +9,7 @@ import {
   Minus,
   Plus,
   ShoppingCart,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useRef, useState } from "react";
@@ -38,6 +39,8 @@ export default function DetalheProdutoComponent({
   >({});
   const [showAddedFeedback, setShowAddedFeedback] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
+  const [galleryModalIndex, setGalleryModalIndex] = useState(0);
 
   const populares = products.filter((p) => p.tags?.includes("populares"));
   const popularesSlider = useRef<any>(null);
@@ -74,6 +77,15 @@ export default function DetalheProdutoComponent({
     );
   }
 
+  const galleryImages = product.images.length > 1 ? product.images : Array(8).fill(product.images[0]);
+  const hasMoreThanEightImages = product.images.length > 8;
+  const visibleGalleryImages = hasMoreThanEightImages
+    ? product.images.slice(0, 7)
+    : galleryImages;
+  const remainingImagesCount = hasMoreThanEightImages
+    ? product.images.length - 7
+    : 0;
+
   const handleAddToCart = () => {
     if (product.variants) {
       const missingVariants = product.variants.filter(
@@ -98,9 +110,6 @@ export default function DetalheProdutoComponent({
     setSelectedVariants((prev) => ({ ...prev, [type]: value }));
   };
 
-  // Gera 4 miniaturas usando a primeira imagem como exemplo caso o produto só tenha 1
-  const galleryImages = product.images.length > 1 ? product.images : Array(8).fill(product.images[0]);
-
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
@@ -111,7 +120,50 @@ export default function DetalheProdutoComponent({
         </div>
       )}
 
-      <div className="w-full max-w-[1440px] mx-auto px-4 py-8">
+      {isGalleryModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+          <div className="relative w-full max-w-5xl max-h-[90vh]">
+            <div className="flex items-center justify-between mb-4 text-white">
+              <span className="text-sm">
+                Imagem {galleryModalIndex + 1} / {product.images.length}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsGalleryModalOpen(false)}
+                className="rounded-lg bg-black/60 p-2 text-white hover:bg-black"
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <div className="relative overflow-hidden rounded-3xl bg-black">
+              <img
+                src={product.images[galleryModalIndex]}
+                alt={`${product.name} - ${galleryModalIndex + 1}`}
+                className="mx-auto max-h-[80vh] w-auto max-w-full object-contain"
+              />
+
+              <button
+                type="button"
+                onClick={() => setGalleryModalIndex((prev) => Math.max(0, prev - 1))}
+                disabled={galleryModalIndex === 0}
+                className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-black/60 p-3 text-white enabled:hover:bg-black disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setGalleryModalIndex((prev) => Math.min(product.images.length - 1, prev + 1))}
+                disabled={galleryModalIndex === product.images.length - 1}
+                className="absolute right-4 top-1/2 -translate-y-1/2 rounded-lg bg-black/60 p-3 text-white enabled:hover:bg-black disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="w-full max-w-[1252px] mx-auto px-4 py-8">
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-gray-600 mb-6 flex-wrap">
           <Link href="/" className="hover:text-black transition-colors">
             Página inicial
@@ -129,8 +181,8 @@ export default function DetalheProdutoComponent({
         <div className="bg-white rounded-[3px] shadow-sm p-8 mb-12">
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="flex gap-4">
-              <div className="flex flex-col justify-between shrink-0 w-[56px]">
-                {galleryImages.map((image, index) => (
+              <div className="flex flex-col gap-4 shrink-0 w-[56px]">
+                {visibleGalleryImages.map((image, index) => (
                   <button
                     type="button"
                     key={index}
@@ -149,6 +201,19 @@ export default function DetalheProdutoComponent({
                     />
                   </button>
                 ))}
+                {hasMoreThanEightImages && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImage(0);
+                      setGalleryModalIndex(0);
+                      setIsGalleryModalOpen(true);
+                    }}
+                    className="w-[56px] h-[56px] shrink-0 rounded-lg border-2 border-transparent bg-slate-300 text-blue-600 font-semibold transition-all hover:border-blue-500 flex items-center justify-center"
+                  >
+                    +{remainingImagesCount}
+                  </button>
+                )}
               </div>
 
               <div className="flex-1 aspect-square bg-gray-100 rounded-lg overflow-hidden">
