@@ -77,13 +77,24 @@ export default function DetalheProdutoComponent({
     );
   }
 
-  const galleryImages = product.images.length > 1 ? product.images : Array(8).fill(product.images[0]);
-  const hasMoreThanEightImages = product.images.length > 8;
-  const visibleGalleryImages = hasMoreThanEightImages
-    ? product.images.slice(0, 7)
-    : galleryImages;
+  const placeholderImage = "https://via.placeholder.com/890x1190/cccccc/000000?text=Imagem+cinza";
+  const originalImages = product.images.length > 0 ? product.images : [placeholderImage];
+  const desiredProductImages = 6;
+  const desiredPlaceholderImages = 6;
+  const productGalleryImages = [
+    ...originalImages.slice(0, desiredProductImages),
+    ...Array(Math.max(0, desiredProductImages - originalImages.length)).fill(
+      originalImages[0],
+    ),
+  ].slice(0, desiredProductImages);
+  const galleryImages = [
+    ...productGalleryImages,
+    ...Array(desiredPlaceholderImages).fill(placeholderImage),
+  ];
+  const visibleGalleryImages = galleryImages.slice(0, 8);
+  const hasMoreThanEightImages = galleryImages.length > 8;
   const remainingImagesCount = hasMoreThanEightImages
-    ? product.images.length - 7
+    ? galleryImages.length - 8
     : 0;
 
   const handleAddToCart = () => {
@@ -125,7 +136,7 @@ export default function DetalheProdutoComponent({
           <div className="relative w-full max-w-5xl max-h-[90vh]">
             <div className="flex items-center justify-between mb-4 text-white">
               <span className="text-sm">
-                Imagem {galleryModalIndex + 1} / {product.images.length}
+                Imagem {galleryModalIndex + 1} / {galleryImages.length}
               </span>
               <button
                 type="button"
@@ -137,7 +148,7 @@ export default function DetalheProdutoComponent({
             </div>
             <div className="relative overflow-hidden rounded-3xl bg-black">
               <img
-                src={product.images[galleryModalIndex]}
+                src={galleryImages[galleryModalIndex]}
                 alt={`${product.name} - ${galleryModalIndex + 1}`}
                 className="mx-auto max-h-[80vh] w-auto max-w-full object-contain"
               />
@@ -152,8 +163,8 @@ export default function DetalheProdutoComponent({
               </button>
               <button
                 type="button"
-                onClick={() => setGalleryModalIndex((prev) => Math.min(product.images.length - 1, prev + 1))}
-                disabled={galleryModalIndex === product.images.length - 1}
+                onClick={() => setGalleryModalIndex((prev) => Math.min(galleryImages.length - 1, prev + 1))}
+                disabled={galleryModalIndex === galleryImages.length - 1}
                 className="absolute right-4 top-1/2 -translate-y-1/2 rounded-lg bg-black/60 p-3 text-white enabled:hover:bg-black disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight size={24} />
@@ -216,11 +227,11 @@ export default function DetalheProdutoComponent({
                 )}
               </div>
 
-              <div className="flex-1 aspect-square bg-gray-100 rounded-lg overflow-hidden">
+              <div className="flex-1 h-[600px] max-h-[600px] bg-gray-100 rounded-lg overflow-hidden">
                 <img
                   src={galleryImages[selectedImage]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </div>
