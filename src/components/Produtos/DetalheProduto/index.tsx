@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  ArrowLeft,
   ChartNoAxesCombined,
   Check,
   ChevronLeft,
@@ -99,6 +98,9 @@ export default function DetalheProdutoComponent({
     setSelectedVariants((prev) => ({ ...prev, [type]: value }));
   };
 
+  // Gera 4 miniaturas usando a primeira imagem como exemplo caso o produto só tenha 1
+  const galleryImages = product.images.length > 1 ? product.images : Array(8).fill(product.images[0]);
+
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
@@ -109,48 +111,53 @@ export default function DetalheProdutoComponent({
         </div>
       )}
 
-      <div className="container mx-auto px-4 py-8">
-        <Link
-          href="/produtos"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-black mb-6"
-        >
-          <ArrowLeft size={20} />
-          Voltar para produtos
-        </Link>
+      <div className="w-full max-w-[1440px] mx-auto px-4 py-8">
+        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-gray-600 mb-6 flex-wrap">
+          <Link href="/" className="hover:text-black transition-colors">
+            Página inicial
+          </Link>
+          <ChevronRight size={16} />
+          <Link href={`/produtos?categoria=${encodeURIComponent(product.category)}`} className="hover:text-black transition-colors">
+            {product.category}
+          </Link>
+          <ChevronRight size={16} />
+          <span className="font-semibold text-black">
+            {product.name}
+          </span>
+        </nav>
 
-        <div className="bg-white rounded-lg border p-8 mb-12">
+        <div className="bg-white rounded-[3px] shadow-sm p-8 mb-12">
           <div className="grid lg:grid-cols-2 gap-12">
-            <div className="space-y-4">
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+            <div className="flex gap-4">
+              <div className="flex flex-col justify-between shrink-0 w-[56px]">
+                {galleryImages.map((image, index) => (
+                  <button
+                    type="button"
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    onMouseEnter={() => setSelectedImage(index)}
+                    className={`w-[56px] h-[56px] shrink-0 bg-gray-100 rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === index
+                        ? "border-blue-600"
+                        : "border-transparent"
+                    }`}
+                  >
+                    <img
+                      src={image}
+                      alt={`${product.name} - ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex-1 aspect-square bg-gray-100 rounded-lg overflow-hidden">
                 <img
-                  src={product.images[selectedImage]}
+                  src={galleryImages[selectedImage]}
                   alt={product.name}
                   className="w-full h-full object-cover"
                 />
               </div>
-
-              {product.images.length > 1 && (
-                <div className="grid grid-cols-4 gap-4">
-                  {product.images.map((image, index) => (
-                    <button
-                      type="button"
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === index
-                          ? "border-black"
-                          : "border-transparent"
-                      }`}
-                    >
-                      <img
-                        src={image}
-                        alt={`${product.name} - ${index + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
             </div>
 
             <div className="space-y-6">
