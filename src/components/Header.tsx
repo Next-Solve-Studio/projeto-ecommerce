@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { categories, products } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
@@ -21,6 +21,8 @@ export function Header() {
   const { getItemCount } = useCart();
   const itemCount = getItemCount();
   const router = useRouter();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -28,6 +30,7 @@ export function Header() {
   const desktopSuggestionRef = useRef<HTMLDivElement>(null);
   const mobileSuggestionRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -50,6 +53,18 @@ export function Header() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    if (!isHome) {
+      setIsScrolled(false);
+      return;
+    }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isHome]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,12 +117,16 @@ export function Header() {
       : [];
 
   return (
-    <header
-      id="header"
-      className="sticky top-0 z-50 w-full bg-white pb-0 mb-0 border-none"
-    >
-      <div className="container mx-auto px-4">
-        <div className="flex h-20 items-center justify-between gap-4 md:gap-6">
+    <>
+      {isHome && <div className={`w-full transition-all duration-300 ${isScrolled ? "h-14" : "h-20"}`} />}
+      <header
+        id="header"
+        className={`z-50 w-full bg-white pb-0 mb-0 border-none transition-all duration-300 ${
+          isHome ? "fixed top-0 left-0 shadow-sm" : "relative"
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className={`flex items-center justify-between gap-4 md:gap-6 transition-all duration-300 ${isHome && isScrolled ? "h-14" : "h-20"}`}>
           <Link href="/" className="shrink-0 flex items-center">
             <Image
               src={logoImg}
@@ -135,7 +154,9 @@ export function Header() {
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
-                className="pl-10 h-10 w-full border-none text-white placeholder:text-gray-300 focus:placeholder:text-gray-500 transition-colors header-search-input"
+                className={`pl-10 h-10 w-full border-none placeholder:text-gray-300 focus:placeholder:text-gray-500 transition-all duration-300 header-search-input focus:!bg-white focus:!text-black ${
+                  isHome && isScrolled ? "!bg-[#011C40] text-white" : "text-white"
+                }`}
               />
             </form>
 
@@ -304,7 +325,9 @@ export function Header() {
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              className="pl-10 h-10 w-full border-none text-white placeholder:text-gray-300 focus:placeholder:text-gray-500 transition-colors header-search-input"
+              className={`pl-10 h-10 w-full border-none placeholder:text-gray-300 focus:placeholder:text-gray-500 transition-all duration-300 header-search-input focus:!bg-white focus:!text-black ${
+                isHome && isScrolled ? "!bg-[#011C40] text-white" : "text-white"
+              }`}
             />
           </form>
           {showSuggestions &&
@@ -369,5 +392,6 @@ export function Header() {
         </div>
       </div>
     </header>
+    </>
   );
 }

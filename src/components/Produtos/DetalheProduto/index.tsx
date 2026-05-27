@@ -77,7 +77,7 @@ export default function DetalheProdutoComponent({
     );
   }
 
-  const placeholderImage = "https://via.placeholder.com/890x1190/cccccc/000000?text=Imagem+cinza";
+  const placeholderImage = "https://tiradentesinnovation.com/wp-content/uploads/2022/07/Picture-768x614.jpg";
   const originalImages = product.images.length > 0 ? product.images : [placeholderImage];
   const desiredProductImages = 6;
   const desiredPlaceholderImages = 6;
@@ -91,10 +91,10 @@ export default function DetalheProdutoComponent({
     ...productGalleryImages,
     ...Array(desiredPlaceholderImages).fill(placeholderImage),
   ];
-  const visibleGalleryImages = galleryImages.slice(0, 8);
-  const hasMoreThanEightImages = galleryImages.length > 8;
+  const visibleGalleryImages = galleryImages.slice(0, 7);
+  const hasMoreThanEightImages = galleryImages.length > 7;
   const remainingImagesCount = hasMoreThanEightImages
-    ? galleryImages.length - 8
+    ? galleryImages.length - 7
     : 0;
 
   const handleAddToCart = () => {
