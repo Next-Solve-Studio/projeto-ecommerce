@@ -9,6 +9,7 @@ import {
   Minus,
   Plus,
   ShoppingCart,
+  Star,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -135,7 +136,7 @@ export default function DetalheProdutoComponent({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
           <div className="relative w-full max-w-5xl max-h-[90vh]">
             <div className="flex items-center justify-between mb-4 text-white">
-              <span className="text-sm">
+              <span className="text-sm bg-black/60 px-2 py-1 rounded-lg">
                 Imagem {galleryModalIndex + 1} / {galleryImages.length}
               </span>
               <button
@@ -146,7 +147,7 @@ export default function DetalheProdutoComponent({
                 <X size={20} />
               </button>
             </div>
-            <div className="relative overflow-hidden rounded-3xl bg-black">
+            <div className="relative overflow-hidden rounded-3xl">
               <img
                 src={galleryImages[galleryModalIndex]}
                 alt={`${product.name} - ${galleryModalIndex + 1}`}
@@ -240,7 +241,7 @@ export default function DetalheProdutoComponent({
               <div>
                 <p className="text-sm text-gray-500 mb-2">{product.category}</p>
                 <div className="flex items-start justify-between gap-4">
-                  <h1 className="text-4xl font-bold mb-4">{product.name}</h1>
+                <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
                   <button
                     type="button"
                     onClick={() => setIsFavorite(!isFavorite)}
@@ -253,18 +254,40 @@ export default function DetalheProdutoComponent({
                     />
                   </button>
                 </div>
-                <p className="text-gray-700 leading-relaxed">
-                  {product.description}
-                </p>
+              <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 mt-1">
+                <span className="font-bold text-black">{product.rating}</span>
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <span className="text-gray-400">•</span>
+                <span>{product.salesCount} vendidos</span>
+              </div>
               </div>
 
-              <div className="border-t border-b py-6">
-                <p className="text-4xl font-bold">
+            <div className="py-2">
+              {product.oldPrice && (
+                <p className="text-sm text-gray-500 line-through mb-1">
+                  R${" "}
+                  {product.oldPrice.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
+              )}
+              <div className="flex items-center gap-3">
+                <p className="text-3xl font-bold">
                   R${" "}
                   {product.price.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                   })}
                 </p>
+                {product.discountPercentage && (
+                  <span className="text-sm font-semibold text-green-600 bg-green-100 px-2 py-1 rounded">
+                    -{product.discountPercentage}%
+                  </span>
+                )}
+              </div>
               </div>
 
               {product.variants &&
