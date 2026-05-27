@@ -9,6 +9,7 @@ import {
   Gamepad2,
   Headphones,
   Laptop,
+  LayoutGrid,
   Smartphone,
   Tablet,
   Usb,
@@ -139,15 +140,24 @@ export default function HomeComponent() {
 
       {/* Categorias */}
       <section className="container mx-auto px-4 mb-16 max-w-[1400px]">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
+          <Link
+            href="/produtos"
+            className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-2"
+          >
+            <LayoutGrid size={28} className="text-gray-700" />
+            <span className="text-xs font-medium text-center text-gray-900">
+              Todas as Categorias
+            </span>
+          </Link>
           {Object.entries(categoryIcons).map(([name, Icon]) => (
             <Link
               key={name}
               href={`/produtos?categoria=${encodeURIComponent(name)}`}
-              className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-3"
+              className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-2"
             >
-              <Icon size={32} className="text-gray-700" />
-              <span className="text-sm font-medium text-center text-gray-900">
+              <Icon size={28} className="text-gray-700" />
+              <span className="text-xs font-medium text-center text-gray-900">
                 {name}
               </span>
             </Link>
