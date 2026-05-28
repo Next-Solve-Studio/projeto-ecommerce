@@ -48,8 +48,6 @@ Características:
 - Marca: ThunderX3
 - Modelo: TGC12
 
- 
-
 Especificações:
 
 - Coleção de produtos: Cadeiras Gamer e Escritório
@@ -79,8 +77,6 @@ Características:
 
 - Marca: HyperX
 - Modelo: Alloy Origins
-
- 
 
 Especificações:
 
@@ -114,8 +110,6 @@ Características:
 - Marca: Razer
 - Modelo: DeathAdder V2
 
- 
-
 Especificações:
 
 - Coleção de produtos: Mouses Competitivos
@@ -145,8 +139,6 @@ Características:
 
 - Marca: LG
 - Modelo: 34WP65C-B
-
- 
 
 Especificações:
 
@@ -180,8 +172,6 @@ Características:
 - Marca: Logitech G
 - Modelo: Pro X
 
- 
-
 Especificações:
 
 - Coleção de produtos: Headsets Profissionais
@@ -211,8 +201,6 @@ Características:
 
 - Marca: NZXT
 - Modelo: H510
-
- 
 
 Especificações:
 
@@ -246,8 +234,6 @@ Características:
 - Marca: NVIDIA / Parceiros (Asus, Gigabyte, MSI)
 - Modelo: GeForce RTX 4070
 
- 
-
 Especificações:
 
 - Coleção de produtos: GPUs Série RTX 40
@@ -277,8 +263,6 @@ Características:
 
 - Marca: HyperX
 - Modelo: QuadCast
-
- 
 
 Especificações:
 
@@ -314,8 +298,6 @@ Características:
 - Marca: Apple
 - Modelo: iPhone 15 Pro Max
 
- 
-
 Especificações:
 
 - Coleção de produtos: Smartphones Premium (iOS)
@@ -343,8 +325,6 @@ Características:
 
 - Marca: Apple
 - Modelo: MacBook Pro 16 (Chip M3 Max)
-
- 
 
 Especificações:
 
@@ -378,8 +358,6 @@ Características:
 - Marca: Apple
 - Modelo: iPad Pro 12.9 polegadas (6ª Geração)
 
- 
-
 Especificações:
 
 - Coleção de produtos: Tablets Profissionais
@@ -409,8 +387,6 @@ Características:
 
 - Marca: Apple
 - Modelo: AirPods Pro 2ª Geração (USB-C)
-
- 
 
 Especificações:
 
@@ -444,8 +420,6 @@ Características:
 - Marca: Apple
 - Modelo: Watch Series 9 GPS
 
- 
-
 Especificações:
 
 - Coleção de produtos: Smartwatches Premium
@@ -475,8 +449,6 @@ Características:
 
 - Marca: Apple
 - Modelo: Magic Keyboard para iPad Pro 12.9"
-
- 
 
 Especificações:
 
@@ -510,8 +482,6 @@ Características:
 - Marca: Samsung
 - Modelo: Galaxy S24 Ultra
 
- 
-
 Especificações:
 
 - Coleção de produtos: Smartphones Premium (Android)
@@ -541,8 +511,6 @@ Características:
 
 - Marca: Dell
 - Modelo: XPS 15
-
- 
 
 Especificações:
 
@@ -576,8 +544,6 @@ Características:
 - Marca: Samsung
 - Modelo: Galaxy Tab S9+
 
- 
-
 Especificações:
 
 - Coleção de produtos: Tablets Premium Multimídia
@@ -608,8 +574,6 @@ Características:
 - Marca: Sony
 - Modelo: WH-1000XM5
 
- 
-
 Especificações:
 
 - Coleção de produtos: Fones de Ouvido Over-Ear Premium
@@ -637,8 +601,6 @@ Características:
 
 - Marca: Garmin
 - Modelo: Fenix 7 Pro Sapphire Solar
-
- 
 
 Especificações:
 
@@ -671,8 +633,6 @@ Características:
 
 - Marca: Logitech
 - Modelo: MX Master 3S
-
- 
 
 Especificações:
 

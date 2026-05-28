@@ -3,8 +3,10 @@
 import {
   ChartNoAxesCombined,
   Check,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  ChevronUp,
   Heart,
   Minus,
   Plus,
@@ -42,6 +44,7 @@ export default function DetalheProdutoComponent({
   const [isFavorite, setIsFavorite] = useState(false);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [galleryModalIndex, setGalleryModalIndex] = useState(0);
+  const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
 
   const populares = products.filter((p) => p.tags?.includes("populares"));
   const popularesSlider = useRef<any>(null);
@@ -190,7 +193,7 @@ export default function DetalheProdutoComponent({
           </span>
         </nav>
 
-        <div className="bg-white rounded-[3px] shadow-sm p-8 mb-12">
+        <div className="bg-white rounded-[3px] shadow-sm p-8 mb-[15px]">
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="flex gap-4">
               <div className="flex flex-col gap-4 shrink-0 w-[56px]">
@@ -371,6 +374,30 @@ export default function DetalheProdutoComponent({
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Descrição do Produto */}
+        <div className="bg-white rounded-[3px] shadow-sm mb-[15px] overflow-hidden">
+          <button
+            type="button"
+            onClick={() => setIsDescriptionOpen(!isDescriptionOpen)}
+            className="w-full flex items-center gap-3 bg-[#FAFAFA] px-8 py-4 border-b border-gray-100 hover:bg-gray-100 transition-colors text-left"
+          >
+            {isDescriptionOpen ? (
+              <ChevronUp className="text-gray-600 shrink-0" size={24} />
+            ) : (
+              <ChevronDown className="text-gray-600 shrink-0" size={24} />
+            )}
+            <h2 className="text-xl font-bold text-gray-900">Descrição do produto</h2>
+          </button>
+          
+          {isDescriptionOpen && (
+            <div className="p-8 animate-in slide-in-from-top-2 fade-in duration-200">
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                {product.description}
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Produtos populares */}
