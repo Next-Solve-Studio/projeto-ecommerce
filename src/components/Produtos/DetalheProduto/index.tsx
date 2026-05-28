@@ -203,7 +203,7 @@ export default function DetalheProdutoComponent({
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     onMouseEnter={() => setSelectedImage(index)}
-                    className={`w-[56px] h-[56px] shrink-0 bg-gray-100 rounded-lg overflow-hidden border-2 transition-all ${
+                    className={`w-[56px] h-[56px] shrink-0 bg-gray-100 rounded-lg overflow-hidden border-2 transition-all hover:scale-105 ${
                       selectedImage === index
                         ? "border-blue-600"
                         : "border-transparent"
@@ -224,7 +224,7 @@ export default function DetalheProdutoComponent({
                       setGalleryModalIndex(0);
                       setIsGalleryModalOpen(true);
                     }}
-                    className="w-[56px] h-[56px] shrink-0 rounded-lg border-2 border-transparent bg-slate-300 text-blue-600 font-semibold transition-all hover:border-blue-500 flex items-center justify-center"
+                    className="w-[56px] h-[56px] shrink-0 rounded-lg border-2 border-transparent bg-slate-300 text-blue-600 font-semibold transition-all hover:scale-105 hover:border-blue-500 flex items-center justify-center"
                   >
                     +{remainingImagesCount}
                   </button>
@@ -381,7 +381,7 @@ export default function DetalheProdutoComponent({
           <button
             type="button"
             onClick={() => setIsDescriptionOpen(!isDescriptionOpen)}
-            className="w-full flex items-center gap-3 bg-[#FAFAFA] px-8 py-4 border-b border-gray-100 hover:bg-gray-100 transition-colors text-left"
+            className={`w-full flex items-center gap-3 px-8 py-4 border-b border-gray-100 transition-colors duration-300 text-left ${isDescriptionOpen ? "bg-[#F3F4F6]" : "bg-white hover:bg-gray-50"}`}
           >
             {isDescriptionOpen ? (
               <ChevronUp className="text-gray-600 shrink-0" size={24} />
@@ -391,13 +391,15 @@ export default function DetalheProdutoComponent({
             <h2 className="text-xl font-bold text-gray-900">Descrição do produto</h2>
           </button>
           
-          {isDescriptionOpen && (
-            <div className="p-8 animate-in slide-in-from-top-2 fade-in duration-200">
-              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
-                {product.description}
-              </p>
+          <div className={`grid transition-all duration-300 ease-in-out ${isDescriptionOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+            <div className="overflow-hidden bg-white">
+              <div className="p-8">
+                <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">
+                  {product.description}
+                </p>
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Produtos populares */}
