@@ -109,7 +109,7 @@ export default function CarrinhoComponent() {
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1)
+                            updateQuantity(item.product.id, item.quantity - 1, item.selectedVariants)
                           }
                           disabled={item.quantity <= 1}
                         >
@@ -122,7 +122,7 @@ export default function CarrinhoComponent() {
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1)
+                            updateQuantity(item.product.id, item.quantity + 1, item.selectedVariants)
                           }
                         >
                           <Plus size={16} />
@@ -150,7 +150,7 @@ export default function CarrinhoComponent() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => removeFromCart(item.product.id)}
+                      onClick={() => removeFromCart(item.product.id, item.selectedVariants)}
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 size={16} className="mr-2" />

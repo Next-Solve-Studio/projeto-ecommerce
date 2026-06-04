@@ -16,14 +16,24 @@ interface CartContextType {
     quantity: number,
     variants?: Record<string, string>,
   ) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  removeFromCart: (productId: string, variants?: Record<string, string>) => void;
+  updateQuantity: (productId: string, quantity: number, variants?: Record<string, string>) => void;
   getTotal: () => number;
   getItemCount: () => number;
   clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
+
+const isVariantsEqual = (v1?: Record<string, string>, v2?: Record<string, string>) => {
+  const obj1 = v1 || {};
+  const obj2 = v2 || {};
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+
+  if (keys1.length !== keys2.length) return false;
+  return keys1.every((key) => obj1[key] === obj2[key]);
+};
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -54,14 +64,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   ) => {
     setItems((prev) => {
       const existingIndex = prev.findIndex(
-        (item) =>
-          item.product.id === product.id &&
-          JSON.stringify(item.selectedVariants) === JSON.stringify(variants),
+        (item) => item.product.id === product.id && isVariantsEqual(item.selectedVariants, variants),
       );
 
       if (existingIndex > -1) {
         const updated = [...prev];
-        updated[existingIndex].quantity += quantity;
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + quantity,
+        };
         return updated;
       }
 
@@ -69,18 +80,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setItems((prev) => prev.filter((item) => item.product.id !== productId));
+  const removeFromCart = (productId: string, variants?: Record<string, string>) => {
+    setItems((prev) => prev.filter((item) => !(item.product.id === productId && isVariantsEqual(item.selectedVariants, variants))));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number, variants?: Record<string, string>) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, variants);
       return;
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item,
+        item.product.id === productId && isVariantsEqual(item.selectedVariants, variants) ? { ...item, quantity } : item,
       ),
     );
   };
