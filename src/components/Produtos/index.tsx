@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal, Check } from "lucide-react";
+import { Search, SlidersHorizontal, Check, Star } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Header } from "@/components/Header";
@@ -27,6 +27,7 @@ function ProdutosComponentContent() {
   const [selectedCategory, setSelectedCategory] = useState<string>(
     categoryParam || "Todas",
   );
+  const [selectedRatings, setSelectedRatings] = useState<number[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 30000]);
   const [sortBy, setSortBy] = useState("name-asc");
 
@@ -61,8 +62,11 @@ function ProdutosComponentContent() {
       selectedCategory === "Todas" || product.category === selectedCategory;
     const matchesPrice =
       product.price >= priceRange[0] && product.price <= priceRange[1];
+    const matchesRating = selectedRatings.length === 0 || selectedRatings.some((r) =>
+      r === 5 ? product.rating === 5 : product.rating >= r && product.rating < r + 1
+    );
 
-    return matchesSearch && matchesCategory && matchesPrice;
+    return matchesSearch && matchesCategory && matchesPrice && matchesRating;
   });
 
   filteredProducts.sort((a, b) => {
@@ -128,6 +132,40 @@ function ProdutosComponentContent() {
                         <Label className="cursor-pointer text-[#202020] pointer-events-none">
                           {category}
                         </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <hr className="my-6 border-gray-300" />
+
+                <div>
+                  <Label className="mb-3 block font-semibold text-[#202020]">Avaliação</Label>
+                  <div className="flex flex-col">
+                    {[5, 4, 3, 2, 1].map((rating) => (
+                      <div
+                        key={rating}
+                        className="flex items-center space-x-2 mb-2 cursor-pointer"
+                        onClick={() => {
+                          setSelectedRatings((prev) =>
+                            prev.includes(rating)
+                              ? prev.filter((r) => r !== rating)
+                              : [...prev, rating]
+                          );
+                        }}
+                      >
+                        <div className="w-[13px] h-[13px] bg-white border border-gray-400 rounded-[1px] flex items-center justify-center shrink-0">
+                          {selectedRatings.includes(rating) && <Check size={10} strokeWidth={4} className="text-blue-600" />}
+                        </div>
+                        <div className="flex items-center cursor-pointer pointer-events-none">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              size={14}
+                              className={i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                            />
+                          ))}
+                        </div>
                       </div>
                     ))}
                   </div>
