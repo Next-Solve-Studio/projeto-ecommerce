@@ -35,7 +35,7 @@ export const products: Product[] = [
     price: 1299.0,
     oldPrice: 1599.0,
     discountPercentage: 18,
-    salesCount: 1450,
+    salesCount: 750,
     rating: 4.8,
     description: `Cadeira Gamer ThunderX3 Profissional Ergonômica Reclinável
 Potencialize seu setup com a Cadeira Gamer ThunderX3, a solução de próxima geração para gamers e usuários que buscam conforto e eficiência. Com ergonomia avançada e suporte de peso robusto, este produto é a escolha ideal para um desempenho ágil em jogos e multitarefas.
@@ -65,8 +65,8 @@ Especificações:
     id: "g2",
     name: "Teclado Mecânico HyperX",
     price: 599.0,
-    salesCount: 3200,
-    rating: 4.9,
+    salesCount: 15,
+    rating: 3.2,
     description: `Teclado Mecânico HyperX Alloy Origins RGB Switches Red
 Potencialize sua digitação com o Teclado Mecânico HyperX, a solução de próxima geração para gamers que buscam desempenho e precisão. Com switches mecânicos vermelhos e iluminação RGB vibrante, este teclado é a escolha ideal para um desempenho ágil em jogos competitivos.
 
@@ -97,8 +97,8 @@ Especificações:
     price: 349.0,
     oldPrice: 449.0,
     discountPercentage: 22,
-    salesCount: 5120,
-    rating: 4.7,
+    salesCount: 45,
+    rating: 3.5,
     description: `Mouse Gamer Razer DeathAdder V2 Óptico 20K DPI
 Potencialize seu rastreio com o Mouse Gamer Razer DeathAdder, a solução avançada para entusiastas que buscam desempenho absoluto. Com um sensor óptico de 20.000 DPI e switches ópticos imbatíveis, este mouse é a escolha ideal para um desempenho rápido e cliques cirúrgicos.
 
@@ -127,8 +127,8 @@ Especificações:
     id: "g4",
     name: 'Monitor Ultrawide 34" LG',
     price: 2499.0,
-    salesCount: 890,
-    rating: 4.6,
+    salesCount: 120,
+    rating: 3.8,
     description: `Monitor Gamer LG Ultrawide 34 Polegadas 144Hz 1ms IPS
 Potencialize sua visão de jogo com o Monitor Ultrawide 34" LG, a solução imersiva para gamers e criadores de conteúdo que buscam campo de visão superior. Com tela IPS de alta fidelidade e taxa de atualização de 144Hz, este monitor é a escolha ideal para um desempenho ágil sem screen tearing.
 
@@ -159,8 +159,8 @@ Especificações:
     price: 799.0,
     oldPrice: 999.0,
     discountPercentage: 20,
-    salesCount: 2300,
-    rating: 4.8,
+    salesCount: 342,
+    rating: 4.1,
     description: `Headset Gamer Logitech G Pro X 7.1 Surround Blue VO!CE
 Potencialize sua comunicação e áudio com o Headset Gamer Logitech G Pro, a solução premium para quem busca desempenho acústico de nível profissional. Com drivers de 50mm e microfone com tecnologia Blue VO!CE, este headset é a escolha ideal para identificar cada passo no campo de batalha.
 
@@ -189,8 +189,8 @@ Especificações:
     id: "g6",
     name: "Gabinete NZXT H510",
     price: 649.0,
-    salesCount: 1100,
-    rating: 4.7,
+    salesCount: 0,
+    rating: 0.0,
     description: `Gabinete Gamer NZXT H510 Mid-Tower Vidro Temperado
 Potencialize a estética e resfriamento do seu PC com o Gabinete NZXT H510, a solução elegante para gamers que buscam montagem limpa e excelente fluxo de ar. Com lateral em vidro temperado e design minimalista, este gabinete é a escolha ideal para exibir seus componentes com orgulho.
 
@@ -221,8 +221,8 @@ Especificações:
     price: 4599.0,
     oldPrice: 5199.0,
     discountPercentage: 11,
-    salesCount: 650,
-    rating: 4.9,
+    salesCount: 46,
+    rating: 5.0,
     description: `Placa de Vídeo NVIDIA GeForce RTX 4070 12GB GDDR6X
 Potencialize seu PC com a Placa de Vídeo RTX 4070, a solução de próxima geração para entusiastas que buscam gráficos ultrarrealistas. Com 12GB de VRAM GDDR6X e tecnologias como Ray Tracing e DLSS 3, este componente é a escolha ideal para jogar em resolução 1440p com taxas de quadros absurdamente altas.
 
@@ -251,8 +251,8 @@ Especificações:
     id: "g8",
     name: "Microfone HyperX QuadCast",
     price: 899.0,
-    salesCount: 1800,
-    rating: 4.8,
+    salesCount: 890,
+    rating: 4.4,
     description: `Microfone Condensador HyperX QuadCast USB com Iluminação Vermelha
 Potencialize suas streams e gravações com o Microfone HyperX QuadCast, a solução profissional para criadores de conteúdo que buscam captação de voz cristalina. Com quatro padrões polares selecionáveis e base shock mount antivibração inclusa, este microfone é a escolha ideal para podcasts, narrações e jogos.
 
@@ -285,7 +285,7 @@ Especificações:
     price: 8499.0,
     oldPrice: 9499.0,
     discountPercentage: 10,
-    salesCount: 12500,
+    salesCount: 134,
     rating: 4.9,
     description: `Smartphone Apple iPhone 15 Pro Max 256GB Titânio
 Potencialize sua vida digital com o iPhone 15 Pro Max, o smartphone de próxima geração para usuários que buscam desempenho de ponta e inovação fotográfica. Com uma construção premium em titânio e o revolucionário processador A17 Pro, este celular é a escolha ideal para captura de vídeos cinematográficos e jogos de alto nível portátil.
@@ -313,7 +313,7 @@ Especificações:
     id: "2",
     name: 'MacBook Pro 16" M3 Max',
     price: 25999.0,
-    salesCount: 310,
+    salesCount: 1500,
     rating: 5.0,
     description: `Notebook Apple MacBook Pro 16" Chip M3 Max 36GB RAM 1TB SSD
 Potencialize seu fluxo de trabalho criativo com o MacBook Pro 16", a estação de trabalho móvel definitiva para profissionais exigentes. Com o monumental chip M3 Max, que integra CPU de 14 núcleos e GPU de 30 núcleos, este notebook é a escolha ideal para renderização de vídeos pesados e simulações complexas.
@@ -345,8 +345,8 @@ Especificações:
     price: 11999.0,
     oldPrice: 12999.0,
     discountPercentage: 7,
-    salesCount: 1420,
-    rating: 4.8,
+    salesCount: 180,
+    rating: 4.5,
     description: `Tablet Apple iPad Pro 12.9" Chip M2 Wi-Fi 256GB
 Potencialize suas ilustrações e produtividade com o iPad Pro de 12.9 polegadas, a prancheta digital mais avançada do mundo. Equipado com o superpoderoso chip M2, capaz de superar muitos computadores de mesa, este tablet é a escolha ideal para designers, editores de fotos e estudantes que buscam uma máquina multitarefa implacável.
 
@@ -375,7 +375,7 @@ Especificações:
     price: 1899.0,
     oldPrice: 2199.0,
     discountPercentage: 13,
-    salesCount: 8900,
+    salesCount: 933,
     rating: 4.9,
     description: `Fone de Ouvido Apple AirPods Pro (2ª Geração) com Estojo MagSafe USB-C
 Potencialize sua audição com os AirPods Pro de 2ª Geração, a solução compacta com a melhor qualidade de som in-ear da Apple. Com cancelamento de ruído até 2x mais potente e o avançado chip H2, estes fones são a escolha ideal para focar no seu trabalho ou mergulhar profundamente nas suas músicas favoritas.
@@ -407,8 +407,8 @@ Especificações:
     price: 3999.0,
     oldPrice: 4299.0,
     discountPercentage: 7,
-    salesCount: 4500,
-    rating: 4.7,
+    salesCount: 124,
+    rating: 3.0,
     description: `Smartwatch Apple Watch Series 9 GPS Caixa de Alumínio 45mm
 Potencialize sua rotina saudável com o Apple Watch Series 9, o relógio inteligente mais cobiçado que se tornou a extensão perfeita para usuários de iPhone. Com o chip S9 ultra-rápido e uma tela duas vezes mais brilhante, este smartwatch é a escolha ideal para acompanhamento de esportes, notificações rápidas e monitoramento avançado de sinais vitais.
 
@@ -437,8 +437,8 @@ Especificações:
     id: "6",
     name: "Magic Keyboard para iPad Pro",
     price: 2499.0,
-    salesCount: 2100,
-    rating: 4.6,
+    salesCount: 0,
+    rating: 0.0,
     description: `Magic Keyboard Apple para iPad Pro 12.9 Polegadas - Teclado com Trackpad
 Potencialize sua produtividade transformando seu iPad em um verdadeiro laptop com o Magic Keyboard. Com teclas retroiluminadas e um trackpad de vidro altamente responsivo, este teclado acoplável é a escolha ideal para digitar documentos longos, responder e-mails e aproveitar ao máximo o sistema iPadOS.
 
@@ -469,7 +469,7 @@ Especificações:
     price: 7799.0,
     oldPrice: 8799.0,
     discountPercentage: 11,
-    salesCount: 5600,
+    salesCount: 89,
     rating: 4.8,
     description: `Smartphone Samsung Galaxy S24 Ultra 512GB Titânio com Galaxy AI
 Potencialize sua criatividade móvel com o Galaxy S24 Ultra, o ápice da tecnologia em smartphones Android turbinado por Inteligência Artificial nativa. Com um sensor fotográfico extraordinário de 200MP e a caneta S Pen embutida, este smartphone é a escolha ideal para produtividade, edição em tempo real e jogos ultra-realistas.
@@ -499,8 +499,8 @@ Especificações:
     id: "8",
     name: "Dell XPS 15",
     price: 11999.0,
-    salesCount: 1200,
-    rating: 4.7,
+    salesCount: 150,
+    rating: 3.9,
     description: `Notebook Premium Dell XPS 15 Intel Core i7 32GB RAM 1TB SSD OLED
 Potencialize seu design e programação com o Dell XPS 15, um notebook luxuoso focado no equilíbrio perfeito entre poder de fogo e portabilidade. Equipado com uma tela OLED 3.5K e chassi de alumínio usinado, é a escolha ideal para editores de vídeo e usuários de Windows que buscam a mais alta estética e eficiência sem limitações de espaço.
 
@@ -531,8 +531,8 @@ Especificações:
     price: 5999.0,
     oldPrice: 6499.0,
     discountPercentage: 7,
-    salesCount: 1800,
-    rating: 4.8,
+    salesCount: 420,
+    rating: 4.2,
     description: `Tablet Samsung Galaxy Tab S9+ Wi-Fi 512GB com S Pen Inclusa
 Potencialize seu home office e entretenimento com o Galaxy Tab S9+, o tablet Android que define o mais alto patamar do mercado. Com certificação contra água (IP68) e um estonteante display Dynamic AMOLED 2X de 12,4 polegadas, este aparelho é a escolha ideal para consumir mídia de alta qualidade ou ilustrar como em uma tela profissional de pintura.
 
@@ -561,7 +561,7 @@ Especificações:
     price: 2499.0,
     oldPrice: 2799.0,
     discountPercentage: 10,
-    salesCount: 3400,
+    salesCount: 420,
     rating: 4.9,
     description: `Headphone Bluetooth Sony WH-1000XM5 Cancelamento de Ruído Ativo
 Potencialize sua concentração e momentos de paz com o headphone Sony WH-1000XM5, coroado repetidas vezes como o melhor cancelamento de ruído passivo e ativo do mundo. Com 8 microfones distribuídos e material ultra-confortável no arco, este fone sem fio é a escolha ideal para amantes de música, viajantes e trabalhadores de escritórios barulhentos.
@@ -589,8 +589,8 @@ Especificações:
     id: "11",
     name: "Garmin Fenix 7 Pro",
     price: 5999.0,
-    salesCount: 800,
-    rating: 4.9,
+    salesCount: 500,
+    rating: 4.3,
     description: `Relógio Esportivo Garmin Fenix 7 Pro Solar GPS Multiesporte
 Potencialize seu condicionamento físico extremo com o Garmin Fenix 7 Pro Solar, o relógio multiesportivo construído para suportar as piores condições ambientais que o ser humano pode enfrentar. Com bateria estendida via carregamento solar e uma lanterna LED embutida, este wearable é a escolha ideal para maratonistas, trilheiros de alta montanha e aventureiros outdoor.
 

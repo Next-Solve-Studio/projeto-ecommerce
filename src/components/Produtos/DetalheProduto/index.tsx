@@ -260,9 +260,22 @@ export default function DetalheProdutoComponent({
               <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 mt-1">
                 <span className="font-bold text-black">{product.rating}</span>
                 <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />
-                  ))}
+                  {[...Array(5)].map((_, i) => {
+                    const ratingValue = i + 1;
+                    if (product.rating >= ratingValue) {
+                      return <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />;
+                    } else if (product.rating >= ratingValue - 0.5) {
+                      return (
+                        <div key={i} className="relative flex">
+                          <Star size={16} className="text-gray-300" />
+                          <div className="absolute top-0 left-0 overflow-hidden w-1/2">
+                            <Star size={16} className="fill-yellow-400 text-yellow-400" />
+                          </div>
+                        </div>
+                      );
+                    }
+                    return <Star key={i} size={16} className="text-gray-300" />;
+                  })}
                 </div>
                 <span className="text-gray-400">•</span>
                 <span>{product.salesCount} vendidos</span>
