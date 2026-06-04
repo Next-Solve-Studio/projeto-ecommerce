@@ -6,12 +6,13 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { useCart } from "@/providers/CartProvider";
+import { SHIPPING_COST } from "@/data/products";
 
 export default function CarrinhoComponent() {
   const { items, updateQuantity, removeFromCart, clearCart, getTotal } = useCart();
 
   const subtotal = getTotal();
-  const shipping = subtotal > 0 ? 0 : 0;
+  const shipping = subtotal > 0 ? SHIPPING_COST : 0;
   const total = subtotal + shipping;
 
   if (items.length === 0) {
@@ -180,7 +181,12 @@ export default function CarrinhoComponent() {
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Frete</span>
-                  <span className="text-green-600 font-semibold">Grátis</span>
+                  <span className="text-gray-900 font-semibold">
+                    R${" "}
+                    {shipping.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
                 </div>
               </div>
 
@@ -204,9 +210,15 @@ export default function CarrinhoComponent() {
                 </Button>
               </Link>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-sm text-green-800">
-                <p className="font-semibold mb-1">Frete Grátis!</p>
-                <p>Entrega em até 7 dias úteis para todo o Brasil.</p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                <p className="font-semibold mb-1">Frete</p>
+                <p>
+                  Entrega em até 7 dias úteis para todo o Brasil por apenas R${" "}
+                  {SHIPPING_COST.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                  .
+                </p>
               </div>
           </section>
         </div>

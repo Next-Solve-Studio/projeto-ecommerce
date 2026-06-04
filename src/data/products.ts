@@ -27,6 +27,8 @@ export const categories = [
   "Setup Gamer",
 ];
 
+export const SHIPPING_COST = 15.0;
+
 export const products: Product[] = [
   // Setup Gamer
   {

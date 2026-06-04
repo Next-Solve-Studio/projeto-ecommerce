@@ -23,7 +23,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { products, type Product } from "@/data/products";
+import { products, type Product, SHIPPING_COST } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
@@ -373,8 +373,13 @@ export default function DetalheProdutoComponent({
 
               <div className="bg-gray-50 p-6 rounded-lg space-y-2 text-sm">
                 <p className="flex justify-between">
-                  <span className="text-gray-600">Frete Grátis</span>
-                  <span className="font-semibold">Para todo Brasil</span>
+                  <span className="text-gray-600">Frete</span>
+                  <span className="font-semibold">
+                    R${" "}
+                    {SHIPPING_COST.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}{" "}
+                  </span>
                 </p>
                 <p className="flex justify-between">
                   <span className="text-gray-600">Entrega</span>
