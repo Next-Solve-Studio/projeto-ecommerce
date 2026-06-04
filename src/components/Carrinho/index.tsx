@@ -1,13 +1,13 @@
 "use client";
 
-import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
+import { Minus, Plus, ShoppingBag, ShoppingBasket, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/providers/CartProvider";
 
 export default function CarrinhoComponent() {
-  const { items, updateQuantity, removeFromCart, getTotal } = useCart();
+  const { items, updateQuantity, removeFromCart, clearCart, getTotal } = useCart();
 
   const subtotal = getTotal();
   const shipping = subtotal > 0 ? 0 : 0;
@@ -38,17 +38,32 @@ export default function CarrinhoComponent() {
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
-      <div className="container mx-auto px-4 py-8">
+      <div className="max-w-[1404px] mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-8">Carrinho de Compras</h1>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => (
-              <div
-                key={`${item.product.id}-${JSON.stringify(item.selectedVariants)}`}
-                className="bg-white p-6 rounded-lg border"
+        <div className="flex flex-col lg:flex-row gap-8">
+          <section className="w-full lg:w-[1116px] bg-white rounded shadow-sm p-6 h-fit">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <ShoppingBasket className="w-6 h-6" />
+                <h2 className="text-2xl font-semibold">Produto</h2>
+              </div>
+              <Button
+                variant="ghost"
+                onClick={clearCart}
+                className="text-red-500 hover:text-red-700 hover:bg-transparent bg-transparent border-none p-0 font-medium"
               >
-                <div className="flex gap-6">
+                <Trash2 size={18} className="mr-2" />
+                REMOVER TODOS OS PRODUTOS
+              </Button>
+            </div>
+            
+            <div className="space-y-6">
+              {items.map((item) => (
+                <div
+                  key={`${item.product.id}-${JSON.stringify(item.selectedVariants)}`}
+                  className="flex gap-6 pb-6 border-b border-gray-400/30 last:border-0 last:pb-0"
+                >
                   <div className="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <img
                       src={item.product.images[0]}
@@ -141,15 +156,14 @@ export default function CarrinhoComponent() {
                     </Button>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
 
-          <div className="lg:col-span-1">
-            <div className="bg-white p-6 rounded-lg border sticky top-24 space-y-4">
-              <h2 className="text-2xl font-bold mb-4">Resumo do Pedido</h2>
+          <section className="w-full lg:w-[356px] flex-shrink-0 bg-white p-6 rounded shadow-sm sticky top-24 space-y-4 h-fit">
+            <h2 className="text-2xl font-bold mb-4">Resumo do Pedido</h2>
 
-              <div className="space-y-3 pb-4 border-b">
+              <div className="space-y-3 pb-4 border-b border-gray-400/30">
                 <div className="flex justify-between text-gray-600">
                   <span>
                     Subtotal (
@@ -192,8 +206,7 @@ export default function CarrinhoComponent() {
                 <p className="font-semibold mb-1">Frete Grátis!</p>
                 <p>Entrega em até 7 dias úteis para todo o Brasil.</p>
               </div>
-            </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>

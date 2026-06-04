@@ -372,8 +372,8 @@ Especificações:
   {
     id: "4",
     name: "AirPods Pro 2ª Geração",
-    price: 1899.0,
-    oldPrice: 2199.0,
+    price: 129.0,
+    oldPrice: 159.0,
     discountPercentage: 13,
     salesCount: 933,
     rating: 4.9,
