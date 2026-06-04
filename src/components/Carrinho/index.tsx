@@ -4,6 +4,7 @@ import { Minus, Plus, ShoppingBag, ShoppingBasket, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
+import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { useCart } from "@/providers/CartProvider";
 
 export default function CarrinhoComponent() {
@@ -25,7 +26,7 @@ export default function CarrinhoComponent() {
               Adicione produtos para começar suas compras
             </p>
             <Link href="/produtos">
-              <Button className="bg-black hover:bg-gray-800">
+              <Button className="bg-black hover:bg-gray-800 hover:underline">
                 Continuar Comprando
               </Button>
             </Link>
@@ -38,7 +39,8 @@ export default function CarrinhoComponent() {
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
-      <div className="max-w-[1404px] mx-auto px-4 py-8">
+      <StepperCheckout currentStep={1} />
+      <div className="max-w-[1404px] mx-auto px-4 pb-8 pt-0">
         <h1 className="text-4xl font-bold mb-8">Carrinho de Compras</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -68,7 +70,7 @@ export default function CarrinhoComponent() {
                     <img
                       src={item.product.images[0]}
                       alt={item.product.name}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   </div>
 
@@ -197,7 +199,7 @@ export default function CarrinhoComponent() {
               </Link>
 
               <Link href="/produtos">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full hover:underline">
                   Continuar Comprando
                 </Button>
               </Link>

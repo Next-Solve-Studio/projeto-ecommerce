@@ -89,40 +89,40 @@ export function Footer() {
             </p>
           </div>
 
-          {/* Col 2: Institutional Links */}
+          {/* Col 2: Links das Categorias*/}
           <div className="flex flex-col gap-4 w-fit items-start">
-            <h3 className="text-white font-semibold mb-2">Institucional</h3>
+            <h3 className="text-white font-semibold mb-2">Categorias</h3>
             <ul className="space-y-3">
               <li>
                 <Link
-                  href="/sobre"
+                  href="/produtos?categoria=Smartphones"
                   className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
                 >
-                  Sobre a Empresa
+                  Smartphones
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/politica-de-privacidade"
+                  href="/produtos?categoria=Notebooks"
                   className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
                 >
-                  Política de Privacidade
+                  Notebooks
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/termos-de-uso"
+                  href="/produtos?categoria=Fones de Ouvido"
                   className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
                 >
-                  Termos de Uso
+                  Fones de Ouvido
                 </Link>
               </li>
               <li>
                 <Link
-                  href="/trocas-e-devolucoes"
+                  href="/produtos?categoria=Setup Gamer"
                   className="text-gray-400 hover:text-blue-400 transition-colors text-sm"
                 >
-                  Trocas e Devoluções
+                  Setup Gamer
                 </Link>
               </li>
             </ul>
