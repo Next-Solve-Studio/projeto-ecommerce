@@ -242,9 +242,9 @@ function ProdutosComponentContent() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 bg-white rounded-lg border">
-                <p className="text-gray-500">
-                  Nenhum produto encontrado com os filtros selecionados.
+              <div className="text-center py-6">
+                <p className="text-black-500 text-lg">
+                  Nenhum produto encontrado com os filtros selecionados :/
                 </p>
               </div>
             )}

@@ -199,13 +199,13 @@ export default function CarrinhoComponent() {
               </div>
 
               <Link href="/checkout" className="block">
-                <Button className="w-full h-12 bg-black hover:bg-gray-800 text-lg">
+                <Button className="w-full h-12 bg-black hover:bg-gray-800 text-lg rounded">
                   Finalizar Compra
                 </Button>
               </Link>
 
               <Link href="/produtos">
-                <Button variant="outline" className="w-full hover:underline">
+                <Button variant="outline" className="w-full hover:underline rounded border-none mb-3">
                   Continuar Comprando
                 </Button>
               </Link>

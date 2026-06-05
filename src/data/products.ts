@@ -59,7 +59,7 @@ Especificações:
 - Ajustes: Encosto reclinável e braços ajustáveis`,
     category: "Setup Gamer",
     images: [
-      "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=800",
+      "https://images9.kabum.com.br/produtos/fotos/92009/92009_1526385601_gg.jpg",
     ],
     tags: ["gamer", "populares"],
   },
@@ -90,6 +90,16 @@ Especificações:
     category: "Setup Gamer",
     images: [
       "https://images.unsplash.com/photo-1595225476474-87563907a212?w=800",
+    ],
+    variants: [
+      {
+        type: "Switch",
+        options: ["Vermelho", "Azul", "Marrom"],
+      },
+      {
+        type: "Iluminação",
+        options: ["RGB", "Branco", "Sem Iluminação"],
+      },
     ],
     tags: ["gamer"],
   },
@@ -123,6 +133,16 @@ Especificações:
     images: [
       "https://upload.wikimedia.org/wikipedia/commons/f/fe/1426-razer-deathadder-essential-raton-gaming-6400-dpi-negro.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=thumbnail_unscaled&_=20230607122556",
     ],
+    variants: [
+      {
+        type: "Cor",
+        options: ["Preto", "Branco", "Verde"],
+      },
+      {
+        type: "Iluminação",
+        options: ["RGB", "Mono Branco"],
+      },
+    ],
     tags: ["gamer", "ofertas"],
   },
   {
@@ -152,6 +172,16 @@ Especificações:
     category: "Setup Gamer",
     images: [
       "https://images.unsplash.com/photo-1527443154391-507e9dc6c5cc?w=800",
+    ],
+    variants: [
+      {
+        type: "Taxa de Atualização",
+        options: ["144Hz", "165Hz"],
+      },
+      {
+        type: "Modo de Tela",
+        options: ["HDR", "Standard"],
+      },
     ],
     tags: ["gamer", "populares"],
   },
@@ -309,6 +339,16 @@ Especificações:
 - Material: Titânio grau aeroespacial`,
     category: "Smartphones",
     images: ["https://m.media-amazon.com/images/I/416MG51rNgL._AC_SX679_.jpg"],
+    variants: [
+      {
+        type: "Cor",
+        options: ["Prata", "Preto Espacial", "Azul Alpine"],
+      },
+      {
+        type: "Armazenamento",
+        options: ["256GB", "512GB", "1TB"],
+      },
+    ],
     tags: ["ofertas", "populares"],
   },
   {
@@ -338,6 +378,20 @@ Especificações:
     category: "Notebooks",
     images: [
       "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800",
+    ],
+    variants: [
+      {
+        type: "Cor",
+        options: ["Prata", "Cinza-espacial"],
+      },
+      {
+        type: "Armazenamento",
+        options: ["1TB", "2TB"],
+      },
+      {
+        type: "Memória",
+        options: ["36GB", "48GB"],
+      },
     ],
     tags: ["populares"],
   },
@@ -369,6 +423,16 @@ Especificações:
 - Câmeras: Traseira 12MP + 10MP Ultrawide / Frontal 12MP TrueDepth`,
     category: "Tablets",
     images: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800"],
+    variants: [
+      {
+        type: "Capacidade",
+        options: ["256GB", "512GB", "1TB"],
+      },
+      {
+        type: "Cor",
+        options: ["Prata", "Meia-Noite"],
+      },
+    ],
     tags: ["ofertas"],
   },
   {
@@ -376,7 +440,7 @@ Especificações:
     name: "AirPods Pro 2ª Geração",
     price: 129.0,
     oldPrice: 159.0,
-    discountPercentage: 13,
+    discountPercentage: 18,
     salesCount: 933,
     rating: 4.9,
     description: `Fone de Ouvido Apple AirPods Pro (2ª Geração) com Estojo MagSafe USB-C
@@ -432,6 +496,16 @@ Especificações:
     category: "Smartwatches",
     images: [
       "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800",
+    ],
+    variants: [
+      {
+        type: "Tamanho",
+        options: ["41mm", "45mm"],
+      },
+      {
+        type: "Pulseira",
+        options: ["Esportivo Preto", "Loop Solo Azul", "Pulseira Trançada"],
+      },
     ],
     tags: ["ofertas"],
   },
@@ -494,6 +568,16 @@ Especificações:
     category: "Smartphones",
     images: [
       "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800",
+    ],
+    variants: [
+      {
+        type: "Cor",
+        options: ["Preto", "Branco", "Verde"],
+      },
+      {
+        type: "Armazenamento",
+        options: ["256GB", "512GB", "1TB"],
+      },
     ],
     tags: ["ofertas", "populares"],
   },
@@ -585,6 +669,12 @@ Especificações:
 - Microfone: 4 microfones direcionais para chamadas cristalinas`,
     category: "Fones de Ouvido",
     images: ["https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800"],
+    variants: [
+      {
+        type: "Cor",
+        options: ["Preto", "Prata"],
+      },
+    ],
     tags: ["ofertas", "populares"],
   },
   {
@@ -646,6 +736,16 @@ Especificações:
     category: "Acessórios",
     images: [
       "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800",
+    ],
+    variants: [
+      {
+        type: "Cor",
+        options: ["Grafite", "Bege", "Azul"],
+      },
+      {
+        type: "Conexão",
+        options: ["Bluetooth", "Logi Bolt"],
+      },
     ],
     tags: ["ofertas"],
   },

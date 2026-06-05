@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
@@ -45,6 +45,23 @@ export default function DetalheProdutoComponent({
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [galleryModalIndex, setGalleryModalIndex] = useState(0);
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+
+  useEffect(() => {
+    if (!product?.variants) {
+      setSelectedVariants({});
+      return;
+    }
+
+    const productVariants = product.variants;
+
+    setSelectedVariants((prev) => {
+      const initialVariants: Record<string, string> = {};
+      productVariants.forEach((variant) => {
+        initialVariants[variant.type] = prev[variant.type] || variant.options[0] || "";
+      });
+      return initialVariants;
+    });
+  }, [product]);
 
   const populares = products.filter((p) => p.tags?.includes("populares"));
   const popularesSlider = useRef<any>(null);
@@ -328,7 +345,7 @@ export default function DetalheProdutoComponent({
                             />
                             <Label
                               htmlFor={`${variant.type}-${option}`}
-                              className="flex items-center justify-center px-4 py-3 border rounded-lg cursor-pointer transition-all peer-data-[state=checked]:border-black peer-data-[state=checked]:bg-black peer-data-[state=checked]:text-white hover:border-gray-400"
+                              className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg cursor-pointer transition-all peer-data-[state=checked]:border-blue-600 peer-data-[state=checked]:bg-blue-600 peer-data-[state=checked]:text-white hover:border-gray-400"
                             >
                               {option}
                             </Label>
