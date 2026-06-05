@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { useCart } from "@/providers/CartProvider";
-import { SHIPPING_COST } from "@/data/products";
+import { getProductPriceWithVariants, SHIPPING_COST } from "@/data/products";
 
 export default function CarrinhoComponent() {
   const { items, updateQuantity, removeFromCart, clearCart, getTotal } = useCart();
@@ -133,14 +133,14 @@ export default function CarrinhoComponent() {
                       <div className="text-right">
                         <p className="text-2xl font-bold">
                           R${" "}
-                          {(item.product.price * item.quantity).toLocaleString(
+                          {(getProductPriceWithVariants(item.product, item.selectedVariants) * item.quantity).toLocaleString(
                             "pt-BR",
                             { minimumFractionDigits: 2 },
                           )}
                         </p>
                         <p className="text-sm text-gray-600">
                           R${" "}
-                          {item.product.price.toLocaleString("pt-BR", {
+                          {getProductPriceWithVariants(item.product, item.selectedVariants).toLocaleString("pt-BR", {
                             minimumFractionDigits: 2,
                           })}{" "}
                           cada

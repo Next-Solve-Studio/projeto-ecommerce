@@ -23,7 +23,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { products, type Product, SHIPPING_COST } from "@/data/products";
+import { products, type Product, SHIPPING_COST, getProductPriceWithVariants } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
@@ -303,7 +303,7 @@ export default function DetalheProdutoComponent({
               {product.oldPrice && (
                 <p className="text-sm text-gray-500 line-through mb-1">
                   R${" "}
-                  {product.oldPrice.toLocaleString("pt-BR", {
+                  {getProductPriceWithVariants(product, selectedVariants, product.oldPrice).toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                   })}
                 </p>
@@ -311,7 +311,7 @@ export default function DetalheProdutoComponent({
               <div className="flex items-center gap-3">
                 <p className="text-3xl font-bold">
                   R${" "}
-                  {product.price.toLocaleString("pt-BR", {
+                  {getProductPriceWithVariants(product, selectedVariants).toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                   })}
                 </p>
@@ -345,7 +345,7 @@ export default function DetalheProdutoComponent({
                             />
                             <Label
                               htmlFor={`${variant.type}-${option}`}
-                              className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg cursor-pointer transition-all peer-data-[state=checked]:border-blue-600 peer-data-[state=checked]:bg-blue-600 peer-data-[state=checked]:text-white hover:border-gray-400"
+                              className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg cursor-pointer transition-all bg-white text-black peer-data-[state=checked]:border-blue-600 peer-data-[state=checked]:border-2 peer-data-[state=checked]:text-black hover:border-gray-400"
                             >
                               {option}
                             </Label>

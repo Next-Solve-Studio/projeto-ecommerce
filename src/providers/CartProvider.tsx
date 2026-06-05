@@ -2,6 +2,7 @@
 
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 import type { Product } from "../data/products";
+import { getProductPriceWithVariants } from "../data/products";
 
 interface CartItem {
   product: Product;
@@ -98,7 +99,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const getTotal = () => {
     return items.reduce(
-      (sum, item) => sum + item.product.price * item.quantity,
+      (sum, item) => sum + getProductPriceWithVariants(item.product, item.selectedVariants) * item.quantity,
       0,
     );
   };

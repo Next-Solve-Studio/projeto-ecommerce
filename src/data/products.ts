@@ -27,6 +27,77 @@ export const categories = [
   "Setup Gamer",
 ];
 
+const variantPriceModifiers: Record<string, Record<string, number>> = {
+  Iluminação: {
+    RGB: 150,
+    Branco: 40,
+    "Mono Branco": 40,
+    "Sem Iluminação": 0,
+  },
+  "Taxa de Atualização": {
+    "165Hz": 300,
+    "144Hz": 0,
+    "240Hz": 550,
+  },
+  "Modo de Tela": {
+    HDR: 240,
+    Standard: 0,
+  },
+  Armazenamento: {
+    "256GB": 0,
+    "512GB": 650,
+    "1TB": 1350,
+    "2TB": 2600,
+  },
+  "Memória RAM": {
+    "36GB": 0,
+    "48GB": 900,
+    "64GB": 1700,
+  },
+  Capacidade: {
+    "256GB": 0,
+    "512GB": 650,
+    "1TB": 1350,
+  },
+  Tamanho: {
+    "41mm": 0,
+    "45mm": 350,
+    "49mm": 600,
+  },
+  Conexão: {
+    Bluetooth: 0,
+    "Logi Bolt": 120,
+    "USB-C": 0,
+    USB: 0,
+  },
+};
+
+export const getVariantPriceDelta = (
+  selectedVariants?: Record<string, string>,
+): number => {
+  if (!selectedVariants) {
+    return 0;
+  }
+
+  return Object.entries(selectedVariants).reduce((sum, [type, option]) => {
+    const typeModifiers = variantPriceModifiers[type];
+    if (!typeModifiers) {
+      return sum;
+    }
+
+    return sum + (typeModifiers[option] ?? 0);
+  }, 0);
+};
+
+export const getProductPriceWithVariants = (
+  product: Product,
+  selectedVariants?: Record<string, string>,
+  basePrice?: number,
+): number => {
+  const price = basePrice ?? product.price;
+  return price + getVariantPriceDelta(selectedVariants);
+};
+
 export const SHIPPING_COST = 15.0;
 
 export const products: Product[] = [
@@ -389,7 +460,7 @@ Especificações:
         options: ["1TB", "2TB"],
       },
       {
-        type: "Memória",
+        type: "Memória RAM",
         options: ["36GB", "48GB"],
       },
     ],
