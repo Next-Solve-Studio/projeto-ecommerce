@@ -388,7 +388,7 @@ export default function DetalheProdutoComponent({
                 Adicionar ao Carrinho
               </Button>
 
-              <div className="bg-gray-50 p-6 rounded-lg space-y-2 text-sm">
+              <div className="bg-gray-50 p-6 rounded space-y-2 text-sm">
                 <p className="flex justify-between">
                   <span className="text-gray-600">Frete</span>
                   <span className="font-semibold">

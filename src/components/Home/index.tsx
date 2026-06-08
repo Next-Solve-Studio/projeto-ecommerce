@@ -143,7 +143,7 @@ export default function HomeComponent() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
           <Link
             href="/produtos"
-            className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-2"
+            className="flex flex-col items-center justify-center p-4 bg-white rounded shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-2"
           >
             <LayoutGrid size={28} className="text-gray-700" />
             <span className="text-xs font-medium text-center text-gray-900">
@@ -154,7 +154,7 @@ export default function HomeComponent() {
             <Link
               key={name}
               href={`/produtos?categoria=${encodeURIComponent(name)}`}
-              className="flex flex-col items-center justify-center p-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-2"
+              className="flex flex-col items-center justify-center p-4 bg-white rounded shadow-sm hover:shadow-md transition-all border border-gray-100 hover:border-gray-300 gap-2"
             >
               <Icon size={28} className="text-gray-700" />
               <span className="text-xs font-medium text-center text-gray-900">

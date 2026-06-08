@@ -160,7 +160,7 @@ Especificações:
 - Conexão: Cabo USB-C removível`,
     category: "Setup Gamer",
     images: [
-      "https://images.unsplash.com/photo-1595225476474-87563907a212?w=800",
+      "https://hotsite.pichau.com.br/descricao/HyperX/HX-KB7BLX-BR/HX-KB7BLX-BR0010.png",
     ],
     variants: [
       {
@@ -284,13 +284,13 @@ Especificações:
 - Material: Alumínio e Aço`,
     category: "Setup Gamer",
     images: [
-      "https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?w=800",
+      "https://images7.kabum.com.br/produtos/fotos/102827/headset-gamer-logitech-g-pro-x-7-1-dolby-surround-981-000817_1744814719_gg.jpg",
     ],
     tags: ["gamer", "ofertas"],
   },
   {
     id: "g6",
-    name: "Gabinete NZXT H510",
+    name: "Gabinete Gamer NZXT H510 Mid-Tower",
     price: 649.0,
     salesCount: 0,
     rating: 0.0,
@@ -314,13 +314,13 @@ Especificações:
 - Filtros de Poeira: Em todas as entradas`,
     category: "Setup Gamer",
     images: [
-      "https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800",
+      "https://patoloco.com.br/arquivos/produtos/imagens_adicionais/1502e58bb1cfaff5ff3a1d8ccfc84d6c2909a7f6.jpeg",
     ],
     tags: ["gamer"],
   },
   {
     id: "g7",
-    name: "Placa de Vídeo RTX 4070",
+    name: "Placa de Vídeo NVIDIA GeForce RTX 4070",
     price: 4599.0,
     oldPrice: 5199.0,
     discountPercentage: 11,
@@ -346,7 +346,7 @@ Especificações:
 - Tecnologias Extras: Ray Tracing, DLSS 3 e NVIDIA Reflex`,
     category: "Setup Gamer",
     images: [
-      "https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800",
+      "https://images4.kabum.com.br/produtos/fotos/402564/placa-de-video-rtx-4070-ti-gigabyte-nvidia-geforce-12-gb-gddr6x-dlss-3-ray-tracing-gv-n407teagle-oc-12gd_1672920613_gg.jpg",
     ],
     tags: ["gamer", "ofertas"],
   },
@@ -376,7 +376,7 @@ Especificações:
 - Resposta de frequência: 20Hz a 20kHz`,
     category: "Setup Gamer",
     images: [
-      "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=800",
+      "https://cdn.awsli.com.br/2500x2500/1718/1718314/produto/71406879/8888adffdb.jpg",
     ],
     tags: ["gamer", "populares"],
   },
@@ -468,7 +468,7 @@ Especificações:
   },
   {
     id: "3",
-    name: 'iPad Pro 12.9" M2',
+    name: 'Tablet Apple iPad Pro Chip M2 256GB',
     price: 11999.0,
     oldPrice: 12999.0,
     discountPercentage: 7,
@@ -493,7 +493,7 @@ Especificações:
 - Conectividade: Wi-Fi 6E e Bluetooth 5.3
 - Câmeras: Traseira 12MP + 10MP Ultrawide / Frontal 12MP TrueDepth`,
     category: "Tablets",
-    images: ["https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=800"],
+    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9FnDyBV5kMEersaoZtGrr9zsV_4dl4bzQWw&s"],
     variants: [
       {
         type: "Capacidade",
@@ -534,7 +534,7 @@ Especificações:
 - Proteção: Resistência a suor, água e poeira (IP54)`,
     category: "Fones de Ouvido",
     images: [
-      "https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=800",
+      "https://http2.mlstatic.com/D_Q_NP_841774-MLA96136658915_102025-O.webp",
     ],
     tags: ["ofertas", "populares"],
   },
@@ -566,7 +566,7 @@ Especificações:
 - Durabilidade: Resistente à água (50m) e poeira (IP6X)`,
     category: "Smartwatches",
     images: [
-      "https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=800",
+      "https://cdsassets.apple.com/live/7WUAS350/images/tech-specs/apple-watch-series-9.png",
     ],
     variants: [
       {
@@ -606,7 +606,7 @@ Especificações:
 - Iluminação: Retroiluminação LED sensível ao ambiente`,
     category: "Acessórios",
     images: [
-      "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800",
+      "https://m.media-amazon.com/images/I/61atNJ8AThL.jpg",
     ],
     tags: ["populares"],
   },
@@ -638,7 +638,7 @@ Especificações:
 - Diferenciais: S Pen Inclusa e Galaxy AI integrada`,
     category: "Smartphones",
     images: [
-      "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=800",
+      "https://fujiokadistribuidor.vteximg.com.br/arquivos/ids/358152",
     ],
     variants: [
       {
@@ -654,7 +654,7 @@ Especificações:
   },
   {
     id: "8",
-    name: "Dell XPS 15",
+    name: "Notebook Dell XPS 15 Intel Core i7",
     price: 11999.0,
     salesCount: 150,
     rating: 3.9,
@@ -678,13 +678,13 @@ Especificações:
 - Placa de Vídeo: NVIDIA GeForce RTX 4050 6GB GDDR6`,
     category: "Notebooks",
     images: [
-      "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800",
+      "https://m.media-amazon.com/images/I/719CAihgtTL.jpg",
     ],
     tags: ["populares"],
   },
   {
     id: "9",
-    name: "Samsung Galaxy Tab S9+",
+    name: "Tablet Samsung Galaxy Tab S9+",
     price: 5999.0,
     oldPrice: 6499.0,
     discountPercentage: 7,
@@ -709,7 +709,7 @@ Especificações:
 - Armazenamento/RAM: 512GB interno e 12GB de RAM
 - Proteção: Certificação IP68 (Resistência a poeira e água)`,
     category: "Tablets",
-    images: ["https://images.unsplash.com/photo-1561154464-82e9adf32764?w=800"],
+    images: ["https://m.media-amazon.com/images/I/61wvtWvQsRL._AC_UF1000,1000_QL80_.jpg"],
     tags: ["ofertas"],
   },
   {
@@ -750,7 +750,7 @@ Especificações:
   },
   {
     id: "11",
-    name: "Garmin Fenix 7 Pro",
+    name: "Relógio Esportivo Garmin Fenix 7 Pro",
     price: 5999.0,
     salesCount: 500,
     rating: 4.3,
@@ -774,13 +774,13 @@ Especificações:
 - Sensores: Frequência cardíaca (Gen 5), Oxímetro de pulso, altímetro, bússola`,
     category: "Smartwatches",
     images: [
-      "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?w=800",
+      "https://res.garmin.com/en/products/010-02777-20/v/cf-lg.jpg",
     ],
     tags: ["populares"],
   },
   {
     id: "12",
-    name: "Logitech MX Master 3S",
+    name: "Mouse Sem Fio Logitech MX Master 3S",
     price: 599.0,
     oldPrice: 699.0,
     discountPercentage: 14,
@@ -806,7 +806,7 @@ Especificações:
 - Bateria: Recarregável via USB-C com duração de até 70 dias`,
     category: "Acessórios",
     images: [
-      "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800",
+      "https://www.logitechstore.com.br/media/catalog/product/cache/105e6f420716e0751863c4b81f527d17/m/x/mx_n3_1.png",
     ],
     variants: [
       {

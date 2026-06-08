@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import { CartProvider } from "@/providers/CartProvider";
 import QueryProvider from "@/providers/QueryProvider";
@@ -33,6 +34,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#F2F3F4]">
+        <Script id="remove-cz-shortcut-listen" strategy="beforeInteractive">
+          {`try{document.body.removeAttribute('cz-shortcut-listen')}catch(e){}`}
+        </Script>
         <QueryProvider>
           <CartProvider>
             {children}
