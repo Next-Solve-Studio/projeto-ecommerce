@@ -98,7 +98,9 @@ export const getProductPriceWithVariants = (
   return price + getVariantPriceDelta(selectedVariants);
 };
 
-export const SHIPPING_COST = 15.0;
+export const frete: number = 15.0;
+
+export const frete_express: number = 35.0;
 
 export const products: Product[] = [
   // Setup Gamer

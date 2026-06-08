@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCart } from "@/providers/CartProvider";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
+import { frete } from "@/data/products";
 
 const schema = yup.object().shape({
   nome: yup.string().required("Nome é obrigatório"),
@@ -42,7 +43,7 @@ export default function CheckoutComponent({ id }: { id?: string }) {
   };
 
   const subtotal = getTotal();
-  const total = subtotal;
+  const total = subtotal + frete;
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
@@ -185,6 +186,14 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                       {subtotal.toLocaleString("pt-BR", {
                         minimumFractionDigits: 2,
                       })}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-gray-600">
+                    <span>Frete</span>
+                    <span className={frete === 0 ? "text-green-600 font-semibold" : ""}>
+                      {frete === 0
+                        ? "Grátis"
+                        : `R$ ${frete.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
                     </span>
                   </div>
                   <div className="flex justify-between font-bold text-lg pt-2">

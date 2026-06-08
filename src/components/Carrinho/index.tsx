@@ -6,13 +6,13 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { useCart } from "@/providers/CartProvider";
-import { getProductPriceWithVariants, SHIPPING_COST } from "@/data/products";
+import { getProductPriceWithVariants, frete } from "@/data/products";
 
 export default function CarrinhoComponent() {
   const { items, updateQuantity, removeFromCart, clearCart, getTotal } = useCart();
 
   const subtotal = getTotal();
-  const shipping = subtotal > 0 ? SHIPPING_COST : 0;
+  const shipping = subtotal > 0 ? frete : 0;
   const total = subtotal + shipping;
 
   if (items.length === 0) {
@@ -214,7 +214,7 @@ export default function CarrinhoComponent() {
                 <p className="font-semibold mb-1">Frete</p>
                 <p>
                   Entrega em até 7 dias úteis para todo o Brasil por apenas R${" "}
-                  {SHIPPING_COST.toLocaleString("pt-BR", {
+                  {frete.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                   })}
                   .

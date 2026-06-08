@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCart } from "@/providers/CartProvider";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
+import { frete, frete_express } from "@/data/products";
 
 const schema = yup.object().shape({
   cep: yup.string().required("CEP é obrigatório"),
@@ -43,7 +44,7 @@ export default function DeliveryPageComponent() {
   });
 
   const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
-  const shippingCost = shippingType === "express" ? 35.9 : 0;
+  const shippingCost = shippingType === "express" ? frete_express : frete;
   const subtotal = getTotal();
   const total = subtotal + shippingCost;
 
@@ -206,7 +207,9 @@ export default function DeliveryPageComponent() {
                           Receba em até 7 dias úteis.
                         </p>
                       </div>
-                      <div className="font-semibold text-green-600">Grátis</div>
+                      <div className={`font-semibold ${frete === 0 ? "text-green-600" : ""}`}>
+                        {frete === 0 ? "Grátis" : `R$ ${frete.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+                      </div>
                     </Label>
 
                     <Label
@@ -227,7 +230,9 @@ export default function DeliveryPageComponent() {
                           Receba em até 2 dias úteis.
                         </p>
                       </div>
-                      <div className="font-semibold">R$ 35,90</div>
+                      <div className="font-semibold">
+                        R$ {frete_express.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                      </div>
                     </Label>
                   </RadioGroup>
 
