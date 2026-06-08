@@ -3,114 +3,262 @@
 import { Truck, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCart } from "@/providers/CartProvider";
+import { StepperCheckout } from "@/components/ui/stepper-checkout";
+
+const schema = yup.object().shape({
+  cep: yup.string().required("CEP é obrigatório"),
+  endereco: yup.string().required("Endereço é obrigatório"),
+  numero: yup.string().required("Número é obrigatório"),
+  complemento: yup.string().optional(),
+  bairro: yup.string().required("Bairro é obrigatório"),
+  cidade: yup.string().required("Cidade é obrigatória"),
+  estado: yup
+    .string()
+    .required("Estado é obrigatório")
+    .length(2, "Apenas a sigla (ex: SP)"),
+});
+
+type DeliveryFormData = yup.InferType<typeof schema>;
 
 export default function DeliveryPageComponent() {
   const router = useRouter();
   const { getTotal, items } = useCart();
   const [shippingType, setShippingType] = useState("standard");
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const inputClassName = "!bg-gray-100 !rounded border border-gray-300";
   const shippingCost = shippingType === "express" ? 35.9 : 0;
   const subtotal = getTotal();
   const total = subtotal + shippingCost;
 
-  const handleNext = () => {
+  const onSubmit = (data: DeliveryFormData) => {
     // Navigate to default payment method (Pix)
+    console.log("Endereço:", data, "Frete:", shippingType);
     router.push("/checkout/pix");
   };
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
-      <div className="py-12">
+      <StepperCheckout currentStep={3} />
+      <div className="pb-10">
         <div className="container mx-auto px-4 max-w-6xl">
           <h1 className="text-3xl font-bold mb-8">Opções de Entrega</h1>
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <div className="bg-white p-6 md:p-8 rounded-lg border shadow-sm">
-                <h2 className="text-xl font-semibold mb-6">
-                  Escolha o tipo de entrega
-                </h2>
+              <div className="bg-white p-6 md:p-8 rounded shadow-md">
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  {/* Endereço */}
+                  <div className="mb-8">
+                    <h2 className="text-xl font-semibold mb-4 border-b border-gray-300/50 pb-2">
+                      Endereço de Entrega
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                      <div className="space-y-2 md:col-span-4">
+                        <Label htmlFor="cep">CEP</Label>
+                        <Input
+                          id="cep"
+                          className={inputClassName}
+                          placeholder="00000-000"
+                          {...register("cep")}
+                        />
+                        {errors.cep && (
+                          <p className="text-red-500 text-sm">
+                            {errors.cep.message}
+                          </p>
+                        )}
+                      </div>
 
-                <RadioGroup
-                  value={shippingType}
-                  onValueChange={setShippingType}
-                  className="space-y-4"
-                >
-                  <div
-                    className={`flex items-start space-x-3 border p-4 rounded-lg cursor-pointer transition-colors ${shippingType === "standard" ? "border-black bg-gray-50" : "hover:bg-gray-50"}`}
-                    onClick={() => setShippingType("standard")}
-                  >
-                    <RadioGroupItem
-                      value="standard"
-                      id="standard"
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <Label
-                        htmlFor="standard"
-                        className="text-base font-semibold cursor-pointer flex items-center gap-2"
-                      >
-                        <Truck className="w-5 h-5" />
-                        Entrega Padrão
-                      </Label>
-                      <p className="text-gray-500 text-sm mt-1">
-                        Receba em até 7 dias úteis.
-                      </p>
+                      <div className="space-y-2 md:col-span-8">
+                        <Label htmlFor="endereco">Endereço</Label>
+                        <Input
+                          id="endereco"
+                          className={inputClassName}
+                          placeholder="Rua, Avenida, etc."
+                          {...register("endereco")}
+                        />
+                        {errors.endereco && (
+                          <p className="text-red-500 text-sm">
+                            {errors.endereco.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 md:col-span-3">
+                        <Label htmlFor="numero">Número</Label>
+                        <Input
+                          id="numero"
+                          className={inputClassName}
+                          placeholder="123"
+                          {...register("numero")}
+                        />
+                        {errors.numero && (
+                          <p className="text-red-500 text-sm">
+                            {errors.numero.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 md:col-span-9">
+                        <Label htmlFor="complemento">
+                          Complemento{" "}
+                          <span className="text-gray-400 font-normal">
+                            (Opcional)
+                          </span>
+                        </Label>
+                        <Input
+                          id="complemento"
+                          className={inputClassName}
+                          placeholder="Apto, Bloco, etc."
+                          {...register("complemento")}
+                        />
+                      </div>
+
+                      <div className="space-y-2 md:col-span-5">
+                        <Label htmlFor="bairro">Bairro</Label>
+                        <Input
+                          id="bairro"
+                          className={inputClassName}
+                          placeholder="Centro"
+                          {...register("bairro")}
+                        />
+                        {errors.bairro && (
+                          <p className="text-red-500 text-sm">
+                            {errors.bairro.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 md:col-span-5">
+                        <Label htmlFor="cidade">Cidade</Label>
+                        <Input
+                          id="cidade"
+                          className={inputClassName}
+                          placeholder="São Paulo"
+                          {...register("cidade")}
+                        />
+                        {errors.cidade && (
+                          <p className="text-red-500 text-sm">
+                            {errors.cidade.message}
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="space-y-2 md:col-span-2">
+                        <Label htmlFor="estado">Estado</Label>
+                        <Input
+                          id="estado"
+                          className={`${inputClassName} uppercase`}
+                          placeholder="SP"
+                          maxLength={2}
+                          {...register("estado")}
+                        />
+                        {errors.estado && (
+                          <p className="text-red-500 text-sm">
+                            {errors.estado.message}
+                          </p>
+                        )}
+                      </div>
                     </div>
-                    <div className="font-semibold text-green-600">Grátis</div>
                   </div>
 
-                  <div
-                    className={`flex items-start space-x-3 border p-4 rounded-lg cursor-pointer transition-colors ${shippingType === "express" ? "border-black bg-gray-50" : "hover:bg-gray-50"}`}
-                    onClick={() => setShippingType("express")}
-                  >
-                    <RadioGroupItem
-                      value="express"
-                      id="express"
-                      className="mt-1"
-                    />
-                    <div className="flex-1">
-                      <Label
-                        htmlFor="express"
-                        className="text-base font-semibold cursor-pointer flex items-center gap-2"
-                      >
-                        <Zap className="w-5 h-5 text-yellow-500" />
-                        Entrega Expressa
-                      </Label>
-                      <p className="text-gray-500 text-sm mt-1">
-                        Receba em até 2 dias úteis.
-                      </p>
-                    </div>
-                    <div className="font-semibold">R$ 35,90</div>
-                  </div>
-                </RadioGroup>
+                  <h2 className="text-xl font-semibold mb-6 border-b border-gray-300/50 pb-2">
+                    Escolha o tipo de entrega
+                  </h2>
 
-                <div className="pt-8 flex justify-between items-center">
-                  <Button
-                    variant="ghost"
-                    onClick={() => router.push("/checkout")}
+                  <RadioGroup
+                    value={shippingType}
+                    onValueChange={setShippingType}
+                    className="space-y-4"
                   >
-                    Voltar
-                  </Button>
-                  <Button
-                    size="lg"
-                    className="bg-black hover:bg-gray-800 text-white px-8"
-                    onClick={handleNext}
-                  >
-                    Ir para o Pagamento
-                  </Button>
-                </div>
+                    <div
+                      className={`flex items-start space-x-3 border p-4 rounded-lg cursor-pointer transition-colors ${shippingType === "standard" ? "border-black bg-gray-50" : "hover:bg-gray-50"}`}
+                      onClick={() => setShippingType("standard")}
+                    >
+                      <RadioGroupItem
+                        value="standard"
+                        id="standard"
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label
+                          htmlFor="standard"
+                          className="text-base font-semibold cursor-pointer flex items-center gap-2"
+                        >
+                          <Truck className="w-5 h-5" />
+                          Entrega Padrão
+                        </Label>
+                        <p className="text-gray-500 text-sm mt-1">
+                          Receba em até 7 dias úteis.
+                        </p>
+                      </div>
+                      <div className="font-semibold text-green-600">Grátis</div>
+                    </div>
+
+                    <div
+                      className={`flex items-start space-x-3 border p-4 rounded-lg cursor-pointer transition-colors ${shippingType === "express" ? "border-black bg-gray-50" : "hover:bg-gray-50"}`}
+                      onClick={() => setShippingType("express")}
+                    >
+                      <RadioGroupItem
+                        value="express"
+                        id="express"
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label
+                          htmlFor="express"
+                          className="text-base font-semibold cursor-pointer flex items-center gap-2"
+                        >
+                          <Zap className="w-5 h-5 text-yellow-500" />
+                          Entrega Expressa
+                        </Label>
+                        <p className="text-gray-500 text-sm mt-1">
+                          Receba em até 2 dias úteis.
+                        </p>
+                      </div>
+                      <div className="font-semibold">R$ 35,90</div>
+                    </div>
+                  </RadioGroup>
+
+                  <div className="pt-8 flex justify-between items-center">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => router.push("/checkout")}
+                    >
+                      Voltar
+                    </Button>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="bg-black hover:bg-gray-800 text-white px-8"
+                    >
+                      Ir para o Pagamento
+                    </Button>
+                  </div>
+                </form>
               </div>
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white p-6 rounded-lg border sticky top-24 shadow-sm">
+              <div className="bg-white p-6 rounded sticky top-24 shadow-md">
                 <h3 className="text-xl font-bold mb-4">Resumo do Pedido</h3>
                 <div className="space-y-4 mb-6">
                   {items.slice(0, 3).map((item) => (
@@ -138,7 +286,7 @@ export default function DeliveryPageComponent() {
                     </div>
                   ))}
                 </div>
-                <div className="border-t pt-4 space-y-3">
+                <div className="border-t border-gray-300/50 pt-4 space-y-3">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
                     <span>
@@ -160,7 +308,7 @@ export default function DeliveryPageComponent() {
                         : `R$ ${shippingCost.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
                     </span>
                   </div>
-                  <div className="flex justify-between font-bold text-lg pt-2 border-t mt-2">
+                  <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-300/50 mt-2">
                     <span>Total</span>
                     <span>
                       R${" "}
