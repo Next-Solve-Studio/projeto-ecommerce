@@ -42,7 +42,7 @@ export default function DeliveryPageComponent() {
     resolver: yupResolver(schema),
   });
 
-  const inputClassName = "!bg-gray-100 !rounded border border-gray-300";
+  const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
   const shippingCost = shippingType === "express" ? 35.9 : 0;
   const subtotal = getTotal();
   const total = subtotal + shippingCost;
@@ -188,9 +188,9 @@ export default function DeliveryPageComponent() {
                     onValueChange={setShippingType}
                     className="space-y-4"
                   >
-                    <div
-                      className={`flex items-start space-x-3 border p-4 rounded-lg cursor-pointer transition-colors ${shippingType === "standard" ? "border-black bg-gray-50" : "hover:bg-gray-50"}`}
-                      onClick={() => setShippingType("standard")}
+                    <Label
+                      htmlFor="standard"
+                      className={`flex items-start space-x-3 border-2 shadow-md p-4 rounded cursor-pointer transition-colors ${shippingType === "standard" ? "border-[#0597F2] bg-[#F5FCFF]" : "border-gray-300 hover:bg-gray-50"}`}
                     >
                       <RadioGroupItem
                         value="standard"
@@ -198,23 +198,20 @@ export default function DeliveryPageComponent() {
                         className="mt-1"
                       />
                       <div className="flex-1">
-                        <Label
-                          htmlFor="standard"
-                          className="text-base font-semibold cursor-pointer flex items-center gap-2"
-                        >
+                        <div className="text-base font-semibold flex items-center gap-2">
                           <Truck className="w-5 h-5" />
                           Entrega Padrão
-                        </Label>
+                        </div>
                         <p className="text-gray-500 text-sm mt-1">
                           Receba em até 7 dias úteis.
                         </p>
                       </div>
                       <div className="font-semibold text-green-600">Grátis</div>
-                    </div>
+                    </Label>
 
-                    <div
-                      className={`flex items-start space-x-3 border p-4 rounded-lg cursor-pointer transition-colors ${shippingType === "express" ? "border-black bg-gray-50" : "hover:bg-gray-50"}`}
-                      onClick={() => setShippingType("express")}
+                    <Label
+                      htmlFor="express"
+                      className={`flex items-start space-x-3 border-2 shadow-md p-4 rounded cursor-pointer transition-colors ${shippingType === "express" ? "border-[#0597F2] bg-[#F5FCFF]" : "border-gray-300 hover:bg-gray-50"}`}
                     >
                       <RadioGroupItem
                         value="express"
@@ -222,29 +219,19 @@ export default function DeliveryPageComponent() {
                         className="mt-1"
                       />
                       <div className="flex-1">
-                        <Label
-                          htmlFor="express"
-                          className="text-base font-semibold cursor-pointer flex items-center gap-2"
-                        >
+                        <div className="text-base font-semibold flex items-center gap-2">
                           <Zap className="w-5 h-5 text-yellow-500" />
                           Entrega Expressa
-                        </Label>
+                        </div>
                         <p className="text-gray-500 text-sm mt-1">
                           Receba em até 2 dias úteis.
                         </p>
                       </div>
                       <div className="font-semibold">R$ 35,90</div>
-                    </div>
+                    </Label>
                   </RadioGroup>
 
-                  <div className="pt-8 flex justify-between items-center">
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => router.push("/checkout")}
-                    >
-                      Voltar
-                    </Button>
+                  <div className="pt-8 flex items-right justify-end">
                     <Button
                       type="submit"
                       size="lg"

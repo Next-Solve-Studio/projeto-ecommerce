@@ -2,6 +2,7 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { Header } from "@/components/Header";
@@ -32,7 +33,7 @@ export default function CheckoutComponent({ id }: { id?: string }) {
     resolver: yupResolver(schema),
   });
 
-  const inputClassName = "!bg-gray-100 !rounded border border-gray-300";
+  const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
 
   const onSubmit = (data: CheckoutFormData) => {
     // salvar no contexto ou no armazenamento local
@@ -54,11 +55,11 @@ export default function CheckoutComponent({ id }: { id?: string }) {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="bg-white p-6 md:p-8 rounded shadow-md">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <form id="checkout-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                   {/* Dados Pessoais */}
                   <div>
                     <h2 className="text-xl font-semibold mb-4 border-b border-gray-300/50 pb-2">
-                      Dados Pessoais
+                      Confira seus dados pessoais
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2 md:col-span-2">
@@ -124,14 +125,19 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                     </div>
                   </div>
 
-                  <div className="pt-6 flex justify-end">
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="bg-black hover:bg-gray-800 text-white px-8"
-                    >
-                      Ir para a Entrega
-                    </Button>
+                  <div className="w-full flex flex-col sm:flex-row gap-4 items-center justify-between bg-[#F5FCFF] rounded-lg border-gray-300 border-2 px-4 py-1 mt-6">
+                    <span className="text-gray-700 text-sm">
+                      Dados incorretos?
+                    </span>
+                    <Link href="/conta">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="bg-white border-gray-300 border-2 font-bold rounded w-full sm:w-auto hover:underline"
+                      >
+                        Altere seus dados no perfil
+                      </Button>
+                    </Link>
                   </div>
                 </form>
               </div>
@@ -191,6 +197,14 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                     </span>
                   </div>
                 </div>
+                <Button
+                  type="submit"
+                  form="checkout-form"
+                  size="lg"
+                  className="w-full mt-6 bg-black hover:bg-gray-800 text-white"
+                >
+                  Ir para a Entrega
+                </Button>
               </div>
             </div>
           </div>
