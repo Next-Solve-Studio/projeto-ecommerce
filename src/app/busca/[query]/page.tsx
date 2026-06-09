@@ -1,4 +1,4 @@
-import SearchPageComponent from "@/components/SearchPage";
+import SearchPageComponent from "@/components/Busca";
 import { products } from "@/data/products";
 
 export default async function SearchPage({

@@ -1,4 +1,4 @@
-import FavoritesPageComponent from "@/components/FavoritosPage";
+import FavoritesPageComponent from "@/components/Favoritos";
 
 export default function FavoritesPage() {
   return <FavoritesPageComponent />;

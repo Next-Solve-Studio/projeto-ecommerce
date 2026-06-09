@@ -5,7 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import type { Product } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 interface ProductCardProps {
   product: Product;

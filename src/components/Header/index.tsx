@@ -14,8 +14,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { categories, products } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
-import logoImg from "../../public/Horizontal_Lockup_on_Blue_Background-removebg-preview.png";
-import { Input } from "./ui/input";
+import logoImg from "../../../public/Horizontal_Lockup_on_Blue_Background-removebg-preview.png";
+import { Input } from "../ui/input";
 
 export function Header() {
   const { getItemCount } = useCart();
@@ -257,13 +257,6 @@ export function Header() {
                     onClick={() => setIsProfileOpen(false)}
                   >
                     Meus pedidos
-                  </Link>
-                  <Link
-                    href="/dados"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                    onClick={() => setIsProfileOpen(false)}
-                  >
-                    Meus dados
                   </Link>
                   <div className="border-t border-gray-100 my-1"></div>
                   <button

@@ -23,7 +23,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { products, type Product, SHIPPING_COST, getProductPriceWithVariants } from "@/data/products";
+import { products, type Product, frete, getProductPriceWithVariants } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
@@ -393,7 +393,7 @@ export default function DetalheProdutoComponent({
                   <span className="text-gray-600">Frete</span>
                   <span className="font-semibold">
                     R${" "}
-                    {SHIPPING_COST.toLocaleString("pt-BR", {
+                    {frete.toLocaleString("pt-BR", {
                       minimumFractionDigits: 2,
                     })}{" "}
                   </span>

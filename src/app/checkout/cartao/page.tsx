@@ -1,4 +1,4 @@
-import CreditCardPaymentPageComponent from "@/components/CreditCardPaymentPage";
+import CreditCardPaymentPageComponent from "@/components/PagamentoCartao";
 
 export default function CreditCardPaymentPage() {
   return <CreditCardPaymentPageComponent />;

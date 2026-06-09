@@ -1,4 +1,4 @@
-import AccountPageComponent from "@/components/ContaPage";
+import AccountPageComponent from "@/components/Conta";
 
 export default function AccountPage() {
   return <AccountPageComponent />;

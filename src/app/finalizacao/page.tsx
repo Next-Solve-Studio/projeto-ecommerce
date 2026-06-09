@@ -1,4 +1,4 @@
-import FinalizacaoPageComponent from "@/components/FinalizacaoPage";
+import FinalizacaoPageComponent from "@/components/FinalizacaoPedido";
 
 export default function OrderSuccessPage() {
   return <FinalizacaoPageComponent />;

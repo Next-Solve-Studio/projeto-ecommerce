@@ -1,4 +1,4 @@
-import SupportPageComponent from "@/components/SupportPage";
+import SupportPageComponent from "@/components/Suporte";
 
 export default function SupportPage() {
   return <SupportPageComponent />;
