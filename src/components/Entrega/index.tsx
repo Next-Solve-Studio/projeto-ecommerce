@@ -17,12 +17,12 @@ import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { frete, frete_express } from "@/data/products";
 
 const schema = yup.object().shape({
-  cep: yup.string().required("CEP é obrigatório"),
-  endereco: yup.string().required("Endereço é obrigatório"),
-  numero: yup.string().required("Número é obrigatório"),
-  complemento: yup.string().optional(),
-  bairro: yup.string().required("Bairro é obrigatório"),
-  cidade: yup.string().required("Cidade é obrigatória"),
+  cep: yup.string().required("CEP é obrigatório").length(9, "CEP incompleto"),
+  endereco: yup.string().required("Endereço é obrigatório").max(70, "Máximo de 70 caracteres"),
+  numero: yup.string().required("Número é obrigatório").max(5, "Máximo de 5 dígitos"),
+  complemento: yup.string().max(40, "Máximo de 40 caracteres").optional(),
+  bairro: yup.string().required("Bairro é obrigatório").max(12, "Máximo de 12 caracteres"),
+  cidade: yup.string().required("Cidade é obrigatória").max(32, "Máximo de 32 caracteres"),
   estado: yup
     .string()
     .required("Estado é obrigatório")
@@ -48,6 +48,14 @@ export default function DeliveryPageComponent() {
   const shippingCost = shippingType === "express" ? frete_express : frete;
   const subtotal = getTotal();
   const total = subtotal + shippingCost;
+
+  const cepRegister = register("cep");
+  const enderecoRegister = register("endereco");
+  const numeroRegister = register("numero");
+  const complementoRegister = register("complemento");
+  const bairroRegister = register("bairro");
+  const cidadeRegister = register("cidade");
+  const estadoRegister = register("estado");
 
   const onSubmit = (data: DeliveryFormData) => {
     // Acesse o método de pagamento padrão (Pix)
@@ -90,7 +98,17 @@ export default function DeliveryPageComponent() {
                           id="cep"
                           className={inputClassName}
                           placeholder="00000-000"
-                          {...register("cep")}
+                          maxLength={9}
+                          {...cepRegister}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, "");
+                            if (value.length > 8) value = value.substring(0, 8);
+                            if (value.length > 5) {
+                              value = value.substring(0, 5) + "-" + value.substring(5);
+                            }
+                            e.target.value = value;
+                            cepRegister.onChange(e);
+                          }}
                         />
                         {errors.cep && (
                           <p className="text-red-500 text-sm">
@@ -105,7 +123,12 @@ export default function DeliveryPageComponent() {
                           id="endereco"
                           className={inputClassName}
                           placeholder="Rua, Avenida, etc."
-                          {...register("endereco")}
+                          maxLength={70}
+                          {...enderecoRegister}
+                          onChange={(e) => {
+                            e.target.value = e.target.value.replace(/[^a-zA-Z0-9\s,À-ÿ]/g, "").substring(0, 70);
+                            enderecoRegister.onChange(e);
+                          }}
                         />
                         {errors.endereco && (
                           <p className="text-red-500 text-sm">
@@ -120,7 +143,12 @@ export default function DeliveryPageComponent() {
                           id="numero"
                           className={inputClassName}
                           placeholder="123"
-                          {...register("numero")}
+                          maxLength={5}
+                          {...numeroRegister}
+                          onChange={(e) => {
+                            e.target.value = e.target.value.replace(/\D/g, "").substring(0, 5);
+                            numeroRegister.onChange(e);
+                          }}
                         />
                         {errors.numero && (
                           <p className="text-red-500 text-sm">
@@ -140,7 +168,12 @@ export default function DeliveryPageComponent() {
                           id="complemento"
                           className={inputClassName}
                           placeholder="Apto, Bloco, etc."
-                          {...register("complemento")}
+                          maxLength={40}
+                          {...complementoRegister}
+                          onChange={(e) => {
+                            e.target.value = e.target.value.replace(/[^a-zA-Z0-9\s,À-ÿ]/g, "").substring(0, 40);
+                            complementoRegister.onChange(e);
+                          }}
                         />
                       </div>
 
@@ -150,7 +183,12 @@ export default function DeliveryPageComponent() {
                           id="bairro"
                           className={inputClassName}
                           placeholder="Centro"
-                          {...register("bairro")}
+                          maxLength={12}
+                          {...bairroRegister}
+                          onChange={(e) => {
+                            e.target.value = e.target.value.replace(/[^a-zA-Z\sÀ-ÿ]/g, "").substring(0, 12);
+                            bairroRegister.onChange(e);
+                          }}
                         />
                         {errors.bairro && (
                           <p className="text-red-500 text-sm">
@@ -165,7 +203,12 @@ export default function DeliveryPageComponent() {
                           id="cidade"
                           className={inputClassName}
                           placeholder="São Paulo"
-                          {...register("cidade")}
+                          maxLength={32}
+                          {...cidadeRegister}
+                          onChange={(e) => {
+                            e.target.value = e.target.value.replace(/[^a-zA-Z\sÀ-ÿ]/g, "").substring(0, 32);
+                            cidadeRegister.onChange(e);
+                          }}
                         />
                         {errors.cidade && (
                           <p className="text-red-500 text-sm">
@@ -181,7 +224,11 @@ export default function DeliveryPageComponent() {
                           className={`${inputClassName} uppercase`}
                           placeholder="SP"
                           maxLength={2}
-                          {...register("estado")}
+                          {...estadoRegister}
+                          onChange={(e) => {
+                            e.target.value = e.target.value.replace(/[^a-zA-Z]/g, "").toUpperCase().substring(0, 2);
+                            estadoRegister.onChange(e);
+                          }}
                         />
                         {errors.estado && (
                           <p className="text-red-500 text-sm">
