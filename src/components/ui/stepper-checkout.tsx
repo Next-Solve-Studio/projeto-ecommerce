@@ -31,7 +31,7 @@ export function StepperCheckout({
 }: StepperCheckoutProps) {
   return (
     <div
-      className={cn("w-full max-w-[814px] mx-auto py-10 px-4", className)}
+      className={cn("w-full max-w-[814px] mx-auto py-4 px-4", className)}
       {...props}
     >
       <div className="flex items-center h-[18px]">

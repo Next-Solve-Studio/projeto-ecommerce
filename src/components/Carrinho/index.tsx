@@ -45,7 +45,7 @@ export default function CarrinhoComponent() {
         <h1 className="text-4xl font-bold mb-8">Carrinho de Compras</h1>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          <section className="w-full lg:w-[1116px] bg-white rounded shadow-sm p-6 h-fit">
+          <section className="w-full lg:w-[1116px] bg-white rounded shadow-md p-6 h-fit">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <ShoppingBasket className="w-6 h-6" />
@@ -163,7 +163,7 @@ export default function CarrinhoComponent() {
             </div>
           </section>
 
-          <section className="w-full lg:w-[356px] flex-shrink-0 bg-white p-6 rounded shadow-sm sticky top-24 space-y-4 h-fit">
+          <section className="w-full lg:w-[356px] flex-shrink-0 bg-white p-6 rounded shadow-md sticky top-24 space-y-4 h-fit">
             <h2 className="text-2xl font-bold mb-4">Resumo do Pedido</h2>
 
               <div className="space-y-3 pb-4 border-b border-gray-400/30">
@@ -210,7 +210,7 @@ export default function CarrinhoComponent() {
                 </Button>
               </Link>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+              <div className="bg-blue-50 border border-blue-200 rounded p-4 text-sm text-blue-800">
                 <p className="font-semibold mb-1">Frete</p>
                 <p>
                   Entrega em até 7 dias úteis para todo o Brasil por apenas R${" "}

@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useCart } from "@/providers/CartProvider";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { frete } from "@/data/products";
+import { ChevronLeft } from "lucide-react";
 
 const schema = yup.object().shape({
   nome: yup.string().required("Nome é obrigatório"),
@@ -48,10 +49,21 @@ export default function CheckoutComponent({ id }: { id?: string }) {
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
+      <div className="container mx-auto px-4 max-w-6xl pt-4 pb-2">
+        <Link href="/carrinho">
+          <Button
+            variant="ghost"
+            className="bg-transparent border-none text-gray-500 hover:bg-transparent hover:underline px-0 font-normal"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Voltar ao carrinho
+          </Button>
+        </Link>
+      </div>
       <StepperCheckout currentStep={2} />
       <div className="pb-10">
         <div className="container mx-auto px-4 max-w-6xl">
-          <h1 className="text-3xl font-bold mb-8">Dados Pessoais</h1>
+          <h1 className="text-3xl font-bold mb-8 mt-6">Dados Pessoais</h1>
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
@@ -210,7 +222,7 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                   type="submit"
                   form="checkout-form"
                   size="lg"
-                  className="w-full mt-6 bg-black hover:bg-gray-800 text-white"
+                  className="w-full mt-6 bg-black hover:bg-gray-800 rounded text-white"
                 >
                   Ir para a Entrega
                 </Button>

@@ -1,7 +1,8 @@
 "use client";
 
-import { Truck, Zap } from "lucide-react";
+import { ChevronLeft, Truck, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -49,7 +50,7 @@ export default function DeliveryPageComponent() {
   const total = subtotal + shippingCost;
 
   const onSubmit = (data: DeliveryFormData) => {
-    // Navigate to default payment method (Pix)
+    // Acesse o método de pagamento padrão (Pix)
     console.log("Endereço:", data, "Frete:", shippingType);
     router.push("/checkout/pix");
   };
@@ -57,10 +58,21 @@ export default function DeliveryPageComponent() {
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
+      <div className="container mx-auto px-4 max-w-6xl pt-4 pb-2">
+        <Link href="/checkout">
+          <Button
+            variant="ghost"
+            className="bg-transparent border-none text-gray-500 hover:bg-transparent hover:underline px-0 font-normal"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Voltar aos dados pessoais
+          </Button>
+        </Link>
+      </div>
       <StepperCheckout currentStep={3} />
       <div className="pb-10">
         <div className="container mx-auto px-4 max-w-6xl">
-          <h1 className="text-3xl font-bold mb-8">Opções de Entrega</h1>
+          <h1 className="text-3xl font-bold mb-8 mt-6">Opções de Entrega</h1>
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
@@ -196,7 +208,7 @@ export default function DeliveryPageComponent() {
                       <RadioGroupItem
                         value="standard"
                         id="standard"
-                        className="mt-1"
+                        className="mt-1 bg-white border-2 border-gray-400 data-[state=checked]:border-[#0597F2] data-[state=checked]:text-[#0597F2]"
                       />
                       <div className="flex-1">
                         <div className="text-base font-semibold flex items-center gap-2">
@@ -219,7 +231,7 @@ export default function DeliveryPageComponent() {
                       <RadioGroupItem
                         value="express"
                         id="express"
-                        className="mt-1"
+                        className="mt-1 bg-white border-2 border-gray-400 data-[state=checked]:border-[#0597F2] data-[state=checked]:text-[#0597F2]"
                       />
                       <div className="flex-1">
                         <div className="text-base font-semibold flex items-center gap-2">
@@ -235,16 +247,6 @@ export default function DeliveryPageComponent() {
                       </div>
                     </Label>
                   </RadioGroup>
-
-                  <div className="pt-8 flex items-right justify-end">
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="bg-black hover:bg-gray-800 text-white px-8"
-                    >
-                      Ir para o Pagamento
-                    </Button>
-                  </div>
                 </form>
               </div>
             </div>
@@ -309,6 +311,13 @@ export default function DeliveryPageComponent() {
                       })}
                     </span>
                   </div>
+                  <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full mt-6 bg-black hover:bg-gray-800 rounded text-white"
+                    >
+                      Ir para o Pagamento
+                  </Button>
                 </div>
               </div>
             </div>
