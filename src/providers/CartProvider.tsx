@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import type { Product } from "../data/products";
 import { getProductPriceWithVariants } from "../data/products";
 
@@ -17,8 +23,15 @@ interface CartContextType {
     quantity: number,
     variants?: Record<string, string>,
   ) => void;
-  removeFromCart: (productId: string, variants?: Record<string, string>) => void;
-  updateQuantity: (productId: string, quantity: number, variants?: Record<string, string>) => void;
+  removeFromCart: (
+    productId: string,
+    variants?: Record<string, string>,
+  ) => void;
+  updateQuantity: (
+    productId: string,
+    quantity: number,
+    variants?: Record<string, string>,
+  ) => void;
   getTotal: () => number;
   getItemCount: () => number;
   clearCart: () => void;
@@ -26,7 +39,10 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-const isVariantsEqual = (v1?: Record<string, string>, v2?: Record<string, string>) => {
+const isVariantsEqual = (
+  v1?: Record<string, string>,
+  v2?: Record<string, string>,
+) => {
   const obj1 = v1 || {};
   const obj2 = v2 || {};
   const keys1 = Object.keys(obj1);
@@ -65,7 +81,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   ) => {
     setItems((prev) => {
       const existingIndex = prev.findIndex(
-        (item) => item.product.id === product.id && isVariantsEqual(item.selectedVariants, variants),
+        (item) =>
+          item.product.id === product.id &&
+          isVariantsEqual(item.selectedVariants, variants),
       );
 
       if (existingIndex > -1) {
@@ -81,25 +99,46 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeFromCart = (productId: string, variants?: Record<string, string>) => {
-    setItems((prev) => prev.filter((item) => !(item.product.id === productId && isVariantsEqual(item.selectedVariants, variants))));
+  const removeFromCart = (
+    productId: string,
+    variants?: Record<string, string>,
+  ) => {
+    setItems((prev) =>
+      prev.filter(
+        (item) =>
+          !(
+            item.product.id === productId &&
+            isVariantsEqual(item.selectedVariants, variants)
+          ),
+      ),
+    );
   };
 
-  const updateQuantity = (productId: string, quantity: number, variants?: Record<string, string>) => {
+  const updateQuantity = (
+    productId: string,
+    quantity: number,
+    variants?: Record<string, string>,
+  ) => {
     if (quantity <= 0) {
       removeFromCart(productId, variants);
       return;
     }
     setItems((prev) =>
       prev.map((item) =>
-        item.product.id === productId && isVariantsEqual(item.selectedVariants, variants) ? { ...item, quantity } : item,
+        item.product.id === productId &&
+        isVariantsEqual(item.selectedVariants, variants)
+          ? { ...item, quantity }
+          : item,
       ),
     );
   };
 
   const getTotal = () => {
     return items.reduce(
-      (sum, item) => sum + getProductPriceWithVariants(item.product, item.selectedVariants) * item.quantity,
+      (sum, item) =>
+        sum +
+        getProductPriceWithVariants(item.product, item.selectedVariants) *
+          item.quantity,
       0,
     );
   };

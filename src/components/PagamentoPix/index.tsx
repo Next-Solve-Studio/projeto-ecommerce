@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { finalizarPedido } from "@/actions/checkout";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/providers/CartProvider";
-import { finalizarPedido } from "@/actions/checkout";
 
 export default function PixPaymentPageComponent() {
   const router = useRouter();
@@ -20,9 +20,10 @@ export default function PixPaymentPageComponent() {
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const subtotal = getTotal();
-  const shippingData = typeof window !== "undefined"
-    ? JSON.parse(localStorage.getItem("shippingData") || '{"shippingCost":0}')
-    : { shippingCost: 0 };
+  const shippingData =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("shippingData") || '{"shippingCost":0}')
+      : { shippingCost: 0 };
   const total = subtotal + shippingData.shippingCost;
 
   const pixCodeFallback =
@@ -71,7 +72,7 @@ export default function PixPaymentPageComponent() {
         toast.error("Erro ao criar pedido. Tente novamente.");
       })
       .finally(() => setIsCreatingOrder(false));
-  }, []);
+  }, [items]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(realPixCode ?? pixCodeFallback);

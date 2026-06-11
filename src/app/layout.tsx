@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import { CartProvider } from "@/providers/CartProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";

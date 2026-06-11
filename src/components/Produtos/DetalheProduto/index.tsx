@@ -23,7 +23,12 @@ import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { products, type Product, frete, getProductPriceWithVariants } from "@/data/products";
+import {
+  frete,
+  getProductPriceWithVariants,
+  type Product,
+  products,
+} from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
@@ -57,7 +62,8 @@ export default function DetalheProdutoComponent({
     setSelectedVariants((prev) => {
       const initialVariants: Record<string, string> = {};
       productVariants.forEach((variant) => {
-        initialVariants[variant.type] = prev[variant.type] || variant.options[0] || "";
+        initialVariants[variant.type] =
+          prev[variant.type] || variant.options[0] || "";
       });
       return initialVariants;
     });
@@ -98,8 +104,10 @@ export default function DetalheProdutoComponent({
     );
   }
 
-  const placeholderImage = "https://tiradentesinnovation.com/wp-content/uploads/2022/07/Picture-768x614.jpg";
-  const originalImages = product.images.length > 0 ? product.images : [placeholderImage];
+  const placeholderImage =
+    "https://tiradentesinnovation.com/wp-content/uploads/2022/07/Picture-768x614.jpg";
+  const originalImages =
+    product.images.length > 0 ? product.images : [placeholderImage];
   const desiredProductImages = 6;
   const desiredPlaceholderImages = 6;
   const productGalleryImages = [
@@ -176,7 +184,9 @@ export default function DetalheProdutoComponent({
 
               <button
                 type="button"
-                onClick={() => setGalleryModalIndex((prev) => Math.max(0, prev - 1))}
+                onClick={() =>
+                  setGalleryModalIndex((prev) => Math.max(0, prev - 1))
+                }
                 disabled={galleryModalIndex === 0}
                 className="absolute left-4 top-1/2 -translate-y-1/2 rounded-lg bg-black/60 p-3 text-white enabled:hover:bg-black disabled:cursor-not-allowed disabled:opacity-40"
               >
@@ -184,7 +194,11 @@ export default function DetalheProdutoComponent({
               </button>
               <button
                 type="button"
-                onClick={() => setGalleryModalIndex((prev) => Math.min(galleryImages.length - 1, prev + 1))}
+                onClick={() =>
+                  setGalleryModalIndex((prev) =>
+                    Math.min(galleryImages.length - 1, prev + 1),
+                  )
+                }
                 disabled={galleryModalIndex === galleryImages.length - 1}
                 className="absolute right-4 top-1/2 -translate-y-1/2 rounded-lg bg-black/60 p-3 text-white enabled:hover:bg-black disabled:cursor-not-allowed disabled:opacity-40"
               >
@@ -196,18 +210,22 @@ export default function DetalheProdutoComponent({
       )}
 
       <div className="w-full max-w-[1252px] mx-auto px-4 py-8">
-        <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-gray-600 mb-6 flex-wrap">
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 text-sm text-gray-600 mb-6 flex-wrap"
+        >
           <Link href="/" className="hover:text-black transition-colors">
             Página inicial
           </Link>
           <ChevronRight size={16} />
-          <Link href={`/produtos?categoria=${encodeURIComponent(product.category)}`} className="hover:text-black transition-colors">
+          <Link
+            href={`/produtos?categoria=${encodeURIComponent(product.category)}`}
+            className="hover:text-black transition-colors"
+          >
             {product.category}
           </Link>
           <ChevronRight size={16} />
-          <span className="font-semibold text-black">
-            {product.name}
-          </span>
+          <span className="font-semibold text-black">{product.name}</span>
         </nav>
 
         <div className="bg-white rounded-[3px] shadow-sm p-8 mb-[15px]">
@@ -261,7 +279,7 @@ export default function DetalheProdutoComponent({
               <div>
                 <p className="text-sm text-gray-500 mb-2">{product.category}</p>
                 <div className="flex items-start justify-between gap-4">
-                <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
+                  <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
                   <button
                     type="button"
                     onClick={() => setIsFavorite(!isFavorite)}
@@ -274,87 +292,104 @@ export default function DetalheProdutoComponent({
                     />
                   </button>
                 </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 mt-1">
-                <span className="font-bold text-black">{product.rating}</span>
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => {
-                    const ratingValue = i + 1;
-                    if (product.rating >= ratingValue) {
-                      return <Star key={i} size={16} className="fill-yellow-400 text-yellow-400" />;
-                    } else if (product.rating >= ratingValue - 0.5) {
-                      return (
-                        <div key={i} className="relative flex">
-                          <Star size={16} className="text-gray-300" />
-                          <div className="absolute top-0 left-0 overflow-hidden w-1/2">
-                            <Star size={16} className="fill-yellow-400 text-yellow-400" />
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-4 mt-1">
+                  <span className="font-bold text-black">{product.rating}</span>
+                  <div className="flex items-center">
+                    {[...Array(5)].map((_, i) => {
+                      const ratingValue = i + 1;
+                      if (product.rating >= ratingValue) {
+                        return (
+                          <Star
+                            key={i}
+                            size={16}
+                            className="fill-yellow-400 text-yellow-400"
+                          />
+                        );
+                      } else if (product.rating >= ratingValue - 0.5) {
+                        return (
+                          <div key={i} className="relative flex">
+                            <Star size={16} className="text-gray-300" />
+                            <div className="absolute top-0 left-0 overflow-hidden w-1/2">
+                              <Star
+                                size={16}
+                                className="fill-yellow-400 text-yellow-400"
+                              />
+                            </div>
                           </div>
-                        </div>
-                      );
-                    }
-                    return <Star key={i} size={16} className="text-gray-300" />;
-                  })}
-                </div>
-                <span className="text-gray-400">•</span>
-                <span>{product.salesCount} vendidos</span>
-              </div>
-              </div>
-
-            <div className="py-2">
-              {product.oldPrice && (
-                <p className="text-sm text-gray-500 line-through mb-1">
-                  R${" "}
-                  {getProductPriceWithVariants(product, selectedVariants, product.oldPrice).toLocaleString("pt-BR", {
-                    minimumFractionDigits: 2,
-                  })}
-                </p>
-              )}
-              <div className="flex items-center gap-3">
-                <p className="text-3xl font-bold">
-                  R${" "}
-                  {getProductPriceWithVariants(product, selectedVariants).toLocaleString("pt-BR", {
-                    minimumFractionDigits: 2,
-                  })}
-                </p>
-                {product.discountPercentage && (
-                  <span className="text-sm font-semibold text-green-600 bg-green-100 px-2 py-1 rounded">
-                    -{product.discountPercentage}%
-                  </span>
-                )}
-              </div>
-              </div>
-
-              {product.variants &&
-                product.variants.map((variant) => (
-                  <div key={variant.type} className="space-y-3">
-                    <Label className="text-lg font-semibold">
-                      {variant.type}
-                    </Label>
-                    <RadioGroup
-                      value={selectedVariants[variant.type] || ""}
-                      onValueChange={(value) =>
-                        handleVariantChange(variant.type, value)
+                        );
                       }
-                    >
-                      <div className="grid grid-cols-2 gap-3">
-                        {variant.options.map((option) => (
-                          <div key={option} className="relative">
-                            <RadioGroupItem
-                              value={option}
-                              id={`${variant.type}-${option}`}
-                              className="peer sr-only"
-                            />
-                            <Label
-                              htmlFor={`${variant.type}-${option}`}
-                              className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg cursor-pointer transition-all bg-white text-black peer-data-[state=checked]:border-blue-600 peer-data-[state=checked]:border-2 peer-data-[state=checked]:text-black hover:border-gray-400"
-                            >
-                              {option}
-                            </Label>
-                          </div>
-                        ))}
-                      </div>
-                    </RadioGroup>
+                      return (
+                        <Star key={i} size={16} className="text-gray-300" />
+                      );
+                    })}
                   </div>
-                ))}
+                  <span className="text-gray-400">•</span>
+                  <span>{product.salesCount} vendidos</span>
+                </div>
+              </div>
+
+              <div className="py-2">
+                {product.oldPrice && (
+                  <p className="text-sm text-gray-500 line-through mb-1">
+                    R${" "}
+                    {getProductPriceWithVariants(
+                      product,
+                      selectedVariants,
+                      product.oldPrice,
+                    ).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </p>
+                )}
+                <div className="flex items-center gap-3">
+                  <p className="text-3xl font-bold">
+                    R${" "}
+                    {getProductPriceWithVariants(
+                      product,
+                      selectedVariants,
+                    ).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </p>
+                  {product.discountPercentage && (
+                    <span className="text-sm font-semibold text-green-600 bg-green-100 px-2 py-1 rounded">
+                      -{product.discountPercentage}%
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {product.variants?.map((variant) => (
+                <div key={variant.type} className="space-y-3">
+                  <Label className="text-lg font-semibold">
+                    {variant.type}
+                  </Label>
+                  <RadioGroup
+                    value={selectedVariants[variant.type] || ""}
+                    onValueChange={(value) =>
+                      handleVariantChange(variant.type, value)
+                    }
+                  >
+                    <div className="grid grid-cols-2 gap-3">
+                      {variant.options.map((option) => (
+                        <div key={option} className="relative">
+                          <RadioGroupItem
+                            value={option}
+                            id={`${variant.type}-${option}`}
+                            className="peer sr-only"
+                          />
+                          <Label
+                            htmlFor={`${variant.type}-${option}`}
+                            className="flex items-center justify-center px-4 py-3 border border-gray-300 rounded-lg cursor-pointer transition-all bg-white text-black peer-data-[state=checked]:border-blue-600 peer-data-[state=checked]:border-2 peer-data-[state=checked]:text-black hover:border-gray-400"
+                          >
+                            {option}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                  </RadioGroup>
+                </div>
+              ))}
 
               <div className="space-y-3">
                 <Label className="text-lg font-semibold">Quantidade</Label>
@@ -423,10 +458,14 @@ export default function DetalheProdutoComponent({
             ) : (
               <ChevronDown className="text-gray-600 shrink-0" size={24} />
             )}
-            <h2 className="text-xl font-bold text-gray-900">Descrição do produto</h2>
+            <h2 className="text-xl font-bold text-gray-900">
+              Descrição do produto
+            </h2>
           </button>
-          
-          <div className={`grid transition-all duration-300 ease-in-out ${isDescriptionOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+
+          <div
+            className={`grid transition-all duration-300 ease-in-out ${isDescriptionOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}
+          >
             <div className="overflow-hidden bg-white">
               <div className="p-8">
                 <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">

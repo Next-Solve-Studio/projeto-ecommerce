@@ -6,9 +6,9 @@ import { CheckCircle2, CreditCard, Package, Truck, User } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { getOrderById } from "@/actions/checkout";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { getOrderById } from "@/actions/checkout";
 
 function FinalizacaoPageComponentContent() {
   const searchParams = useSearchParams();
@@ -53,8 +53,8 @@ function FinalizacaoPageComponentContent() {
                 {loading
                   ? "Carregando..."
                   : orderData?.orderNumber
-                  ? `#${orderData.orderNumber}`
-                  : "#UX-12345"}
+                    ? `#${orderData.orderNumber}`
+                    : "#UX-12345"}
               </p>
             </div>
 
@@ -76,10 +76,16 @@ function FinalizacaoPageComponentContent() {
                   <div className="space-y-1 mb-4">
                     {orderData?.items && orderData.items.length > 0 ? (
                       orderData.items.map((item: any, idx: number) => (
-                        <p key={idx} className="text-sm text-gray-600 line-clamp-1">
+                        <p
+                          key={idx}
+                          className="text-sm text-gray-600 line-clamp-1"
+                        >
                           {item.quantity}x {item.productName}
                           {item.variantInfo && (
-                            <span className="text-gray-400"> ({item.variantInfo})</span>
+                            <span className="text-gray-400">
+                              {" "}
+                              ({item.variantInfo})
+                            </span>
                           )}
                         </p>
                       ))
@@ -114,9 +120,11 @@ function FinalizacaoPageComponentContent() {
                     {orderData?.address ? (
                       <>
                         {orderData.address.street}, {orderData.address.number}
-                        {orderData.address.complement && ` - ${orderData.address.complement}`}
+                        {orderData.address.complement &&
+                          ` - ${orderData.address.complement}`}
                         <br />
-                        {orderData.address.neighborhood} - {orderData.address.city}, {orderData.address.state}
+                        {orderData.address.neighborhood} -{" "}
+                        {orderData.address.city}, {orderData.address.state}
                         <br />
                         CEP: {orderData.address.cep}
                       </>

@@ -1,7 +1,7 @@
 "use client";
 
-import { Search, SlidersHorizontal, Check, Star } from "lucide-react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { Check, Search, SlidersHorizontal, Star } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
@@ -46,13 +46,13 @@ function ProdutosComponentContent() {
     if (categoryParam && categoryParam !== selectedCategory) {
       setSelectedCategory(categoryParam);
     }
-  }, [categoryParam]);
+  }, [categoryParam, selectedCategory]);
 
   useEffect(() => {
     if (buscaParam !== null && buscaParam !== searchQuery) {
       setSearchQuery(buscaParam);
     }
-  }, [buscaParam]);
+  }, [buscaParam, searchQuery]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -62,9 +62,13 @@ function ProdutosComponentContent() {
       selectedCategory === "Todas" || product.category === selectedCategory;
     const matchesPrice =
       product.price >= priceRange[0] && product.price <= priceRange[1];
-    const matchesRating = selectedRatings.length === 0 || selectedRatings.some((r) =>
-      r === 5 ? product.rating === 5 : product.rating >= r && product.rating < r + 1
-    );
+    const matchesRating =
+      selectedRatings.length === 0 ||
+      selectedRatings.some((r) =>
+        r === 5
+          ? product.rating === 5
+          : product.rating >= r && product.rating < r + 1,
+      );
 
     return matchesSearch && matchesCategory && matchesPrice && matchesRating;
   });
@@ -89,7 +93,9 @@ function ProdutosComponentContent() {
       <Header />
       <div className="max-w-[1250px] w-full mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2 text-black">Catálogo de Produtos</h1>
+          <h1 className="text-4xl font-bold mb-2 text-black">
+            Catálogo de Produtos
+          </h1>
           <p className="text-gray-800">
             Encontre os melhores eletrônicos para você
           </p>
@@ -107,14 +113,22 @@ function ProdutosComponentContent() {
 
               <div className="space-y-6">
                 <div>
-                  <Label className="mb-3 block font-semibold text-[#202020]">Categoria</Label>
+                  <Label className="mb-3 block font-semibold text-[#202020]">
+                    Categoria
+                  </Label>
                   <div className="flex flex-col">
-                    <div 
+                    <div
                       className="flex items-center space-x-2 mb-2 cursor-pointer"
                       onClick={() => handleCategoryChange("Todas")}
                     >
                       <div className="w-[13px] h-[13px] bg-white border border-gray-400 rounded-[1px] flex items-center justify-center shrink-0">
-                        {selectedCategory === "Todas" && <Check size={10} strokeWidth={4} className="text-blue-600" />}
+                        {selectedCategory === "Todas" && (
+                          <Check
+                            size={10}
+                            strokeWidth={4}
+                            className="text-blue-600"
+                          />
+                        )}
                       </div>
                       <Label className="cursor-pointer text-[#202020] pointer-events-none">
                         Todas
@@ -127,7 +141,13 @@ function ProdutosComponentContent() {
                         onClick={() => handleCategoryChange(category)}
                       >
                         <div className="w-[13px] h-[13px] bg-white border border-gray-400 rounded-[1px] flex items-center justify-center shrink-0">
-                          {selectedCategory === category && <Check size={10} strokeWidth={4} className="text-blue-600" />}
+                          {selectedCategory === category && (
+                            <Check
+                              size={10}
+                              strokeWidth={4}
+                              className="text-blue-600"
+                            />
+                          )}
                         </div>
                         <Label className="cursor-pointer text-[#202020] pointer-events-none">
                           {category}
@@ -140,7 +160,9 @@ function ProdutosComponentContent() {
                 <hr className="my-6 border-gray-300" />
 
                 <div>
-                  <Label className="mb-3 block font-semibold text-[#202020]">Avaliação</Label>
+                  <Label className="mb-3 block font-semibold text-[#202020]">
+                    Avaliação
+                  </Label>
                   <div className="flex flex-col">
                     {[5, 4, 3, 2, 1].map((rating) => (
                       <div
@@ -150,19 +172,29 @@ function ProdutosComponentContent() {
                           setSelectedRatings((prev) =>
                             prev.includes(rating)
                               ? prev.filter((r) => r !== rating)
-                              : [...prev, rating]
+                              : [...prev, rating],
                           );
                         }}
                       >
                         <div className="w-[13px] h-[13px] bg-white border border-gray-400 rounded-[1px] flex items-center justify-center shrink-0">
-                          {selectedRatings.includes(rating) && <Check size={10} strokeWidth={4} className="text-blue-600" />}
+                          {selectedRatings.includes(rating) && (
+                            <Check
+                              size={10}
+                              strokeWidth={4}
+                              className="text-blue-600"
+                            />
+                          )}
                         </div>
                         <div className="flex items-center cursor-pointer pointer-events-none">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
                               size={14}
-                              className={i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}
+                              className={
+                                i < rating
+                                  ? "fill-yellow-400 text-yellow-400"
+                                  : "text-gray-300"
+                              }
                             />
                           ))}
                         </div>

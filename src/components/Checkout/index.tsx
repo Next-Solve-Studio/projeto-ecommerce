@@ -1,17 +1,17 @@
 "use client";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useRouter } from "next/navigation";
+import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCart } from "@/providers/CartProvider";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { frete } from "@/data/products";
-import { ChevronLeft } from "lucide-react";
+import { useCart } from "@/providers/CartProvider";
 
 const schema = yup.object().shape({
   nome: yup.string().required("Nome é obrigatório"),
@@ -37,9 +37,9 @@ export default function CheckoutComponent({ id }: { id?: string }) {
   const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
 
   const onSubmit = (data: CheckoutFormData) => {
-  localStorage.setItem("checkoutFormData", JSON.stringify(data));
-  router.push("/entrega");
-};
+    localStorage.setItem("checkoutFormData", JSON.stringify(data));
+    router.push("/entrega");
+  };
 
   const subtotal = getTotal();
   const total = subtotal + frete;
@@ -66,7 +66,11 @@ export default function CheckoutComponent({ id }: { id?: string }) {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="bg-white p-6 md:p-8 rounded shadow-md">
-                <form id="checkout-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <form
+                  id="checkout-form"
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="space-y-6"
+                >
                   {/* Dados Pessoais */}
                   <div>
                     <h2 className="text-xl font-semibold mb-4 border-b border-gray-300/50 pb-2">
@@ -200,7 +204,11 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Frete</span>
-                    <span className={frete === 0 ? "text-green-600 font-semibold" : ""}>
+                    <span
+                      className={
+                        frete === 0 ? "text-green-600 font-semibold" : ""
+                      }
+                    >
                       {frete === 0
                         ? "Grátis"
                         : `R$ ${frete.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}

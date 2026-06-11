@@ -5,11 +5,12 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
+import { frete, getProductPriceWithVariants } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
-import { getProductPriceWithVariants, frete } from "@/data/products";
 
 export default function CarrinhoComponent() {
-  const { items, updateQuantity, removeFromCart, clearCart, getTotal } = useCart();
+  const { items, updateQuantity, removeFromCart, clearCart, getTotal } =
+    useCart();
 
   const subtotal = getTotal();
   const shipping = subtotal > 0 ? frete : 0;
@@ -60,7 +61,7 @@ export default function CarrinhoComponent() {
                 REMOVER TODOS OS PRODUTOS
               </Button>
             </div>
-            
+
             <div className="space-y-6">
               {items.map((item) => (
                 <div
@@ -110,7 +111,11 @@ export default function CarrinhoComponent() {
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity - 1, item.selectedVariants)
+                            updateQuantity(
+                              item.product.id,
+                              item.quantity - 1,
+                              item.selectedVariants,
+                            )
                           }
                           disabled={item.quantity <= 1}
                         >
@@ -123,7 +128,11 @@ export default function CarrinhoComponent() {
                           variant="outline"
                           size="icon"
                           onClick={() =>
-                            updateQuantity(item.product.id, item.quantity + 1, item.selectedVariants)
+                            updateQuantity(
+                              item.product.id,
+                              item.quantity + 1,
+                              item.selectedVariants,
+                            )
                           }
                         >
                           <Plus size={16} />
@@ -133,14 +142,21 @@ export default function CarrinhoComponent() {
                       <div className="text-right">
                         <p className="text-2xl font-bold">
                           R${" "}
-                          {(getProductPriceWithVariants(item.product, item.selectedVariants) * item.quantity).toLocaleString(
-                            "pt-BR",
-                            { minimumFractionDigits: 2 },
-                          )}
+                          {(
+                            getProductPriceWithVariants(
+                              item.product,
+                              item.selectedVariants,
+                            ) * item.quantity
+                          ).toLocaleString("pt-BR", {
+                            minimumFractionDigits: 2,
+                          })}
                         </p>
                         <p className="text-sm text-gray-600">
                           R${" "}
-                          {getProductPriceWithVariants(item.product, item.selectedVariants).toLocaleString("pt-BR", {
+                          {getProductPriceWithVariants(
+                            item.product,
+                            item.selectedVariants,
+                          ).toLocaleString("pt-BR", {
                             minimumFractionDigits: 2,
                           })}{" "}
                           cada
@@ -151,7 +167,9 @@ export default function CarrinhoComponent() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => removeFromCart(item.product.id, item.selectedVariants)}
+                      onClick={() =>
+                        removeFromCart(item.product.id, item.selectedVariants)
+                      }
                       className="text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 size={16} className="mr-2" />
@@ -166,60 +184,62 @@ export default function CarrinhoComponent() {
           <section className="w-full lg:w-[356px] flex-shrink-0 bg-white p-6 rounded shadow-md sticky top-24 space-y-4 h-fit">
             <h2 className="text-2xl font-bold mb-4">Resumo do Pedido</h2>
 
-              <div className="space-y-3 pb-4 border-b border-gray-400/30">
-                <div className="flex justify-between text-gray-600">
-                  <span>
-                    Subtotal (
-                    {items.reduce((sum, item) => sum + item.quantity, 0)} itens)
-                  </span>
-                  <span>
-                    R${" "}
-                    {subtotal.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Frete</span>
-                  <span className="text-gray-900 font-semibold">
-                    R${" "}
-                    {shipping.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex justify-between text-2xl font-bold pt-2">
-                <span>Total</span>
+            <div className="space-y-3 pb-4 border-b border-gray-400/30">
+              <div className="flex justify-between text-gray-600">
+                <span>
+                  Subtotal (
+                  {items.reduce((sum, item) => sum + item.quantity, 0)} itens)
+                </span>
                 <span>
                   R${" "}
-                  {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-                </span>
-              </div>
-
-              <Link href="/checkout" className="block">
-                <Button className="w-full h-12 bg-black hover:bg-gray-800 text-lg rounded">
-                  Finalizar Compra
-                </Button>
-              </Link>
-
-              <Link href="/produtos">
-                <Button variant="outline" className="w-full hover:underline rounded border-none mb-3">
-                  Continuar Comprando
-                </Button>
-              </Link>
-
-              <div className="bg-blue-50 border border-blue-200 rounded p-4 text-sm text-blue-800">
-                <p className="font-semibold mb-1">Frete</p>
-                <p>
-                  Entrega em até 7 dias úteis para todo o Brasil por apenas R${" "}
-                  {frete.toLocaleString("pt-BR", {
+                  {subtotal.toLocaleString("pt-BR", {
                     minimumFractionDigits: 2,
                   })}
-                  .
-                </p>
+                </span>
               </div>
+              <div className="flex justify-between text-gray-600">
+                <span>Frete</span>
+                <span className="text-gray-900 font-semibold">
+                  R${" "}
+                  {shipping.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-between text-2xl font-bold pt-2">
+              <span>Total</span>
+              <span>
+                R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+              </span>
+            </div>
+
+            <Link href="/checkout" className="block">
+              <Button className="w-full h-12 bg-black hover:bg-gray-800 text-lg rounded">
+                Finalizar Compra
+              </Button>
+            </Link>
+
+            <Link href="/produtos">
+              <Button
+                variant="outline"
+                className="w-full hover:underline rounded border-none mb-3"
+              >
+                Continuar Comprando
+              </Button>
+            </Link>
+
+            <div className="bg-blue-50 border border-blue-200 rounded p-4 text-sm text-blue-800">
+              <p className="font-semibold mb-1">Frete</p>
+              <p>
+                Entrega em até 7 dias úteis para todo o Brasil por apenas R${" "}
+                {frete.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+                .
+              </p>
+            </div>
           </section>
         </div>
       </div>

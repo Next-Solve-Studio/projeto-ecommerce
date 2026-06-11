@@ -470,7 +470,7 @@ Especificações:
   },
   {
     id: "3",
-    name: 'Tablet Apple iPad Pro Chip M2 256GB',
+    name: "Tablet Apple iPad Pro Chip M2 256GB",
     price: 11999.0,
     oldPrice: 12999.0,
     discountPercentage: 7,
@@ -495,7 +495,9 @@ Especificações:
 - Conectividade: Wi-Fi 6E e Bluetooth 5.3
 - Câmeras: Traseira 12MP + 10MP Ultrawide / Frontal 12MP TrueDepth`,
     category: "Tablets",
-    images: ["https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9FnDyBV5kMEersaoZtGrr9zsV_4dl4bzQWw&s"],
+    images: [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9FnDyBV5kMEersaoZtGrr9zsV_4dl4bzQWw&s",
+    ],
     variants: [
       {
         type: "Capacidade",
@@ -607,9 +609,7 @@ Especificações:
 - Mecanismo das teclas: Tesoura, com curso de 1mm
 - Iluminação: Retroiluminação LED sensível ao ambiente`,
     category: "Acessórios",
-    images: [
-      "https://m.media-amazon.com/images/I/61atNJ8AThL.jpg",
-    ],
+    images: ["https://m.media-amazon.com/images/I/61atNJ8AThL.jpg"],
     tags: ["populares"],
   },
   {
@@ -639,9 +639,7 @@ Especificações:
 - Câmeras: Traseira 200MP + 50MP + 12MP + 10MP / Frontal 12MP
 - Diferenciais: S Pen Inclusa e Galaxy AI integrada`,
     category: "Smartphones",
-    images: [
-      "https://fujiokadistribuidor.vteximg.com.br/arquivos/ids/358152",
-    ],
+    images: ["https://fujiokadistribuidor.vteximg.com.br/arquivos/ids/358152"],
     variants: [
       {
         type: "Cor",
@@ -679,9 +677,7 @@ Especificações:
 - Memória: 32GB DDR5
 - Placa de Vídeo: NVIDIA GeForce RTX 4050 6GB GDDR6`,
     category: "Notebooks",
-    images: [
-      "https://m.media-amazon.com/images/I/719CAihgtTL.jpg",
-    ],
+    images: ["https://m.media-amazon.com/images/I/719CAihgtTL.jpg"],
     tags: ["populares"],
   },
   {
@@ -711,7 +707,9 @@ Especificações:
 - Armazenamento/RAM: 512GB interno e 12GB de RAM
 - Proteção: Certificação IP68 (Resistência a poeira e água)`,
     category: "Tablets",
-    images: ["https://m.media-amazon.com/images/I/61wvtWvQsRL._AC_UF1000,1000_QL80_.jpg"],
+    images: [
+      "https://m.media-amazon.com/images/I/61wvtWvQsRL._AC_UF1000,1000_QL80_.jpg",
+    ],
     tags: ["ofertas"],
   },
   {
@@ -775,9 +773,7 @@ Especificações:
 - GPS: Multibanda (GPS, GLONASS e Galileo)
 - Sensores: Frequência cardíaca (Gen 5), Oxímetro de pulso, altímetro, bússola`,
     category: "Smartwatches",
-    images: [
-      "https://res.garmin.com/en/products/010-02777-20/v/cf-lg.jpg",
-    ],
+    images: ["https://res.garmin.com/en/products/010-02777-20/v/cf-lg.jpg"],
     tags: ["populares"],
   },
   {

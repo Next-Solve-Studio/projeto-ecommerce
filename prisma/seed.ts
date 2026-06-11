@@ -1,10 +1,10 @@
 import "dotenv/config";
-import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { products, categories } from "../src/data/products";
+import { PrismaClient } from "@prisma/client";
+import { categories, products } from "../src/data/products";
 
-const adapter = new PrismaPg({ 
-  connectionString: process.env["DATABASE_URL"] 
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL,
 });
 const prisma = new PrismaClient({ adapter });
 const variantPriceModifiers: Record<string, Record<string, number>> = {
@@ -36,7 +36,6 @@ function toSlug(text: string): string {
 }
 
 async function main() {
-
   for (const categoryName of categories) {
     await prisma.category.upsert({
       where: { slug: toSlug(categoryName) },
@@ -65,7 +64,7 @@ async function main() {
       where: { slug },
       update: {},
       create: {
-        id: product.id, 
+        id: product.id,
         name: product.name,
         slug,
         description: product.description,

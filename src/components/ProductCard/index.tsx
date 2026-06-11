@@ -57,7 +57,7 @@ export function ProductCard({ product }: ProductCardProps) {
             <div className="flex flex-col">
               <span className="text-xs text-gray-400 line-through">
                 R${" "}
-                {product.oldPrice!.toLocaleString("pt-BR", {
+                {product.oldPrice?.toLocaleString("pt-BR", {
                   minimumFractionDigits: 2,
                 })}
               </span>

@@ -53,7 +53,14 @@ function generatePixCode(total: number, orderNumber: string): string {
 }
 
 export async function finalizarPedido(input: FinalizarPedidoInput) {
-  const { formData, enderecoData, cartItems, paymentMethod, shippingCost, shippingType } = input;
+  const {
+    formData,
+    enderecoData,
+    cartItems,
+    paymentMethod,
+    shippingCost,
+    shippingType,
+  } = input;
 
   const user = await prisma.user.upsert({
     where: { email: formData.email },
@@ -81,15 +88,13 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
 
   const itemsTotal = cartItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
-    0
+    0,
   );
   const totalAmount = itemsTotal + shippingCost;
 
   const orderNumber = generateOrderNumber();
   const pixCode =
-    paymentMethod === "PIX"
-      ? generatePixCode(totalAmount, orderNumber)
-      : null;
+    paymentMethod === "PIX" ? generatePixCode(totalAmount, orderNumber) : null;
 
   const order = await prisma.order.create({
     data: {

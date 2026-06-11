@@ -1,29 +1,41 @@
 "use client";
 
-import { buscarCep } from "@/actions/cep";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { ChevronLeft, Truck, Zap } from "lucide-react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { buscarCep } from "@/actions/cep";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useCart } from "@/providers/CartProvider";
 import { StepperCheckout } from "@/components/ui/stepper-checkout";
 import { frete, frete_express } from "@/data/products";
+import { useCart } from "@/providers/CartProvider";
 
 const schema = yup.object().shape({
   cep: yup.string().required("CEP é obrigatório").length(9, "CEP incompleto"),
-  endereco: yup.string().required("Endereço é obrigatório").max(70, "Máximo de 70 caracteres"),
-  numero: yup.string().required("Número é obrigatório").max(5, "Máximo de 5 dígitos"),
+  endereco: yup
+    .string()
+    .required("Endereço é obrigatório")
+    .max(70, "Máximo de 70 caracteres"),
+  numero: yup
+    .string()
+    .required("Número é obrigatório")
+    .max(5, "Máximo de 5 dígitos"),
   complemento: yup.string().max(40, "Máximo de 40 caracteres").optional(),
-  bairro: yup.string().required("Bairro é obrigatório").max(12, "Máximo de 12 caracteres"),
-  cidade: yup.string().required("Cidade é obrigatória").max(32, "Máximo de 32 caracteres"),
+  bairro: yup
+    .string()
+    .required("Bairro é obrigatório")
+    .max(12, "Máximo de 12 caracteres"),
+  cidade: yup
+    .string()
+    .required("Cidade é obrigatória")
+    .max(32, "Máximo de 32 caracteres"),
   estado: yup
     .string()
     .required("Estado é obrigatório")
@@ -38,25 +50,25 @@ export default function DeliveryPageComponent() {
   const [shippingType, setShippingType] = useState("standard");
 
   const {
-  register,
-  handleSubmit,
-  setValue,
-  formState: { errors },
-} = useForm({
-  resolver: yupResolver(schema),
-});
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
 
-const handleCepBlur = async (cep: string) => {
-  const cepLimpo = cep.replace(/\D/g, "");
-  if (cepLimpo.length !== 8) return;
-  const data = await buscarCep(cepLimpo);
-  if (!("error" in data)) {
-    setValue("endereco", data.endereco);
-    setValue("bairro", data.bairro);
-    setValue("cidade", data.cidade);
-    setValue("estado", data.estado);
-  }
-};
+  const handleCepBlur = async (cep: string) => {
+    const cepLimpo = cep.replace(/\D/g, "");
+    if (cepLimpo.length !== 8) return;
+    const data = await buscarCep(cepLimpo);
+    if (!("error" in data)) {
+      setValue("endereco", data.endereco);
+      setValue("bairro", data.bairro);
+      setValue("cidade", data.cidade);
+      setValue("estado", data.estado);
+    }
+  };
 
   const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
   const shippingCost = shippingType === "express" ? frete_express : frete;
@@ -73,13 +85,13 @@ const handleCepBlur = async (cep: string) => {
 
   const onSubmit = (data: DeliveryFormData) => {
     //Pagamento via pix
-  localStorage.setItem("enderecoData", JSON.stringify(data));
-  localStorage.setItem(
-    "shippingData",
-    JSON.stringify({ shippingType, shippingCost })
-  );
-  router.push("/checkout/pix");
-};
+    localStorage.setItem("enderecoData", JSON.stringify(data));
+    localStorage.setItem(
+      "shippingData",
+      JSON.stringify({ shippingType, shippingCost }),
+    );
+    router.push("/checkout/pix");
+  };
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
@@ -113,22 +125,25 @@ const handleCepBlur = async (cep: string) => {
                       <div className="space-y-2 md:col-span-4">
                         <Label htmlFor="cep">CEP</Label>
                         <Input
-                           id="cep"
-                            className={inputClassName}
-                            placeholder="00000-000"
-                            maxLength={9}
-                            {...cepRegister}
-                            onChange={(e) => {
-                              let value = e.target.value.replace(/\D/g, "");
-                              if (value.length > 8) value = value.substring(0, 8);
-                              if (value.length > 5) {
-                                value = value.substring(0, 5) + "-" + value.substring(5);
-                              }
-                              e.target.value = value;
-                              cepRegister.onChange(e);
-                            }}
-                            onBlur={(e) => handleCepBlur(e.target.value)}
-                            />
+                          id="cep"
+                          className={inputClassName}
+                          placeholder="00000-000"
+                          maxLength={9}
+                          {...cepRegister}
+                          onChange={(e) => {
+                            let value = e.target.value.replace(/\D/g, "");
+                            if (value.length > 8) value = value.substring(0, 8);
+                            if (value.length > 5) {
+                              value =
+                                value.substring(0, 5) +
+                                "-" +
+                                value.substring(5);
+                            }
+                            e.target.value = value;
+                            cepRegister.onChange(e);
+                          }}
+                          onBlur={(e) => handleCepBlur(e.target.value)}
+                        />
                         {errors.cep && (
                           <p className="text-red-500 text-sm">
                             {errors.cep.message}
@@ -145,7 +160,9 @@ const handleCepBlur = async (cep: string) => {
                           maxLength={70}
                           {...enderecoRegister}
                           onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^a-zA-Z0-9\s,À-ÿ]/g, "").substring(0, 70);
+                            e.target.value = e.target.value
+                              .replace(/[^a-zA-Z0-9\s,À-ÿ]/g, "")
+                              .substring(0, 70);
                             enderecoRegister.onChange(e);
                           }}
                         />
@@ -165,7 +182,9 @@ const handleCepBlur = async (cep: string) => {
                           maxLength={5}
                           {...numeroRegister}
                           onChange={(e) => {
-                            e.target.value = e.target.value.replace(/\D/g, "").substring(0, 5);
+                            e.target.value = e.target.value
+                              .replace(/\D/g, "")
+                              .substring(0, 5);
                             numeroRegister.onChange(e);
                           }}
                         />
@@ -190,7 +209,9 @@ const handleCepBlur = async (cep: string) => {
                           maxLength={40}
                           {...complementoRegister}
                           onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^a-zA-Z0-9\s,À-ÿ]/g, "").substring(0, 40);
+                            e.target.value = e.target.value
+                              .replace(/[^a-zA-Z0-9\s,À-ÿ]/g, "")
+                              .substring(0, 40);
                             complementoRegister.onChange(e);
                           }}
                         />
@@ -205,7 +226,9 @@ const handleCepBlur = async (cep: string) => {
                           maxLength={12}
                           {...bairroRegister}
                           onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^a-zA-Z\sÀ-ÿ]/g, "").substring(0, 12);
+                            e.target.value = e.target.value
+                              .replace(/[^a-zA-Z\sÀ-ÿ]/g, "")
+                              .substring(0, 12);
                             bairroRegister.onChange(e);
                           }}
                         />
@@ -225,7 +248,9 @@ const handleCepBlur = async (cep: string) => {
                           maxLength={32}
                           {...cidadeRegister}
                           onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^a-zA-Z\sÀ-ÿ]/g, "").substring(0, 32);
+                            e.target.value = e.target.value
+                              .replace(/[^a-zA-Z\sÀ-ÿ]/g, "")
+                              .substring(0, 32);
                             cidadeRegister.onChange(e);
                           }}
                         />
@@ -245,7 +270,10 @@ const handleCepBlur = async (cep: string) => {
                           maxLength={2}
                           {...estadoRegister}
                           onChange={(e) => {
-                            e.target.value = e.target.value.replace(/[^a-zA-Z]/g, "").toUpperCase().substring(0, 2);
+                            e.target.value = e.target.value
+                              .replace(/[^a-zA-Z]/g, "")
+                              .toUpperCase()
+                              .substring(0, 2);
                             estadoRegister.onChange(e);
                           }}
                         />
@@ -285,8 +313,12 @@ const handleCepBlur = async (cep: string) => {
                           Receba em até 7 dias úteis.
                         </p>
                       </div>
-                      <div className={`font-semibold ${frete === 0 ? "text-green-600" : ""}`}>
-                        {frete === 0 ? "Grátis" : `R$ ${frete.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+                      <div
+                        className={`font-semibold ${frete === 0 ? "text-green-600" : ""}`}
+                      >
+                        {frete === 0
+                          ? "Grátis"
+                          : `R$ ${frete.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
                       </div>
                     </Label>
 
@@ -309,7 +341,10 @@ const handleCepBlur = async (cep: string) => {
                         </p>
                       </div>
                       <div className="font-semibold">
-                        R$ {frete_express.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                        R${" "}
+                        {frete_express.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                        })}
                       </div>
                     </Label>
                   </RadioGroup>
@@ -378,12 +413,12 @@ const handleCepBlur = async (cep: string) => {
                     </span>
                   </div>
                   <Button
-                      type="submit"
-                      form="entrega-form"
-                      size="lg"
-                      className="w-full mt-6 bg-black hover:bg-gray-800 rounded text-white"
-                    >
-                      Ir para o Pagamento
+                    type="submit"
+                    form="entrega-form"
+                    size="lg"
+                    className="w-full mt-6 bg-black hover:bg-gray-800 rounded text-white"
+                  >
+                    Ir para o Pagamento
                   </Button>
                 </div>
               </div>

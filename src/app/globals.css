@@ -95,11 +95,11 @@ header {
 }
 
 .header-search-input {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  border-radius: 3px !important;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
 }
 
 .header-search-input:focus {
-  background-color: #ffffff !important;
-  color: #000000 !important;
+  background-color: #ffffff;
+  color: #000000;
 }

@@ -1,12 +1,4 @@
-import {
-  Globe,
-  Mail,
-  MapPin,
-  MessageCircle,
-  Phone,
-  Share2,
-  Users,
-} from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {

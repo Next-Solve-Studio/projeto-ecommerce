@@ -21,7 +21,7 @@ import { useRef } from "react";
 import Slider from "react-slick";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
-import { categories, products } from "@/data/products";
+import { products } from "@/data/products";
 
 import banner1 from "../../../public/1.png";
 import banner2 from "../../../public/2.png";
