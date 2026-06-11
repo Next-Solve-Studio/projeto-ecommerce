@@ -3,26 +3,78 @@
 import { CheckCircle2, Copy, CreditCard, Loader2, QrCode } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/providers/CartProvider";
+import { finalizarPedido } from "@/actions/checkout";
 
 export default function PixPaymentPageComponent() {
   const router = useRouter();
-  const { getTotal, items } = useCart();
+  const { getTotal, items, clearCart } = useCart();
   const [copied, setCopied] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [realPixCode, setRealPixCode] = useState<string | null>(null);
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const subtotal = getTotal();
-  const total = subtotal;
+  const shippingData = typeof window !== "undefined"
+    ? JSON.parse(localStorage.getItem("shippingData") || '{"shippingCost":0}')
+    : { shippingCost: 0 };
+  const total = subtotal + shippingData.shippingCost;
 
-  const pixCode =
+  const pixCodeFallback =
     "00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913Loja de Eletr6008SAO PAULO62070503***63041A2B";
 
+  useEffect(() => {
+    const formDataRaw = localStorage.getItem("checkoutFormData");
+    const enderecoRaw = localStorage.getItem("enderecoData");
+    const shippingRaw = localStorage.getItem("shippingData");
+
+    if (!formDataRaw || !enderecoRaw || items.length === 0) return;
+
+    // Evita criar pedido duplicado se já criou
+    const existingOrderId = localStorage.getItem("currentOrderId");
+    if (existingOrderId) {
+      setOrderId(existingOrderId);
+      const existingPixCode = localStorage.getItem("currentPixCode");
+      if (existingPixCode) setRealPixCode(existingPixCode);
+      return;
+    }
+
+    const formData = JSON.parse(formDataRaw);
+    const enderecoData = JSON.parse(enderecoRaw);
+    const { shippingType, shippingCost } = shippingRaw
+      ? JSON.parse(shippingRaw)
+      : { shippingType: "standard", shippingCost: 0 };
+
+    setIsCreatingOrder(true);
+
+    finalizarPedido({
+      formData,
+      enderecoData,
+      cartItems: items,
+      paymentMethod: "PIX",
+      shippingCost,
+      shippingType,
+    })
+      .then(({ orderId, pixCode }) => {
+        setOrderId(orderId);
+        if (pixCode) setRealPixCode(pixCode);
+        // Salva pra não criar duplicado se recarregar
+        localStorage.setItem("currentOrderId", orderId);
+        if (pixCode) localStorage.setItem("currentPixCode", pixCode);
+      })
+      .catch(() => {
+        toast.error("Erro ao criar pedido. Tente novamente.");
+      })
+      .finally(() => setIsCreatingOrder(false));
+  }, []);
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(pixCode);
+    navigator.clipboard.writeText(realPixCode ?? pixCodeFallback);
     setCopied(true);
     toast.success("Código Pix copiado!");
     setTimeout(() => setCopied(false), 3000);
@@ -30,8 +82,14 @@ export default function PixPaymentPageComponent() {
 
   const handleConfirm = () => {
     setIsConfirming(true);
+    clearCart();
+    localStorage.removeItem("checkoutFormData");
+    localStorage.removeItem("enderecoData");
+    localStorage.removeItem("shippingData");
+    localStorage.removeItem("currentOrderId");
+    localStorage.removeItem("currentPixCode");
     setTimeout(() => {
-      router.push("/finalizacao?method=Pix");
+      router.push(`/finalizacao?method=Pix&orderId=${orderId ?? ""}`);
     }, 2000);
   };
 
@@ -70,6 +128,13 @@ export default function PixPaymentPageComponent() {
                     </p>
                   </div>
 
+                  {isCreatingOrder && (
+                    <div className="flex items-center gap-2 text-gray-500">
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span className="text-sm">Gerando seu pedido...</span>
+                    </div>
+                  )}
+
                   <div className="p-4 bg-gray-50 border rounded-lg flex flex-col items-center justify-center w-64 h-64">
                     <QrCode
                       className="w-48 h-48 text-gray-800"
@@ -85,7 +150,7 @@ export default function PixPaymentPageComponent() {
                       <input
                         type="text"
                         readOnly
-                        value={pixCode}
+                        value={realPixCode ?? pixCodeFallback}
                         className="flex-1 px-3 py-2 border rounded-md bg-gray-50 text-gray-500 font-mono text-sm truncate"
                       />
                       <Button
@@ -113,7 +178,7 @@ export default function PixPaymentPageComponent() {
                       size="lg"
                       className="w-full bg-black hover:bg-gray-800 text-white h-14 text-lg"
                       onClick={handleConfirm}
-                      disabled={isConfirming}
+                      disabled={isConfirming || isCreatingOrder || !orderId}
                     >
                       {isConfirming ? (
                         <>

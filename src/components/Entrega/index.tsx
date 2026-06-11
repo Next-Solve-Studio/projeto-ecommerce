@@ -1,5 +1,6 @@
 "use client";
 
+import { buscarCep } from "@/actions/cep";
 import { ChevronLeft, Truck, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -37,12 +38,25 @@ export default function DeliveryPageComponent() {
   const [shippingType, setShippingType] = useState("standard");
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(schema),
-  });
+  register,
+  handleSubmit,
+  setValue,
+  formState: { errors },
+} = useForm({
+  resolver: yupResolver(schema),
+});
+
+const handleCepBlur = async (cep: string) => {
+  const cepLimpo = cep.replace(/\D/g, "");
+  if (cepLimpo.length !== 8) return;
+  const data = await buscarCep(cepLimpo);
+  if (!("error" in data)) {
+    setValue("endereco", data.endereco);
+    setValue("bairro", data.bairro);
+    setValue("cidade", data.cidade);
+    setValue("estado", data.estado);
+  }
+};
 
   const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
   const shippingCost = shippingType === "express" ? frete_express : frete;
@@ -58,10 +72,14 @@ export default function DeliveryPageComponent() {
   const estadoRegister = register("estado");
 
   const onSubmit = (data: DeliveryFormData) => {
-    // Acesse o método de pagamento padrão (Pix)
-    console.log("Endereço:", data, "Frete:", shippingType);
-    router.push("/checkout/pix");
-  };
+    //Pagamento via pix
+  localStorage.setItem("enderecoData", JSON.stringify(data));
+  localStorage.setItem(
+    "shippingData",
+    JSON.stringify({ shippingType, shippingCost })
+  );
+  router.push("/checkout/pix");
+};
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
@@ -85,7 +103,7 @@ export default function DeliveryPageComponent() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="bg-white p-6 md:p-8 rounded shadow-md">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form id="entrega-form" onSubmit={handleSubmit(onSubmit)}>
                   {/* Endereço */}
                   <div className="mb-8">
                     <h2 className="text-xl font-semibold mb-4 border-b border-gray-300/50 pb-2">
@@ -95,21 +113,22 @@ export default function DeliveryPageComponent() {
                       <div className="space-y-2 md:col-span-4">
                         <Label htmlFor="cep">CEP</Label>
                         <Input
-                          id="cep"
-                          className={inputClassName}
-                          placeholder="00000-000"
-                          maxLength={9}
-                          {...cepRegister}
-                          onChange={(e) => {
-                            let value = e.target.value.replace(/\D/g, "");
-                            if (value.length > 8) value = value.substring(0, 8);
-                            if (value.length > 5) {
-                              value = value.substring(0, 5) + "-" + value.substring(5);
-                            }
-                            e.target.value = value;
-                            cepRegister.onChange(e);
-                          }}
-                        />
+                           id="cep"
+                            className={inputClassName}
+                            placeholder="00000-000"
+                            maxLength={9}
+                            {...cepRegister}
+                            onChange={(e) => {
+                              let value = e.target.value.replace(/\D/g, "");
+                              if (value.length > 8) value = value.substring(0, 8);
+                              if (value.length > 5) {
+                                value = value.substring(0, 5) + "-" + value.substring(5);
+                              }
+                              e.target.value = value;
+                              cepRegister.onChange(e);
+                            }}
+                            onBlur={(e) => handleCepBlur(e.target.value)}
+                            />
                         {errors.cep && (
                           <p className="text-red-500 text-sm">
                             {errors.cep.message}
@@ -360,6 +379,7 @@ export default function DeliveryPageComponent() {
                   </div>
                   <Button
                       type="submit"
+                      form="entrega-form"
                       size="lg"
                       className="w-full mt-6 bg-black hover:bg-gray-800 rounded text-white"
                     >

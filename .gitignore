@@ -60,3 +60,5 @@ next-env.d.ts
 
 # pastas extras a serem ignoradas
 E-commerceNextSolve/
+
+/src/generated/prisma

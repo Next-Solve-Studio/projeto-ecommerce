@@ -1,5 +1,4 @@
 "use client";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -38,10 +37,9 @@ export default function CheckoutComponent({ id }: { id?: string }) {
   const inputClassName = "!bg-[#EEF9FF] !rounded border border-gray-300";
 
   const onSubmit = (data: CheckoutFormData) => {
-    // salvar no contexto ou no armazenamento local
-    console.log(data);
-    router.push("/entrega");
-  };
+  localStorage.setItem("checkoutFormData", JSON.stringify(data));
+  router.push("/entrega");
+};
 
   const subtotal = getTotal();
   const total = subtotal + frete;

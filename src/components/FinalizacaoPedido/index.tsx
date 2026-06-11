@@ -8,24 +8,26 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { useCart } from "@/providers/CartProvider";
+import { getOrderById } from "@/actions/checkout";
 
 function FinalizacaoPageComponentContent() {
-  const { items, getTotal, clearCart } = useCart();
   const searchParams = useSearchParams();
   const paymentMethod = searchParams.get("method") || "Pix";
   const installments = searchParams.get("installments") || "1";
+  const orderId = searchParams.get("orderId");
 
-  const [subtotal] = useState(getTotal());
-  const total = subtotal; // Assuming free standard shipping
-
-  const [orderItems] = useState(items);
+  const [orderData, setOrderData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (orderItems.length > 0) {
-      clearCart();
+    if (orderId) {
+      getOrderById(orderId)
+        .then(setOrderData)
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
-  }, []);
+  }, [orderId]);
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
@@ -48,7 +50,11 @@ function FinalizacaoPageComponentContent() {
                 Número do Pedido
               </p>
               <p className="text-2xl font-bold font-mono text-black">
-                #UX-12345
+                {loading
+                  ? "Carregando..."
+                  : orderData?.orderNumber
+                  ? `#${orderData.orderNumber}`
+                  : "#UX-12345"}
               </p>
             </div>
 
@@ -68,13 +74,13 @@ function FinalizacaoPageComponentContent() {
                     <h4 className="font-semibold">Itens Comprados</h4>
                   </div>
                   <div className="space-y-1 mb-4">
-                    {orderItems.length > 0 ? (
-                      orderItems.map((item, idx) => (
-                        <p
-                          key={idx}
-                          className="text-sm text-gray-600 line-clamp-1"
-                        >
-                          {item.quantity}x {item.product.name}
+                    {orderData?.items && orderData.items.length > 0 ? (
+                      orderData.items.map((item: any, idx: number) => (
+                        <p key={idx} className="text-sm text-gray-600 line-clamp-1">
+                          {item.quantity}x {item.productName}
+                          {item.variantInfo && (
+                            <span className="text-gray-400"> ({item.variantInfo})</span>
+                          )}
                         </p>
                       ))
                     ) : (
@@ -88,9 +94,15 @@ function FinalizacaoPageComponentContent() {
                     <User className="w-4 h-4 text-gray-400" />
                     <h4 className="font-semibold">Dados do Cliente</h4>
                   </div>
-                  <p className="text-sm text-gray-600">João da Silva</p>
-                  <p className="text-sm text-gray-600">joao@exemplo.com</p>
-                  <p className="text-sm text-gray-600">(11) 99999-9999</p>
+                  <p className="text-sm text-gray-600">
+                    {orderData?.user?.name ?? "João da Silva"}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {orderData?.user?.email ?? "joao@exemplo.com"}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {orderData?.user?.phone ?? "(11) 99999-9999"}
+                  </p>
                 </div>
 
                 <div>
@@ -99,11 +111,24 @@ function FinalizacaoPageComponentContent() {
                     <h4 className="font-semibold">Endereço de Entrega</h4>
                   </div>
                   <p className="text-sm text-gray-600 mb-4">
-                    Rua Exemplo, 123
-                    <br />
-                    Centro - São Paulo, SP
-                    <br />
-                    CEP: 00000-000
+                    {orderData?.address ? (
+                      <>
+                        {orderData.address.street}, {orderData.address.number}
+                        {orderData.address.complement && ` - ${orderData.address.complement}`}
+                        <br />
+                        {orderData.address.neighborhood} - {orderData.address.city}, {orderData.address.state}
+                        <br />
+                        CEP: {orderData.address.cep}
+                      </>
+                    ) : (
+                      <>
+                        Rua Exemplo, 123
+                        <br />
+                        Centro - São Paulo, SP
+                        <br />
+                        CEP: 00000-000
+                      </>
+                    )}
                   </p>
 
                   <div className="flex items-center gap-2 mb-2 border-t pt-4">
@@ -118,8 +143,8 @@ function FinalizacaoPageComponentContent() {
                   )}
                   <p className="text-sm font-bold mt-1 text-black">
                     Total: R${" "}
-                    {total > 0
-                      ? total.toLocaleString("pt-BR", {
+                    {orderData?.totalAmount
+                      ? orderData.totalAmount.toLocaleString("pt-BR", {
                           minimumFractionDigits: 2,
                         })
                       : "1.299,00"}
