@@ -1,93 +1,93 @@
 "use client";
 
-import { yupResolver } from "@hookform/resolvers/yup";
-import { CreditCard, Loader2, QrCode } from "lucide-react";
+import { ChevronLeft, CreditCard, Loader2, ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { finalizarPedido } from "@/actions/checkout";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useCart } from "@/providers/CartProvider";
-
-const schema = yup.object().shape({
-  cardNumber: yup
-    .string()
-    .required("Número do cartão é obrigatório")
-    .matches(/^[0-9\s]{19}$/, "Formato inválido. Use 0000 0000 0000 0000"),
-  cardName: yup.string().required("Nome é obrigatório"),
-  expiry: yup
-    .string()
-    .required("Validade é obrigatória")
-    .matches(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, "Use MM/AA"),
-  cvv: yup
-    .string()
-    .required("CVV é obrigatório")
-    .matches(/^[0-9]{3,4}$/, "CVV inválido"),
-  installments: yup.string().required("Selecione as parcelas"),
-});
-
-type CreditCardFormData = yup.InferType<typeof schema>;
+import { StepperCheckout } from "../ui/stepper-checkout";
 
 export default function CreditCardPaymentPageComponent() {
   const router = useRouter();
-  const { getTotal, items } = useCart();
+  const { getTotal, items, clearCart } = useCart();
   const [isConfirming, setIsConfirming] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<CreditCardFormData>({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      installments: "1",
-    },
-  });
+  const [cardData, setCardData] = useState<any>(null);
+  const [orderId, setOrderId] = useState<string | null>(null);
 
   const subtotal = getTotal();
-  const total = subtotal;
+  const shippingData =
+    typeof window !== "undefined"
+      ? JSON.parse(localStorage.getItem("shippingData") || '{"shippingCost":0}')
+      : { shippingCost: 0 };
+  const total = subtotal + shippingData.shippingCost;
 
-  const onSubmit = (data: CreditCardFormData) => {
-    setIsConfirming(true);
-    setTimeout(() => {
-      router.push(
-        `/finalizacao?method=${encodeURIComponent("Cartão de Crédito")}&installments=${encodeURIComponent(data.installments)}`,
-      );
-    }, 2000);
-  };
-
-  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
-    value = value.replace(/(\d{4})/g, "$1 ").trim();
-    if (value.length > 19) value = value.substring(0, 19);
-    setValue("cardNumber", value, { shouldValidate: true });
-    e.target.value = value;
-  };
-
-  const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let value = e.target.value.replace(/\D/g, "");
-    if (value.length >= 2) {
-      value = value.substring(0, 2) + "/" + value.substring(2, 4);
+  useEffect(() => {
+    const data = localStorage.getItem("creditCardData");
+    if (data) {
+      setCardData(JSON.parse(data));
+    } else {
+      router.push("/pagamento");
     }
-    setValue("expiry", value, { shouldValidate: true });
-    e.target.value = value;
+  }, [router]);
+
+  const handleConfirm = async () => {
+    setIsConfirming(true);
+    try {
+      const formDataRaw = localStorage.getItem("checkoutFormData");
+      const enderecoRaw = localStorage.getItem("enderecoData");
+      const shippingRaw = localStorage.getItem("shippingData");
+
+      if (!formDataRaw || !enderecoRaw || items.length === 0) throw new Error();
+
+      const formData = JSON.parse(formDataRaw);
+      const enderecoData = JSON.parse(enderecoRaw);
+      const { shippingType, shippingCost } = shippingRaw
+        ? JSON.parse(shippingRaw)
+        : { shippingType: "standard", shippingCost: 0 };
+
+      const response = await finalizarPedido({
+        formData,
+        enderecoData,
+        cartItems: items,
+        paymentMethod: "Cartão de Crédito",
+        shippingCost,
+        shippingType,
+      });
+
+      clearCart();
+      localStorage.removeItem("checkoutFormData");
+      localStorage.removeItem("enderecoData");
+      localStorage.removeItem("shippingData");
+      localStorage.removeItem("creditCardData");
+
+      router.push(
+        `/finalizacao?method=${encodeURIComponent("Cartão de Crédito")}&installments=${encodeURIComponent(cardData?.installments ?? 1)}&orderId=${response.orderId}`,
+      );
+    } catch (error) {
+      toast.error("Erro ao processar pagamento. Tente novamente.");
+      setIsConfirming(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
+      <div className="container mx-auto px-4 max-w-6xl pt-4 pb-2">
+        <Link href="/pagamento">
+          <Button
+            variant="ghost"
+            className="bg-transparent border-none text-gray-500 hover:bg-transparent hover:underline px-0 font-normal"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Voltar para o Pagamento
+          </Button>
+        </Link>
+      </div>
+      <StepperCheckout currentStep={4} />
       <div className="py-12">
         <div className="container mx-auto px-4 max-w-6xl">
           <h1 className="text-3xl font-bold mb-8">Pagamento</h1>
@@ -95,151 +95,44 @@ export default function CreditCardPaymentPageComponent() {
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="bg-white p-6 md:p-8 rounded-lg border shadow-sm">
-                <div className="flex space-x-4 border-b pb-4 mb-6">
-                  <Link
-                    href="/checkout/pix"
-                    className="flex items-center gap-2 px-4 py-2 text-gray-500 hover:text-black transition-colors"
-                  >
-                    <QrCode className="w-5 h-5" />
-                    Pix
-                  </Link>
-                  <Link
-                    href="/checkout/cartao"
-                    className="flex items-center gap-2 px-4 py-2 border-b-2 border-black font-semibold text-black"
-                  >
-                    <CreditCard className="w-5 h-5" />
-                    Cartão de Crédito
-                  </Link>
-                </div>
-
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="space-y-6 max-w-lg mx-auto py-4"
-                >
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="cardNumber">Número do Cartão</Label>
-                      <Input
-                        id="cardNumber"
-                        placeholder="0000 0000 0000 0000"
-                        {...register("cardNumber")}
-                        onChange={(e) => {
-                          register("cardNumber").onChange(e);
-                          handleCardNumberChange(e);
-                        }}
-                      />
-                      {errors.cardNumber && (
-                        <p className="text-red-500 text-sm">
-                          {errors.cardNumber.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="cardName">Nome Impresso no Cartão</Label>
-                      <Input
-                        id="cardName"
-                        placeholder="JOAO M SILVA"
-                        className="uppercase"
-                        {...register("cardName")}
-                      />
-                      {errors.cardName && (
-                        <p className="text-red-500 text-sm">
-                          {errors.cardName.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="expiry">Validade</Label>
-                        <Input
-                          id="expiry"
-                          placeholder="MM/AA"
-                          {...register("expiry")}
-                          onChange={(e) => {
-                            register("expiry").onChange(e);
-                            handleExpiryChange(e);
-                          }}
-                        />
-                        {errors.expiry && (
-                          <p className="text-red-500 text-sm">
-                            {errors.expiry.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="cvv">CVV</Label>
-                        <Input
-                          id="cvv"
-                          placeholder="123"
-                          maxLength={4}
-                          {...register("cvv")}
-                        />
-                        {errors.cvv && (
-                          <p className="text-red-500 text-sm">
-                            {errors.cvv.message}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="installments">Parcelamento</Label>
-                      <Select
-                        onValueChange={(val) =>
-                          setValue("installments", val, {
-                            shouldValidate: true,
-                          })
-                        }
-                        defaultValue="1"
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione as parcelas" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">
-                            1x de R${" "}
-                            {total.toLocaleString("pt-BR", {
-                              minimumFractionDigits: 2,
-                            })}{" "}
-                            sem juros
-                          </SelectItem>
-                          <SelectItem value="2">
-                            2x de R${" "}
-                            {(total / 2).toLocaleString("pt-BR", {
-                              minimumFractionDigits: 2,
-                            })}{" "}
-                            sem juros
-                          </SelectItem>
-                          <SelectItem value="3">
-                            3x de R${" "}
-                            {(total / 3).toLocaleString("pt-BR", {
-                              minimumFractionDigits: 2,
-                            })}{" "}
-                            sem juros
-                          </SelectItem>
-                          <SelectItem value="4">
-                            4x de R${" "}
-                            {(total / 4).toLocaleString("pt-BR", {
-                              minimumFractionDigits: 2,
-                            })}{" "}
-                            sem juros
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                      {errors.installments && (
-                        <p className="text-red-500 text-sm">
-                          {errors.installments.message}
-                        </p>
-                      )}
-                    </div>
+                <div className="flex flex-col items-center justify-center py-6 space-y-6">
+                  <div className="text-center">
+                    <h2 className="text-2xl font-bold mb-2">Confirmação de Pagamento</h2>
+                    <p className="text-gray-500">
+                      Revise as informações abaixo e confirme a transação.
+                    </p>
                   </div>
 
-                  <div className="pt-6 w-full border-t">
+                  {cardData && (
+                    <div className="w-full max-w-md p-6 bg-gray-50 border rounded-lg space-y-4">
+                      <div className="flex items-center justify-between text-gray-700">
+                        <div className="flex items-center gap-2">
+                          <CreditCard className="w-5 h-5 text-[#0597F2]" />
+                          <span className="font-semibold">Cartão Final</span>
+                        </div>
+                        <span className="font-mono text-lg">{cardData.cardNumber.slice(-4)}</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-gray-700">
+                        <span className="text-sm">Titular</span>
+                        <span className="font-medium">{cardData.cardName}</span>
+                      </div>
+                      
+                      <div className="flex items-center justify-between text-gray-700 border-t pt-4">
+                        <span className="text-sm">Parcelas</span>
+                        <span className="font-medium">{cardData.installments}x</span>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex items-center gap-3 text-green-600 bg-green-50 px-4 py-3 rounded-full font-medium mt-4">
+                    <ShieldCheck className="w-5 h-5" />
+                    Ambiente Seguro e Criptografado
+                  </div>
+
+                  <div className="pt-6 w-full border-t max-w-md mx-auto">
                     <Button
-                      type="submit"
+                      onClick={handleConfirm}
                       size="lg"
                       className="w-full bg-black hover:bg-gray-800 text-white h-14 text-lg"
                       disabled={isConfirming}
@@ -254,7 +147,7 @@ export default function CreditCardPaymentPageComponent() {
                       )}
                     </Button>
                   </div>
-                </form>
+                </div>
               </div>
             </div>
 
@@ -302,9 +195,9 @@ export default function CreditCardPaymentPageComponent() {
                   <Button
                     variant="ghost"
                     className="w-full"
-                    onClick={() => router.push("/entrega")}
+                    onClick={() => router.push("/pagamento")}
                   >
-                    Voltar para Entrega
+                    Voltar para Pagamento
                   </Button>
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, ChevronLeft, Copy, Loader2, QrCode } from "lucide-react";
+import { CheckCircle2, ChevronLeft, Copy, Loader2, Barcode } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -11,13 +11,12 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/providers/CartProvider";
 import { StepperCheckout } from "../ui/stepper-checkout";
 
-export default function PixPaymentPageComponent() {
+export default function BoletoPaymentPageComponent() {
   const router = useRouter();
   const { getTotal, items, clearCart } = useCart();
   const [copied, setCopied] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
-  const [realPixCode, setRealPixCode] = useState<string | null>(null);
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const subtotal = getTotal();
@@ -27,8 +26,7 @@ export default function PixPaymentPageComponent() {
       : { shippingCost: 0 };
   const total = subtotal + shippingData.shippingCost;
 
-  const pixCodeFallback =
-    "00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913Loja de Eletr6008SAO PAULO62070503***63041A2B";
+  const barcodeFallback = "34191.09008 61732.540134 50064.080005 6 95000000009900";
 
   useEffect(() => {
     const formDataRaw = localStorage.getItem("checkoutFormData");
@@ -37,12 +35,9 @@ export default function PixPaymentPageComponent() {
 
     if (!formDataRaw || !enderecoRaw || items.length === 0) return;
 
-    // Evita criar pedido duplicado se já criou
     const existingOrderId = localStorage.getItem("currentOrderId");
     if (existingOrderId) {
       setOrderId(existingOrderId);
-      const existingPixCode = localStorage.getItem("currentPixCode");
-      if (existingPixCode) setRealPixCode(existingPixCode);
       return;
     }
 
@@ -58,16 +53,13 @@ export default function PixPaymentPageComponent() {
       formData,
       enderecoData,
       cartItems: items,
-      paymentMethod: "PIX",
+      paymentMethod: "Boleto Bancário",
       shippingCost,
       shippingType,
     })
-      .then(({ orderId, pixCode }) => {
+      .then(({ orderId }) => {
         setOrderId(orderId);
-        if (pixCode) setRealPixCode(pixCode);
-        // Salva pra não criar duplicado se recarregar
         localStorage.setItem("currentOrderId", orderId);
-        if (pixCode) localStorage.setItem("currentPixCode", pixCode);
       })
       .catch(() => {
         toast.error("Erro ao criar pedido. Tente novamente.");
@@ -76,9 +68,9 @@ export default function PixPaymentPageComponent() {
   }, [items]);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(realPixCode ?? pixCodeFallback);
+    navigator.clipboard.writeText(barcodeFallback);
     setCopied(true);
-    toast.success("Código Pix copiado!");
+    toast.success("Código de barras copiado!");
     setTimeout(() => setCopied(false), 3000);
   };
 
@@ -89,9 +81,8 @@ export default function PixPaymentPageComponent() {
     localStorage.removeItem("enderecoData");
     localStorage.removeItem("shippingData");
     localStorage.removeItem("currentOrderId");
-    localStorage.removeItem("currentPixCode");
     setTimeout(() => {
-      router.push(`/finalizacao?method=Pix&orderId=${orderId ?? ""}`);
+      router.push(`/finalizacao?method=Boleto&orderId=${orderId ?? ""}`);
     }, 2000);
   };
 
@@ -119,9 +110,9 @@ export default function PixPaymentPageComponent() {
               <div className="bg-white p-6 md:p-8 rounded-lg border shadow-sm">
                 <div className="flex flex-col items-center justify-center py-6 space-y-6">
                   <div className="text-center">
-                    <h2 className="text-2xl font-bold mb-2">Pague com Pix</h2>
+                    <h2 className="text-2xl font-bold mb-2">Pague com Boleto Bancário</h2>
                     <p className="text-gray-500">
-                      Use o aplicativo do seu banco para pagar.
+                      Copie o código de barras ou pague diretamente pelo app do seu banco.
                     </p>
                   </div>
 
@@ -132,22 +123,22 @@ export default function PixPaymentPageComponent() {
                     </div>
                   )}
 
-                  <div className="p-4 bg-gray-50 border rounded-lg flex flex-col items-center justify-center w-64 h-64">
-                    <QrCode
-                      className="w-48 h-48 text-gray-800"
-                      strokeWidth={1}
-                    />
+                  <div className="p-8 bg-gray-50 border rounded-lg flex flex-col items-center justify-center w-full max-w-md space-y-4">
+                    <Barcode className="w-24 h-24 text-gray-800" strokeWidth={1} />
+                    <p className="text-sm text-gray-500 text-center">
+                      O vencimento do boleto será em 3 dias úteis após a geração.
+                    </p>
                   </div>
 
                   <div className="w-full max-w-md space-y-2">
                     <p className="text-sm font-semibold text-gray-700">
-                      Código Copia e Cola:
+                      Código de Barras:
                     </p>
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         readOnly
-                        value={realPixCode ?? pixCodeFallback}
+                        value={barcodeFallback}
                         className="flex-1 px-3 py-2 border rounded-md bg-gray-50 text-gray-500 font-mono text-sm truncate"
                       />
                       <Button
@@ -205,16 +196,11 @@ export default function PixPaymentPageComponent() {
                         />
                       </div>
                       <div className="flex-1 text-sm">
-                        <p className="font-semibold line-clamp-2">
-                          {item.product.name}
-                        </p>
+                        <p className="font-semibold line-clamp-2">{item.product.name}</p>
                         <p className="text-gray-500">Qtd: {item.quantity}</p>
                         <p className="font-medium">
                           R${" "}
-                          {(item.product.price * item.quantity).toLocaleString(
-                            "pt-BR",
-                            { minimumFractionDigits: 2 },
-                          )}
+                          {(item.product.price * item.quantity).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                         </p>
                       </div>
                     </div>
@@ -223,20 +209,11 @@ export default function PixPaymentPageComponent() {
                 <div className="border-t pt-4 space-y-3">
                   <div className="flex justify-between font-bold text-xl pt-2">
                     <span>Total</span>
-                    <span>
-                      R${" "}
-                      {total.toLocaleString("pt-BR", {
-                        minimumFractionDigits: 2,
-                      })}
-                    </span>
+                    <span>R$ {total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span>
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t">
-                  <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={() => router.push("/pagamento")}
-                  >
+                  <Button variant="ghost" className="w-full" onClick={() => router.push("/pagamento")}>
                     Voltar para Pagamento
                   </Button>
                 </div>

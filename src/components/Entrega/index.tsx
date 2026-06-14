@@ -90,7 +90,7 @@ export default function DeliveryPageComponent() {
       "shippingData",
       JSON.stringify({ shippingType, shippingCost }),
     );
-    router.push("/checkout/pix");
+    router.push("/pagamento");
   };
 
   return (
