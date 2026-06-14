@@ -53,7 +53,7 @@ export default function CreditCardPaymentPageComponent() {
         formData,
         enderecoData,
         cartItems: items,
-        paymentMethod: "Cartão de Crédito",
+        paymentMethod: "CREDIT_CARD",
         shippingCost,
         shippingType,
       });

@@ -1,7 +1,7 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ChevronLeft, CreditCard, QrCode, Barcode } from "lucide-react";
+import { ChevronLeft, CreditCard, QrCode } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -141,15 +141,6 @@ export default function PagamentoPageComponent() {
                   </Label>
 
                   <Label
-                    htmlFor="boleto"
-                    className={`flex items-center space-x-3 border-2 p-4 rounded cursor-pointer transition-colors ${paymentMethod === "boleto" ? "border-[#0597F2] bg-[#F5FCFF]" : "border-gray-200 hover:bg-gray-50"}`}
-                  >
-                    <RadioGroupItem value="boleto" id="boleto" />
-                    <Barcode className="w-5 h-5 text-gray-700" />
-                    <span className="font-medium text-base">Boleto Bancário</span>
-                  </Label>
-
-                  <Label
                     htmlFor="cartao"
                     className={`flex items-center space-x-3 border-2 p-4 rounded cursor-pointer transition-colors ${paymentMethod === "cartao" ? "border-[#0597F2] bg-[#F5FCFF]" : "border-gray-200 hover:bg-gray-50"}`}
                   >
@@ -254,25 +245,19 @@ export default function PagamentoPageComponent() {
                                 sem juros
                               </SelectItem>
                               <SelectItem value="2">
-                                2x de R${" "}
-                                ((total) / 2).toLocaleString("pt-BR", {
+                                2x de R$ {((total) / 2).toLocaleString("pt-BR", {
                                   minimumFractionDigits: 2,
-                                }){" "}
-                                sem juros
+                                })} sem juros
                               </SelectItem>
                               <SelectItem value="3">
-                                3x de R${" "}
-                                ((total) / 3).toLocaleString("pt-BR", {
+                                3x de R$ {((total) / 3).toLocaleString("pt-BR", {
                                   minimumFractionDigits: 2,
-                                }){" "}
-                                sem juros
+                                })} sem juros
                               </SelectItem>
                               <SelectItem value="4">
-                                4x de R${" "}
-                                ((total) / 4).toLocaleString("pt-BR", {
+                                4x de R$ {((total) / 4).toLocaleString("pt-BR", {
                                   minimumFractionDigits: 2,
-                                }){" "}
-                                sem juros
+                                })} sem juros
                               </SelectItem>
                             </SelectContent>
                           </Select>

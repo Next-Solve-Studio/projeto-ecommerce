@@ -140,8 +140,8 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                     </div>
                   </div>
 
-                  <div className="w-full flex flex-col sm:flex-row gap-4 items-center justify-between bg-[#F5FCFF] rounded-lg border-blue-400 border-2 px-4 py-1 mt-6">
-                    <span className="text-blue-600 text-sm">
+                  <div className="w-full flex flex-col sm:flex-row gap-4 items-center justify-between bg-[#F5FCFF] rounded-lg border-gray-600 border-2 px-4 py-1 mt-6">
+                    <span className="text-sm">
                       Dados incorretos?
                     </span>
                     <Link href="/conta">
