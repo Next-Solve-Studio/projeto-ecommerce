@@ -140,15 +140,15 @@ export default function CheckoutComponent({ id }: { id?: string }) {
                     </div>
                   </div>
 
-                  <div className="w-full flex flex-col sm:flex-row gap-4 items-center justify-between bg-[#F5FCFF] rounded-lg border-gray-300 border-2 px-4 py-1 mt-6">
-                    <span className="text-gray-700 text-sm">
+                  <div className="w-full flex flex-col sm:flex-row gap-4 items-center justify-between bg-[#F5FCFF] rounded-lg border-blue-400 border-2 px-4 py-1 mt-6">
+                    <span className="text-blue-600 text-sm">
                       Dados incorretos?
                     </span>
                     <Link href="/conta">
                       <Button
                         type="button"
                         variant="outline"
-                        className="bg-white border-gray-300 border-2 font-bold rounded w-full sm:w-auto hover:underline"
+                        className="!bg-gray-100 !border-gray-900 border-2 font-bold p-2 rounded-lg w-full sm:w-auto hover:!bg-red-100 hover:!text-red-800 hover:!border-red-800 transition-all duration-300"
                       >
                         Altere seus dados no perfil
                       </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus, ShoppingBag, ShoppingBasket, Trash2 } from "lucide-react";
+import { Minus, Plus, ShoppingBag, ShoppingBasket, Trash2, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -41,12 +41,24 @@ export default function CarrinhoComponent() {
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
+      <div className="container mx-auto px-4 max-w-6xl pt-4 pb-2">
+        <Link href="/produtos">
+          <Button
+            variant="ghost"
+            className="bg-transparent border-none text-gray-500 hover:bg-transparent hover:underline px-0 font-normal"
+          >
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Voltar aos produtos
+          </Button>
+        </Link>
+      </div>
       <StepperCheckout currentStep={1} />
-      <div className="max-w-[1404px] mx-auto px-4 pb-8 pt-0">
-        <h1 className="text-4xl font-bold mb-8">Carrinho de Compras</h1>
+      <div className="pb-10">
+        <div className="container mx-auto px-4 max-w-6xl">
+          <h1 className="text-3xl font-bold mb-8 mt-6">Carrinho de Compras</h1>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          <section className="w-full lg:w-[1116px] bg-white rounded shadow-md p-6 h-fit">
+          <div className="grid lg:grid-cols-3 gap-8">
+            <section className="lg:col-span-2 bg-white rounded shadow-md p-6 h-fit">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <ShoppingBasket className="w-6 h-6" />
@@ -181,7 +193,7 @@ export default function CarrinhoComponent() {
             </div>
           </section>
 
-          <section className="w-full lg:w-[356px] flex-shrink-0 bg-white p-6 rounded shadow-md sticky top-24 space-y-4 h-fit">
+            <section className="lg:col-span-1 bg-white p-6 rounded shadow-md sticky top-24 space-y-4 h-fit">
             <h2 className="text-2xl font-bold mb-4">Resumo do Pedido</h2>
 
             <div className="space-y-3 pb-4 border-b border-gray-400/30">
@@ -241,6 +253,7 @@ export default function CarrinhoComponent() {
               </p>
             </div>
           </section>
+          </div>
         </div>
       </div>
     </div>
