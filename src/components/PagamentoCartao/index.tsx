@@ -88,13 +88,13 @@ export default function CreditCardPaymentPageComponent() {
         </Link>
       </div>
       <StepperCheckout currentStep={4} />
-      <div className="py-12">
+      <div className="pb-12">
         <div className="container mx-auto px-4 max-w-6xl">
-          <h1 className="text-3xl font-bold mb-8">Pagamento</h1>
+          <h1 className="text-3xl font-bold mb-8 mt-6">Pagamento no Cartão</h1>
 
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <div className="bg-white p-6 md:p-8 rounded-lg border shadow-sm">
+              <div className="bg-white p-6 md:p-8 rounded shadow-md">
                 <div className="flex flex-col items-center justify-center py-6 space-y-6">
                   <div className="text-center">
                     <h2 className="text-2xl font-bold mb-2">Confirmação de Pagamento</h2>
@@ -104,7 +104,7 @@ export default function CreditCardPaymentPageComponent() {
                   </div>
 
                   {cardData && (
-                    <div className="w-full max-w-md p-6 bg-gray-50 border rounded-lg space-y-4">
+                    <div className="w-full max-w-md p-6 bg-[#F5FCFF] border border-gray-300 rounded shadow-sm space-y-4">
                       <div className="flex items-center justify-between text-gray-700">
                         <div className="flex items-center gap-2">
                           <CreditCard className="w-5 h-5 text-[#0597F2]" />
@@ -118,7 +118,7 @@ export default function CreditCardPaymentPageComponent() {
                         <span className="font-medium">{cardData.cardName}</span>
                       </div>
                       
-                      <div className="flex items-center justify-between text-gray-700 border-t pt-4">
+                      <div className="flex items-center justify-between text-gray-700 border-t border-gray-300/50 pt-4">
                         <span className="text-sm">Parcelas</span>
                         <span className="font-medium">{cardData.installments}x</span>
                       </div>
@@ -130,11 +130,11 @@ export default function CreditCardPaymentPageComponent() {
                     Ambiente Seguro e Criptografado
                   </div>
 
-                  <div className="pt-6 w-full border-t max-w-md mx-auto">
+                  <div className="pt-6 w-full border-t border-gray-300/50 max-w-md mx-auto mt-6">
                     <Button
                       onClick={handleConfirm}
                       size="lg"
-                      className="w-full bg-black hover:bg-gray-800 text-white h-14 text-lg"
+                      className="w-full bg-black hover:bg-gray-800 rounded text-white h-14 text-lg"
                       disabled={isConfirming}
                     >
                       {isConfirming ? (
@@ -152,7 +152,7 @@ export default function CreditCardPaymentPageComponent() {
             </div>
 
             <div className="lg:col-span-1">
-              <div className="bg-white p-6 rounded-lg border sticky top-24 shadow-sm">
+              <div className="bg-white p-6 rounded sticky top-24 shadow-md">
                 <h3 className="text-xl font-bold mb-4">Resumo do Pedido</h3>
                 <div className="space-y-4 mb-6">
                   {items.slice(0, 3).map((item) => (
@@ -180,8 +180,8 @@ export default function CreditCardPaymentPageComponent() {
                     </div>
                   ))}
                 </div>
-                <div className="border-t pt-4 space-y-3">
-                  <div className="flex justify-between font-bold text-xl pt-2">
+                <div className="border-t border-gray-300/50 pt-4 space-y-3">
+                  <div className="flex justify-between font-bold text-lg pt-2 mt-2 border-t border-gray-300/50">
                     <span>Total</span>
                     <span>
                       R${" "}
@@ -190,15 +190,6 @@ export default function CreditCardPaymentPageComponent() {
                       })}
                     </span>
                   </div>
-                </div>
-                <div className="mt-4 pt-4 border-t">
-                  <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={() => router.push("/pagamento")}
-                  >
-                    Voltar para Pagamento
-                  </Button>
                 </div>
               </div>
             </div>
