@@ -183,7 +183,7 @@ export default function PixPaymentPageComponent() {
                           Processando...
                         </>
                       ) : (
-                        "Confirmar Pagamento (Simulação)"
+                        "Confirmar Pagamento"
                       )}
                     </Button>
                   </div>

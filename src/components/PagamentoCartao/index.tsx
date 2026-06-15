@@ -125,9 +125,16 @@ export default function CreditCardPaymentPageComponent() {
                     </div>
                   )}
 
-                  <div className="flex items-center gap-3 text-green-600 bg-green-50 px-4 py-3 rounded-full font-medium mt-4">
-                    <ShieldCheck className="w-5 h-5" />
-                    Ambiente Seguro e Criptografado
+                  <div className="flex flex-col items-center gap-3 w-full max-w-md mt-4">
+                    <div className="flex w-full justify-center items-center gap-3 text-amber-600 bg-amber-50 px-4 py-3 rounded-full font-medium">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      Aguardando pagamento...
+                    </div>
+                    
+                    <div className="flex w-full justify-center items-center gap-3 text-green-600 bg-green-50 px-4 py-3 rounded-full font-medium">
+                      <ShieldCheck className="w-5 h-5" />
+                      Ambiente Seguro e Criptografado
+                    </div>
                   </div>
 
                   <div className="pt-6 w-full border-t border-gray-300/50 max-w-md mx-auto mt-6">
@@ -143,7 +150,7 @@ export default function CreditCardPaymentPageComponent() {
                           Processando...
                         </>
                       ) : (
-                        "Finalizar Compra"
+                        "Confirmar Pagamento"
                       )}
                     </Button>
                   </div>

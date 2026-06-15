@@ -51,8 +51,12 @@ export default function PagamentoPageComponent() {
   useEffect(() => {
     const shippingRaw = localStorage.getItem("shippingData");
     if (shippingRaw) {
-      const { shippingCost } = JSON.parse(shippingRaw);
-      setShippingCost(shippingCost);
+      try {
+        const { shippingCost } = JSON.parse(shippingRaw);
+        setShippingCost(shippingCost);
+      } catch (error) {
+        console.error("Erro ao carregar os dados de frete:", error);
+      }
     }
   }, []);
 
@@ -76,8 +80,6 @@ export default function PagamentoPageComponent() {
   const onSubmit = (data?: CreditCardFormData) => {
     if (paymentMethod === "pix") {
       router.push("/pagamento/pix");
-    } else if (paymentMethod === "boleto") {
-      router.push("/pagamento/boleto");
     } else if (paymentMethod === "cartao") {
       if (data) {
         localStorage.setItem("creditCardData", JSON.stringify(data));

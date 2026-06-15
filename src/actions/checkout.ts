@@ -62,6 +62,9 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
     shippingType,
   } = input;
 
+  // --- MODO DE SIMULAÇÃO ---
+  // A comunicação com o Prisma foi desativada para não exigir o banco de dados neste momento.
+  /*
   const user = await prisma.user.upsert({
     where: { email: formData.email },
     update: { name: formData.nome, phone: formData.telefone },
@@ -85,6 +88,7 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
       state: enderecoData.estado.toUpperCase(),
     },
   });
+  */
 
   const itemsTotal = cartItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
@@ -96,6 +100,7 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
   const pixCode =
     paymentMethod === "PIX" ? generatePixCode(totalAmount, orderNumber) : null;
 
+  /*
   const order = await prisma.order.create({
     data: {
       orderNumber,
@@ -122,12 +127,17 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
     },
     include: { items: true, address: true, user: true },
   });
+  */
+
+  // Simula um delay rápido de comunicação com API
+  await new Promise((resolve) => setTimeout(resolve, 800));
+  const mockOrderId = `mock_${Date.now()}`;
 
   return {
-    orderId: order.id,
-    orderNumber: order.orderNumber,
-    pixCode: order.pixCode,
-    total: order.totalAmount,
+    orderId: mockOrderId,
+    orderNumber: orderNumber,
+    pixCode: pixCode,
+    total: totalAmount,
   };
 }
 
