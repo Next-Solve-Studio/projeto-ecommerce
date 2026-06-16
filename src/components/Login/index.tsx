@@ -1,17 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { MonitorSmartphone, Lock, Mail } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
 
 export function Login() {
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen overflow-hidden flex items-center justify-center bg-gray-900">
-      {/* Adicionado fixed, inset-0 e z-50 para cobrir o Footer e travar a tela acima do layout global */}
-      {/* Contêiner responsivo com medidas máximas garantindo que caibam exatamente na tela */}
       <main 
         className="flex w-full h-full max-w-[1536px] max-h-[864px] shadow-2xl bg-white overflow-hidden"
       >
-        
         {/* Seção da Esquerda */}
         <div 
           className="hidden md:flex w-[60%] h-full bg-cover bg-center items-center justify-center relative shrink-0"
@@ -19,14 +16,41 @@ export function Login() {
             backgroundImage: "url(/imagem-1_Autentificacao.png)" 
           }}
         >
-          {/* Div interna para futuro conteúdo com paddings específicos */}
           <div 
-            className="w-full h-full max-w-[653.360px] max-h-[638.200px]"
+            className="w-full h-full max-w-[800px] max-h-[620px] flex flex-col justify-between"
             style={{ 
-              padding: "40px 203.240px 65px 65px" 
+              padding: "0px 203.240px 0px 0px" 
             }}
           >
-            {/* Conteúdo a definir depois */}
+            <div className="flex justify-start items-start w-full">
+              <Link href="/">
+                <img 
+                  src="/LogoCompleta-ElectronicSolve_Store.png" 
+                  alt="ElectronicSolve Store" 
+                  className="h-17 md:h-17 w-auto object-contain hover:opacity-90 transition-opacity drop-shadow-lg" 
+                />
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-start w-full">
+              <div className="flex gap-4 mb-3">
+                <Link href="#" className="transition-all hover:opacity-80">
+                  <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" className="w-5 h-5" />
+                </Link>
+                <Link href="#" className="transition-all hover:opacity-80">
+                  <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="X/Twitter" className="w-5 h-5" />
+                </Link>
+                <Link href="#" className="transition-all hover:opacity-80">
+                  <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" className="w-5 h-5" />
+                </Link>
+                <Link href="#" className="transition-all hover:opacity-80">
+                  <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" alt="LinkedIn" className="w-5 h-5" />
+                </Link>
+              </div>
+              <span className="text-white text-base font-medium tracking-wide drop-shadow-md">
+                Electronic Solve | Store
+              </span>
+            </div>
           </div>
         </div>
 
@@ -41,7 +65,6 @@ export function Login() {
           <section 
             className="bg-white rounded-xl shadow-2xl flex flex-col relative z-10 w-[90%] md:w-[474px] p-[35px] h-auto min-h-[431px] md:ml-[-138.24px]"
           >
-            {/* Identidade Visual */}
             <div className="flex justify-center mb-6">
               <img 
                 src="/Logo-EletronicSolve_Store.png" 
@@ -50,13 +73,11 @@ export function Login() {
               />
             </div>
 
-            {/* Título de Boas-vindas */}
             <div className="mb-6 text-center">
               <h1 className="text-2xl font-bold text-gray-900">Bem-vindo de volta!</h1>
               <p className="text-sm text-gray-500 mt-1">Insira suas credenciais para acessar sua conta</p>
             </div>
 
-            {/* Formulário */}
             <form className="flex flex-col gap-4">
               <div className="space-y-4">
                 <div>
@@ -92,7 +113,6 @@ export function Login() {
                 </div>
               </div>
 
-              {/* Opções extras */}
               <div className="flex items-center justify-between mt-2 mb-2">
                 <div className="flex items-center">
                   <input 
@@ -109,7 +129,6 @@ export function Login() {
                 </Link>
               </div>
 
-              {/* Botão de Ação */}
               <button 
                 type="submit"
                 className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600 transition-colors"
@@ -118,7 +137,6 @@ export function Login() {
               </button>
             </form>
 
-            {/* Link de Cadastro */}
             <div className="mt-6 text-center text-sm text-gray-600 border-t pt-4 border-gray-100">
               Não tem uma conta?{' '}
               <Link href="/cadastro" className="font-medium text-indigo-600 hover:text-indigo-500">

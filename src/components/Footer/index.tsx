@@ -159,8 +159,8 @@ export function Footer() {
               </a>
               <a href="#" className="transition-all hover:opacity-80">
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"
-                  alt="YouTube"
+                  src="https://cdn-icons-png.flaticon.com/512/174/174857.png"
+                  alt="LinkedIn"
                   className="w-5 h-5"
                 />
               </a>

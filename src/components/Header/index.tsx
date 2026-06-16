@@ -14,7 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { categories, products } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
-import logoImg from "../../../public/Horizontal_Lockup_on_Blue_Background-removebg-preview.png";
+import logoImg from "../../../public/LogoCompleta-ElectronicSolve_Store.png";
 import { Input } from "../ui/input";
 
 export function Header() {
