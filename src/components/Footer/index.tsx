@@ -145,9 +145,9 @@ export function Footer() {
               </a>
               <a href="#" className="transition-all hover:opacity-80">
                 <img
-                  src="https://cdn-icons-png.flaticon.com/512/733/733579.png"
-                  alt="Twitter"
-                  className="w-5 h-5"
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/WhatsApp_icon.png/500px-WhatsApp_icon.png"
+                  alt="WhatsApp"
+                  className="w-6 h-6"
                 />
               </a>
               <a href="#" className="transition-all hover:opacity-80">

@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 export function Login() {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen overflow-hidden flex items-center justify-center bg-gray-900">
       <main 
@@ -38,7 +41,7 @@ export function Login() {
                   <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" className="w-5 h-5" />
                 </Link>
                 <Link href="#" className="transition-all hover:opacity-80">
-                  <img src="https://cdn-icons-png.flaticon.com/512/733/733579.png" alt="X/Twitter" className="w-5 h-5" />
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/WhatsApp_icon.png/500px-WhatsApp_icon.png" alt="WhatsApp" className="w-6 h-6" />
                 </Link>
                 <Link href="#" className="transition-all hover:opacity-80">
                   <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="Instagram" className="w-5 h-5" />
@@ -103,12 +106,24 @@ export function Login() {
                       <Lock className="h-5 w-5 text-gray-400" />
                     </div>
                     <input 
-                      type="password" 
+                      type={showPassword ? "text" : "password"} 
                       id="password"
-                      className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm outline-none transition-colors"
+                      className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm outline-none transition-colors"
                       placeholder="••••••••"
                       required
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                      aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+                    >
+                      {showPassword ? (
+                        <Eye className="h-5 w-5" />
+                      ) : (
+                        <EyeOff className="h-5 w-5" />
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
