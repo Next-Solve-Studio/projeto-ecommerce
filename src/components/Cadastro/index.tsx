@@ -81,8 +81,17 @@ export function Cadastro() {
     mode: "onChange",
   });
 
-  const onSubmit = (data: any) => {
-    console.log("Dados Validados:", data);
+  const onSubmit = async (data: any) => {
+    const payload = {
+      nome: data.nome,
+      email: data.email,
+      cpf: data.cpf.replace(/\D/g, ""),
+      telefone: data.telefone.replace(/\D/g, ""),
+      senha: data.password,
+    };
+
+    console.log("JSON aqui VAMOOOOO:", JSON.stringify(payload, null, 2));
+
     router.push("/login");
   };
 

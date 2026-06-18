@@ -3,9 +3,20 @@
 import Link from "next/link";
 import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+
+  const { register, handleSubmit } = useForm();
+
+  const onSubmit = async (data: any) => {
+    console.log("Dados capturados no Login:", JSON.stringify(data, null, 2));
+
+    router.push("/");
+  };
 
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen overflow-hidden flex items-center justify-center bg-gray-900">
@@ -81,7 +92,7 @@ export function Login() {
               <p className="text-sm text-gray-500 mt-1">Insira suas credenciais para acessar sua conta</p>
             </div>
 
-            <form className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1" htmlFor="email">E-mail</label>
@@ -92,9 +103,9 @@ export function Login() {
                     <input 
                       type="email" 
                       id="email"
+                    {...register("email", { required: true })}
                       className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm outline-none transition-colors"
                       placeholder="seu@email.com"
-                      required
                     />
                   </div>
                 </div>
@@ -108,9 +119,9 @@ export function Login() {
                     <input 
                       type={showPassword ? "text" : "password"} 
                       id="password"
+                    {...register("password", { required: true })}
                       className="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm outline-none transition-colors"
                       placeholder="••••••••"
-                      required
                     />
                     <button
                       type="button"

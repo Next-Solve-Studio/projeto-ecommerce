@@ -235,6 +235,15 @@ export function Header() {
             </div>
 
             <div className="flex items-center gap-1 md:gap-3 shrink-0">
+              <Link
+                href="/login"
+                className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-white hover:text-black"
+                title="Entrar"
+              >
+                <User size={18} />
+              </Link>
+     
+              {/* Seção de perfil - Será ativada quando o sistema de autenticação estiver implementado
               <div className="relative" ref={profileRef}>
                 <button
                   type="button"
@@ -280,6 +289,7 @@ export function Header() {
                   </div>
                 )}
               </div>
+              */}
 
               <Link
                 href="/atendimento"
