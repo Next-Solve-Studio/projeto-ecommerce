@@ -23,9 +23,9 @@ import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { products } from "@/data/products";
 
-import banner1 from "../../../public/1.png";
-import banner2 from "../../../public/2.png";
-import banner3 from "../../../public/3.png";
+import banner1 from "../../../public/Home/banner-1_Homepage.png";
+import banner2 from "../../../public/Home/banner-2_Homepage.png";
+import banner3 from "../../../public/Home/banner-3_Homepage.png";
 
 const categoryIcons = {
   Smartphones: Smartphone,
@@ -87,10 +87,10 @@ export default function HomeComponent() {
           height: auto;
           display: flex;
           justify-content: center;
-          padding: 0 8px; /* Adds space between slides without breaking slick math */
+          padding: 0 8px;
         }
         .slick-list {
-          margin: 0 -8px; /* Counteracts the padding on slides */
+          margin: 0 -8px;
         }
         .slick-slide > div {
           width: 100%;
@@ -121,18 +121,34 @@ export default function HomeComponent() {
         .icon-destaque {
           color: #011C40;
         }
+        /* banner responsivo */
+        @media (max-width: 640px) {
+          .banner-slider .slick-slide {
+            height: 200px !important;
+          }
+        }
+        @media (min-width: 641px) and (max-width: 1024px) {
+          .banner-slider .slick-slide {
+            height: 300px !important;
+          }
+        }
+        @media (min-width: 1025px) {
+          .banner-slider .slick-slide {
+            height: 450px !important;
+          }
+        }
       `}</style>
 
-      {/* Banner Slider */}
+      {/* Banner */}
       <section className="w-full mb-8 relative">
         <Slider {...bannerSettings} className="banner-slider">
-          <div className="relative w-full h-[450px] outline-none">
+          <div className="relative w-full h-[200px] sm:h-[300px] lg:h-[450px] outline-none">
             <Image src={banner1} alt="Banner 1" fill className="object-cover" />
           </div>
-          <div className="relative w-full h-[450px] outline-none">
+          <div className="relative w-full h-[200px] sm:h-[300px] lg:h-[450px] outline-none">
             <Image src={banner2} alt="Banner 2" fill className="object-cover" />
           </div>
-          <div className="relative w-full h-[450px] outline-none">
+          <div className="relative w-full h-[200px] sm:h-[300px] lg:h-[450px] outline-none">
             <Image src={banner3} alt="Banner 3" fill className="object-cover" />
           </div>
         </Slider>

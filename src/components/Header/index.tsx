@@ -14,7 +14,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { categories, products } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
-import logoImg from "../../../public/LogoCompleta-ElectronicSolve_Store.png";
+import logoImg from "../../../public/Logo/LogoCompleta-ElectronicSolve_Store.png";
 import { Input } from "../ui/input";
 
 export function Header() {
@@ -139,6 +139,7 @@ export function Header() {
                 width={120}
                 height={40}
                 className="h-10 object-contain"
+                loading="eager"
               />
             </Link>
 

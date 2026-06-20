@@ -27,7 +27,7 @@ export function Login() {
         <div 
           className="hidden md:flex w-[60%] h-full bg-cover bg-center items-center justify-center relative shrink-0"
           style={{ 
-            backgroundImage: "url(/imagem-1_Autentificacao.png)" 
+            backgroundImage: "url(/Auth/imagem-1_Autentificacao.png)" 
           }}
         >
           <div 
@@ -39,7 +39,7 @@ export function Login() {
             <div className="flex justify-start items-start w-full">
               <Link href="/">
                 <img 
-                  src="/LogoCompleta-ElectronicSolve_Store.png" 
+                  src="/Logo/LogoCompleta-ElectronicSolve_Store.png" 
                   alt="ElectronicSolve Store" 
                   className="h-17 md:h-17 w-auto object-contain hover:opacity-90 transition-opacity drop-shadow-lg" 
                 />
@@ -72,7 +72,7 @@ export function Login() {
         <div 
           className="w-full md:w-[40%] h-full bg-cover bg-center flex items-center justify-center md:justify-start relative shrink-0"
           style={{ 
-            backgroundImage: "url(/imagem-2_Autentificacao.png)" 
+            backgroundImage: "url(/Auth/imagem-2_Autentificacao.png)" 
           }}
         >
           {/* Formulário de Login sobreposto com altura automática (corrige o link vazando) */}
@@ -81,8 +81,8 @@ export function Login() {
           >
             <div className="flex justify-center mb-6">
               <img 
-                src="/Logo-EletronicSolve_Store.png" 
-                alt="EletronicSolve Store" 
+                src="/Logo/Logo-ElectronicSolve_Store.png" 
+                alt="ElectronicSolve Store" 
                 className="h-16 w-auto object-contain" 
               />
             </div>

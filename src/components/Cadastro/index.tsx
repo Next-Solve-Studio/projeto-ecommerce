@@ -107,7 +107,7 @@ export function Cadastro() {
         <div 
           className="w-full md:w-[40%] h-full bg-cover bg-center flex items-center justify-center md:justify-end relative shrink-0 z-20"
           style={{ 
-            backgroundImage: "url(/imagem-4_Autentificacao.png)" 
+            backgroundImage: "url(/Auth/imagem-4_Autentificacao.png)" 
           }}
         >
           {/* Formulário de Cadastro */}
@@ -289,7 +289,7 @@ export function Cadastro() {
         {/* Seção da Direita */}
         <div 
           className="hidden md:flex w-[60%] h-full bg-cover bg-center items-center justify-center relative shrink-0 z-0"
-          style={{ backgroundImage: "url(/imagem-3_Autentificacao.png)" }}
+          style={{ backgroundImage: "url(/Auth/imagem-3_Autentificacao.png)" }}
         >
           <div 
             className="w-full h-full max-w-[800px] max-h-[620px] flex flex-col justify-between"
@@ -297,7 +297,7 @@ export function Cadastro() {
             <div className="flex justify-end items-end w-full">
               <Link href="/">
                 <img 
-                  src="/LogoCompleta-ElectronicSolve_Store.png" 
+                  src="/Logo/LogoCompleta-ElectronicSolve_Store.png" 
                   alt="ElectronicSolve Store" 
                   className="h-17 md:h-17 w-auto object-contain hover:opacity-90 transition-opacity drop-shadow-lg" 
                 />
