@@ -37,6 +37,14 @@ interface CartContextType {
   clearCart: () => void;
 }
 
+const CART_STORAGE_KEY = "@ProjetoEcommerce:cart";
+const CART_STORAGE_TTL_MS = 24 * 60 * 60 * 1000; // 24 horas
+
+interface SavedCart {
+  items: CartItem[];
+  expiresAt: number;
+}
+
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const isVariantsEqual = (
@@ -58,10 +66,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setIsMounted(true);
-    const savedCart = localStorage.getItem("@ProjetoEcommerce:cart");
+    const savedCart = localStorage.getItem(CART_STORAGE_KEY);
     if (savedCart) {
       try {
-        setItems(JSON.parse(savedCart));
+        const parsed = JSON.parse(savedCart) as SavedCart;
+        if (parsed?.expiresAt && parsed.expiresAt > Date.now() && Array.isArray(parsed.items)) {
+          setItems(parsed.items);
+        } else {
+          localStorage.removeItem(CART_STORAGE_KEY);
+        }
       } catch (error) {
         console.error("Erro ao carregar o carrinho do localStorage:", error);
       }
@@ -70,7 +83,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (isMounted) {
-      localStorage.setItem("@ProjetoEcommerce:cart", JSON.stringify(items));
+      const savedCart: SavedCart = {
+        items,
+        expiresAt: Date.now() + CART_STORAGE_TTL_MS,
+      };
+      localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(savedCart));
     }
   }, [items, isMounted]);
 

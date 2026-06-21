@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
-import { toastAddedToCart } from "@/components/ui/toast-sonner";
+import { toastAddedToCart, toastAddFavorito } from "@/components/ui/toast-sonner";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,41 @@ import { useCart } from "@/providers/CartProvider";
 
 interface DetalheProdutoComponentProps {
   product?: Product;
+}
+
+const FAVORITES_STORAGE_KEY = "@ProjetoEcommerce:favorites";
+const FAVORITES_TTL_MS = 24 * 60 * 60 * 1000; // 24 horas
+
+function loadFavoriteIds() {
+  if (typeof window === "undefined") {
+    return [] as string[];
+  }
+
+  const raw = localStorage.getItem(FAVORITES_STORAGE_KEY);
+  if (!raw) {
+    return [] as string[];
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as { ids?: string[]; expiresAt?: number };
+    if (
+      parsed?.expiresAt &&
+      parsed.expiresAt > Date.now() &&
+      Array.isArray(parsed.ids)
+    ) {
+      return parsed.ids;
+    }
+  } catch {}
+
+  localStorage.removeItem(FAVORITES_STORAGE_KEY);
+  return [] as string[];
+}
+
+function saveFavoriteIds(ids: string[]) {
+  localStorage.setItem(
+    FAVORITES_STORAGE_KEY,
+    JSON.stringify({ ids, expiresAt: Date.now() + FAVORITES_TTL_MS }),
+  );
 }
 
 export default function DetalheProdutoComponent({
@@ -67,6 +102,33 @@ export default function DetalheProdutoComponent({
       return initialVariants;
     });
   }, [product]);
+
+  useEffect(() => {
+    if (!product) {
+      return;
+    }
+
+    const favorites = loadFavoriteIds();
+    setIsFavorite(favorites.includes(product.id));
+  }, [product]);
+
+  const handleToggleFavorite = () => {
+    if (!product) {
+      return;
+    }
+
+    const favoriteIds = loadFavoriteIds();
+    const updatedFavorites = isFavorite
+      ? favoriteIds.filter((id) => id !== product.id)
+      : Array.from(new Set([...favoriteIds, product.id]));
+
+    saveFavoriteIds(updatedFavorites);
+    setIsFavorite(!isFavorite);
+
+    if (!isFavorite) {
+      toastAddFavorito(product.name);
+    }
+  };
 
   const populares = products.filter((p) => p.tags?.includes("populares"));
   const popularesSlider = useRef<any>(null);
@@ -270,9 +332,9 @@ export default function DetalheProdutoComponent({
                   <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
                   <button
                     type="button"
-                    onClick={() => setIsFavorite(!isFavorite)}
+                    onClick={handleToggleFavorite}
                     className="p-3 rounded-full hover:bg-gray-100 transition-colors shrink-0"
-                    title="Adicionar aos favoritos"
+                    title={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                   >
                     <Heart
                       size={28}

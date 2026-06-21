@@ -4,6 +4,7 @@ import { Toaster, toast } from "sonner";
 import {
   AlertTriangle,
   CheckCircle2,
+  Heart,
   Sparkles,
   UserCheck,
 } from "lucide-react";
@@ -195,6 +196,23 @@ export function toastAddedToCart(quantity: number, productName: string) {
         icon={<CheckCircle2 size={18} />}
         title="Produto adicionado ao carrinho"
         description={`${quantity}x ${productName} adicionado ao carrinho!`}
+        tone="green"
+        toastId={toastId}
+      />
+    ),
+    {
+      duration: Infinity,
+    },
+  );
+}
+
+export function toastAddFavorito(productName: string) {
+  toast.custom(
+    (toastId) => (
+      <ToastContent
+        icon={<Heart size={18} />}
+        title="Produto adicionado aos favoritos"
+        description={`${productName} foi adicionado aos seus favoritos.`}
         tone="green"
         toastId={toastId}
       />
