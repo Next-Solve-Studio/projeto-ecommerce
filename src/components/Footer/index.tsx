@@ -75,7 +75,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-sm text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                 <Phone size={18} />
-                <span>(11) 4002-8922</span>
+                <span>0800 123 4567</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-gray-400 hover:text-blue-400 transition-colors cursor-pointer">
                 <Mail size={18} />

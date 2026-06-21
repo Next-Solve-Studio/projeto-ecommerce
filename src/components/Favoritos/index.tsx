@@ -71,7 +71,7 @@ export default function FavoritesPageComponent() {
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
-      <div className="container mx-auto px-4 py-12">
+      <div className="mx-auto max-w-[1100px] px-4 py-12">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-10">
           <div>
             <h1 className="text-3xl font-bold">Meus Favoritos</h1>
@@ -95,14 +95,15 @@ export default function FavoritesPageComponent() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3">
             {favoriteProducts.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm flex flex-col"
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm flex flex-col transform transition-transform duration-200 hover:-translate-y-1"
+                style={{ maxWidth: 360 }}
               >
                 <Link href={`/produtos/${product.id}`} className="group block">
-                  <div className="h-52 bg-gray-100 flex items-center justify-center overflow-hidden">
+                  <div className="h-44 bg-gray-100 flex items-center justify-center overflow-hidden">
                     <img
                       src={product.images[0]}
                       alt={product.name}
