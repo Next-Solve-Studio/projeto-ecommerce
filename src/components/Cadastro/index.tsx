@@ -6,7 +6,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useRouter } from "next/navigation";
+import { cadastrar } from "@/actions/auth";
+import { toast } from "sonner";
 
 const cpfMask = (value: string) => {
   return value
@@ -68,7 +69,6 @@ const schema = yup.object().shape({
 });
 
 export function Cadastro() {
-  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -81,19 +81,21 @@ export function Cadastro() {
     mode: "onChange",
   });
 
-  const onSubmit = async (data: any) => {
-    const payload = {
-      nome: data.nome,
-      email: data.email,
-      cpf: data.cpf.replace(/\D/g, ""),
-      telefone: data.telefone.replace(/\D/g, ""),
-      senha: data.password,
-    };
+const onSubmit = async (data: any) => {
+  const result = await cadastrar({
+    name: data.nome,
+    email: data.email,
+    password: data.password,
+    cpf: data.cpf.replace(/\D/g, ""),
+    phone: data.telefone.replace(/\D/g, ""),
+  });
 
-    console.log("JSON aqui VAMOOOOO:", JSON.stringify(payload, null, 2));
+  if (result?.error) {
+    toast.error(result.error);
+    return;
+  }
+};
 
-    router.push("/login");
-  };
 
   const { onChange: cpfOnChange, ...cpfRest } = register("cpf");
   const { onChange: phoneOnChange, ...phoneRest } = register("telefone");

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SessionProvider } from "@/providers/SessionProvider";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { CartProvider } from "@/providers/CartProvider";
@@ -39,11 +40,13 @@ export default function RootLayout({
           {`try{document.body.removeAttribute('cz-shortcut-listen')}catch(e){}`}
         </Script>
         <QueryProvider>
-          <CartProvider>
-            <ToastSonner />
-            {children}
-            <Footer />
-          </CartProvider>
+          <SessionProvider>
+            <CartProvider>
+              <ToastSonner />
+              {children}
+              <Footer />
+            </CartProvider>
+          </SessionProvider>
         </QueryProvider>
       </body>
     </html>

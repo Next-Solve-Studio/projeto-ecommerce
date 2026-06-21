@@ -1,8 +1,8 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
-// Dados pessoais
 export type CheckoutFormData = {
   nome: string;
   email: string;
@@ -10,7 +10,6 @@ export type CheckoutFormData = {
   cpf: string;
 };
 
-// Dados de endereço
 export type EnderecoFormData = {
   cep: string;
   endereco: string;
@@ -53,28 +52,28 @@ function generatePixCode(total: number, orderNumber: string): string {
 }
 
 export async function finalizarPedido(input: FinalizarPedidoInput) {
-  const {
-    formData,
-    enderecoData,
-    cartItems,
-    paymentMethod,
-    shippingCost,
-    shippingType,
-  } = input;
+  const { formData, enderecoData, cartItems, paymentMethod, shippingCost, shippingType } = input;
 
-  // --- MODO DE SIMULAÇÃO ---
-  // A comunicação com o Prisma foi desativada para não exigir o banco de dados neste momento.
-  /*
-  const user = await prisma.user.upsert({
-    where: { email: formData.email },
-    update: { name: formData.nome, phone: formData.telefone },
-    create: {
-      name: formData.nome,
-      email: formData.email,
-      cpf: formData.cpf.replace(/\D/g, ""),
-      phone: formData.telefone,
-    },
-  });
+  const session = await auth();
+
+  let user;
+  if (session?.user?.id) {
+    user = await prisma.user.update({
+      where: { id: session.user.id },
+      data: { name: formData.nome, phone: formData.telefone },
+    });
+  } else {
+    user = await prisma.user.upsert({
+      where: { email: formData.email },
+      update: { name: formData.nome, phone: formData.telefone },
+      create: {
+        name: formData.nome,
+        email: formData.email,
+        cpf: formData.cpf.replace(/\D/g, ""),
+        phone: formData.telefone,
+      },
+    });
+  }
 
   const address = await prisma.address.create({
     data: {
@@ -88,11 +87,10 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
       state: enderecoData.estado.toUpperCase(),
     },
   });
-  */
 
   const itemsTotal = cartItems.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
-    0,
+    0
   );
   const totalAmount = itemsTotal + shippingCost;
 
@@ -100,7 +98,6 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
   const pixCode =
     paymentMethod === "PIX" ? generatePixCode(totalAmount, orderNumber) : null;
 
-  /*
   const order = await prisma.order.create({
     data: {
       orderNumber,
@@ -127,17 +124,12 @@ export async function finalizarPedido(input: FinalizarPedidoInput) {
     },
     include: { items: true, address: true, user: true },
   });
-  */
-
-  // Simula um delay rápido de comunicação com API
-  await new Promise((resolve) => setTimeout(resolve, 800));
-  const mockOrderId = `mock_${Date.now()}`;
 
   return {
-    orderId: mockOrderId,
-    orderNumber: orderNumber,
-    pixCode: pixCode,
-    total: totalAmount,
+    orderId: order.id,
+    orderNumber: order.orderNumber,
+    pixCode: order.pixCode,
+    total: order.totalAmount,
   };
 }
 
@@ -159,4 +151,25 @@ export async function getOrdersByEmail(email: string) {
     },
   });
   return user?.orders ?? [];
+}
+
+export async function getMyOrders() {
+  const session = await auth();
+  if (!session?.user?.id) return [];
+
+  return prisma.order.findMany({
+    where: { userId: session.user.id },
+    include: { items: true, address: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
+export async function getMyProfile() {
+  const session = await auth();
+  if (!session?.user?.id) return null;
+
+  return prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: { addresses: true },
+  });
 }

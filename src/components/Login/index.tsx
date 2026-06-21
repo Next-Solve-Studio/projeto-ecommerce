@@ -4,19 +4,24 @@ import Link from "next/link";
 import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { login } from "@/actions/auth";
+import { toast } from "sonner";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
 
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data: any) => {
-    console.log("Dados capturados no Login:", JSON.stringify(data, null, 2));
+  const result = await login({
+    email: data.email,
+    password: data.password,
+  });
 
-    router.push("/");
-  };
+  if (result?.error) {
+    toast.error(result.error);
+  }
+};
 
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen overflow-hidden flex items-center justify-center bg-gray-900">
