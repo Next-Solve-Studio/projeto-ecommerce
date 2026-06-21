@@ -17,7 +17,7 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import Slider from "react-slick";
-import { toast } from "sonner";
+import { toastAddedToCart } from "@/components/ui/toast-sonner";
 import { Header } from "@/components/Header";
 import { ProductCard } from "@/components/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -45,7 +45,6 @@ export default function DetalheProdutoComponent({
   const [selectedVariants, setSelectedVariants] = useState<
     Record<string, string>
   >({});
-  const [showAddedFeedback, setShowAddedFeedback] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isGalleryModalOpen, setIsGalleryModalOpen] = useState(false);
   const [galleryModalIndex, setGalleryModalIndex] = useState(0);
@@ -132,18 +131,12 @@ export default function DetalheProdutoComponent({
         (v) => !selectedVariants[v.type],
       );
       if (missingVariants.length > 0) {
-        toast.error(
-          `Por favor, selecione: ${missingVariants.map((v) => v.type).join(", ")}`,
-        );
         return;
       }
     }
 
     addToCart(product, quantity, selectedVariants);
-    setShowAddedFeedback(true);
-    toast.success(`${quantity}x ${product.name} adicionado ao carrinho!`);
-
-    setTimeout(() => setShowAddedFeedback(false), 3000);
+    toastAddedToCart(quantity, product.name);
   };
 
   const handleVariantChange = (type: string, value: string) => {
@@ -153,12 +146,7 @@ export default function DetalheProdutoComponent({
   return (
     <div className="min-h-screen bg-[#F2F3F4]">
       <Header />
-      {showAddedFeedback && (
-        <div className="fixed top-20 right-4 z-50 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 animate-in slide-in-from-right">
-          <Check size={24} />
-          <span className="font-semibold">Produto adicionado ao carrinho!</span>
-        </div>
-      )}
+      {/* Toast handled by ToastSonner component */}
 
       {isGalleryModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">

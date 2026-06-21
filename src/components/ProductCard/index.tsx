@@ -2,7 +2,7 @@
 
 import { ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
-import { toast } from "sonner";
+import { toastAddedToCart } from "@/components/ui/toast-sonner";
 import type { Product } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
 import { Button } from "../ui/button";
@@ -17,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     addToCart(product, 1);
-    toast.success(`${product.name} adicionado ao carrinho!`);
+    toastAddedToCart(1, product.name);
   };
 
   const hasDiscount = product.oldPrice && product.discountPercentage;
