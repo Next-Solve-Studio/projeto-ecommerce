@@ -1,0 +1,1183 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
+import { categories } from "@/data/products";
+import {
+  Package,
+  ShoppingCart,
+  BarChart3,
+  Settings,
+  Home,
+  Menu,
+  X,
+  Search,
+  Edit,
+  Trash2,
+  Eye,
+  Clock,
+  TrendingUp,
+  DollarSign,
+  Plus,
+  ShieldCheck,
+  AlertCircle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+
+const paymentLabel: Record<string, string> = {
+  PIX: "PIX",
+  CREDIT_CARD: "Cartão de Crédito",
+};
+
+const shippingLabel: Record<string, string> = {
+  standard: "Entrega padrão",
+  express: "Entrega expressa",
+  pickup: "Retirada em loja",
+};
+
+const orderStatusLabels: Record<string, string> = {
+  PENDING: "Pendente",
+  PROCESSING: "Processando",
+  PAID: "Pago",
+  SHIPPED: "Enviado",
+  DELIVERED: "Entregue",
+  CANCELLED: "Cancelado",
+};
+
+const orderStatusClasses: Record<string, string> = {
+  PENDING: "bg-warning/10 text-warning border-warning/20",
+  PROCESSING: "bg-primary/10 text-primary border-primary/20",
+  PAID: "bg-success/10 text-success border-success/20",
+  SHIPPED: "bg-accent/10 text-accent border-accent/20",
+  DELIVERED: "bg-muted text-muted-foreground border-muted",
+  CANCELLED: "bg-destructive/10 text-destructive border-destructive/20",
+};
+
+type OrderStatus = keyof typeof orderStatusLabels;
+
+type AdminProduct = {
+  id: string;
+  name: string;
+  price: number;
+  oldPrice?: number | null;
+  stockQty: number;
+  description?: string | null;
+  category?: { name: string } | null;
+  imageUrl?: string | null;
+  featured?: boolean;
+};
+
+type AdminOrder = {
+  id: string;
+  orderNumber: string;
+  totalAmount: number;
+  shippingCost: number;
+  shippingType: string;
+  status: OrderStatus;
+  paymentMethod: string;
+  createdAt: string;
+  user: { name: string; email: string };
+  address: {
+    street: string;
+    number: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    cep: string;
+  };
+  items: Array<{
+    id: string;
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+    variantInfo?: string | null;
+  }>;
+};
+
+export default function AdminComponent() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("products");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [products, setProducts] = useState<AdminProduct[]>([]);
+  const [orders, setOrders] = useState<AdminOrder[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(false);
+  const [loadingOrders, setLoadingOrders] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [creatingProduct, setCreatingProduct] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    price: "",
+    stockQty: "0",
+    category: categories[0] ?? "Eletrônicos",
+    imageUrl: "",
+    description: "",
+    featured: false,
+  });
+  const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [updatingProduct, setUpdatingProduct] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<AdminProduct | null>(null);
+  const [deletingProduct, setDeletingProduct] = useState(false);
+  const [viewingOrder, setViewingOrder] = useState<AdminOrder | null>(null);
+  const [isViewOrderOpen, setIsViewOrderOpen] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+
+  const formatPrice = (value: number) =>
+    new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    }).format(value);
+
+  const formatDate = (value: string) =>
+    new Intl.DateTimeFormat("pt-BR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(new Date(value));
+
+  const loadProducts = async () => {
+    try {
+      setLoadingProducts(true);
+      const response = await fetch("/api/admin/produtos");
+      const data = await response.json();
+      setProducts(data.products || []);
+    } catch (error) {
+      console.error("Erro ao carregar produtos", error);
+    } finally {
+      setLoadingProducts(false);
+    }
+  };
+
+  const loadOrders = async () => {
+    try {
+      setLoadingOrders(true);
+      const response = await fetch("/api/admin/pedidos");
+      const data = await response.json();
+      setOrders(data.orders || []);
+    } catch (error) {
+      console.error("Erro ao carregar pedidos", error);
+    } finally {
+      setLoadingOrders(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProducts();
+    loadOrders();
+  }, []);
+
+  const filteredProducts = useMemo(
+    () =>
+      products.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      ),
+    [products, searchQuery],
+  );
+
+  const filteredOrders = useMemo(
+    () =>
+      orders.filter((order) => {
+        const matchesSearch =
+          order.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          order.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          order.user.email.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus =
+          statusFilter === "all" || order.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      }),
+    [orders, searchQuery, statusFilter],
+  );
+
+  const totalRevenue = useMemo(
+    () => orders.reduce((sum, order) => sum + order.totalAmount, 0),
+    [orders],
+  );
+
+  const lowStockCount = useMemo(
+    () => products.filter((product) => product.stockQty < 10).length,
+    [products],
+  );
+
+  const totalProducts = products.length;
+  const totalOrders = orders.length;
+
+  const handleCreateProduct = async () => {
+    setCreatingProduct(true);
+    setMessage(null);
+    try {
+      const payload = {
+        name: newProduct.name,
+        price: parseFloat(newProduct.price.replace(",", ".") || "0"),
+        stockQty: Number(newProduct.stockQty),
+        category: newProduct.category,
+        imageUrl: newProduct.imageUrl,
+        description: newProduct.description,
+        featured: newProduct.featured,
+      };
+
+      const response = await fetch("/api/admin/produtos", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao criar produto");
+      }
+
+      await loadProducts();
+      setIsCreateOpen(false);
+      setNewProduct({
+        name: "",
+        price: "",
+        stockQty: "0",
+        category: categories[0] ?? "Eletrônicos",
+        imageUrl: "",
+        description: "",
+        featured: false,
+      });
+    } catch (error) {
+      setMessage((error as Error).message);
+    } finally {
+      setCreatingProduct(false);
+    }
+  };
+
+  const handleUpdateProduct = async () => {
+    if (!editingProduct) return;
+    setUpdatingProduct(true);
+    setMessage(null);
+    try {
+      const payload = {
+        name: editingProduct.name,
+        price: editingProduct.price,
+        stockQty: editingProduct.stockQty,
+        category: editingProduct.category?.name || categories[0],
+        imageUrl: editingProduct.imageUrl,
+        description: editingProduct.description,
+        featured: editingProduct.featured,
+      };
+
+      const response = await fetch(
+        `/api/admin/produtos?id=${encodeURIComponent(editingProduct.id)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao atualizar produto");
+      }
+
+      await loadProducts();
+      setIsEditOpen(false);
+      setEditingProduct(null);
+    } catch (error) {
+      setMessage((error as Error).message);
+    } finally {
+      setUpdatingProduct(false);
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    if (!productToDelete) return;
+    setDeletingProduct(true);
+    setMessage(null);
+    try {
+      const response = await fetch(
+        `/api/admin/produtos?id=${encodeURIComponent(productToDelete.id)}`,
+        {
+          method: "DELETE",
+        },
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao excluir produto");
+      }
+
+      await loadProducts();
+      setIsDeleteOpen(false);
+      setProductToDelete(null);
+    } catch (error) {
+      setMessage((error as Error).message);
+    } finally {
+      setDeletingProduct(false);
+    }
+  };
+
+  const navItems = [
+    { id: "products", label: "Produtos", icon: Package },
+    { id: "orders", label: "Pedidos", icon: ShoppingCart },
+    { id: "reports", label: "Relatórios", icon: BarChart3 },
+    { id: "settings", label: "Configurações", icon: Settings },
+  ];
+
+  return (
+    <div className="flex min-h-screen bg-[#F4F9FA]">
+      <div className="hidden lg:block w-56 flex-shrink-0">
+        <aside className="fixed top-0 bottom-0 left-0 w-[72px] hover:w-56 flex-shrink-0 border-r border-sidebar-border bg-[#07121D] transition-all duration-300 overflow-hidden group z-50">
+          <div className="flex h-full flex-col w-full">
+            <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5 overflow-hidden">
+              <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg">
+                <img 
+                src="/Logo/Logo-ElectronicSolve_Store.png" 
+                alt="ElectronicSolve Store" 
+                className="h-16 w-auto object-contain" 
+                />
+              </div>
+              <span className="text-lg font-bold text-sidebar-foreground whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                Admin Eletrônicos
+              </span>
+            </div>
+            <nav className="flex-1 space-y-2 p-3">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition-all duration-150 ${
+                      activeTab === item.id
+                        ? "bg-primary/10 text-primary"
+                        : "text-muted-foreground hover:bg-secondary"
+                    }`}
+                    title={item.label}
+                  >
+                    <Icon className="h-5 w-5" />
+                    <span className="opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      {item.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </nav>
+            <div className="border-t border-sidebar-border p-3">
+              <Link href="/">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start gap-3 border-sidebar-border bg-sidebar text-[#ef4444] hover:bg-sidebar-accent hover:text-[#ef4444]/80 px-[14px] py-3 h-auto font-medium"
+                  title="Voltar à Loja"
+                >
+                  <Home className="h-5 w-5 flex-shrink-0" />
+                  <span className="whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    Voltar à Loja
+                  </span>
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div
+            className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+            onClick={() => setSidebarOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 h-full w-64 border-r border-sidebar-border bg-sidebar">
+            <div className="flex h-full flex-col">
+              <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-6">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
+                    <span className="text-sm font-bold text-sidebar-primary-foreground">E</span>
+                  </div>
+                  <span className="text-lg font-bold text-sidebar-foreground">Admin Eletrônicos</span>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSidebarOpen(false)}
+                  className="text-sidebar-foreground"
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <nav className="flex-1 space-y-1 p-4">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveTab(item.id);
+                        setSidebarOpen(false);
+                      }}
+                      className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition-all duration-150 ${
+                        activeTab === item.id
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-secondary"
+                      }`}
+                    >
+                      <Icon className="h-5 w-5" />
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </nav>
+              <div className="border-t border-sidebar-border p-4">
+                <Link href="/">
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start gap-2 border-sidebar-border bg-sidebar text-[#ef4444] hover:bg-sidebar-accent hover:text-[#ef4444]/80 py-2.5 h-auto font-medium"
+                  >
+                    <Home className="h-5 w-5" />
+                    Voltar à Loja
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      <div className="flex flex-1 flex-col">
+        <header className="flex h-16 items-center gap-4 shadow-sm border-gray-200 border-1 rounded !bg-white px-4 mx-4 mt-4 lg:px-6 lg:mx-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+          <h1 className="text-xl font-semibold capitalize text-foreground">
+            {navItems.find((item) => item.id === activeTab)?.label}
+          </h1>
+          <div className="ml-auto flex items-center gap-4">
+            {(activeTab === "products" || activeTab === "orders") && (
+              <div className="relative bg-[#011C40] rounded-sm hidden sm:block">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Buscar..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-64 pl-9 text-white bg-secondary border-0"
+                />
+              </div>
+            )}
+          </div>
+        </header>
+
+        <main className="flex-1 overflow-auto p-4 lg:p-6">
+          {message && (
+            <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-destructive">
+              {message}
+            </div>
+          )}
+
+          {activeTab === "products" && (
+            <div className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                      <Package className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Produtos</p>
+                      <p className="text-2xl font-semibold">{totalProducts}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-success/10 p-3 text-success">
+                      <DollarSign className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Receita total</p>
+                      <p className="text-2xl font-semibold">{formatPrice(totalRevenue)}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-warning/10 p-3 text-warning">
+                      <TrendingUp className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Pedidos</p>
+                      <p className="text-2xl font-semibold">{totalOrders}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-destructive/10 p-3 text-destructive">
+                      <AlertCircle className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Estoque baixo</p>
+                      <p className="text-2xl font-semibold">{lowStockCount}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card className="shadow-sm border-gray-200 border-1 rounded">
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle className="text-base font-semibold">Gerenciar Produtos</CardTitle>
+                  <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+                    <DialogTrigger asChild>
+                      <Button className="gap-2">
+                        <Plus className="h-4 w-4" />
+                        Novo produto
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[600px]">
+                      <DialogHeader>
+                        <DialogTitle>Adicionar produto</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4 py-2">
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <Label htmlFor="product-name">
+                              Nome
+                            </Label>
+                            <Input
+                              id="product-name"
+                              value={newProduct.name}
+                              onChange={(e) =>
+                                setNewProduct({ ...newProduct, name: e.target.value })
+                              }
+                              placeholder="Nome do produto"
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="product-price">Preço</Label>
+                            <Input
+                              id="product-price"
+                              value={newProduct.price}
+                              onChange={(e) =>
+                                setNewProduct({ ...newProduct, price: e.target.value })
+                              }
+                              placeholder="0,00"
+                            />
+                          </div>
+                        </div>
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <Label htmlFor="product-stock">Estoque</Label>
+                            <Input
+                              id="product-stock"
+                              type="number"
+                              min={0}
+                              value={newProduct.stockQty}
+                              onChange={(e) =>
+                                setNewProduct({ ...newProduct, stockQty: e.target.value })
+                              }
+                            />
+                          </div>
+                          <div>
+                            <Label htmlFor="product-category">Categoria</Label>
+                            <Select
+                              value={newProduct.category}
+                              onValueChange={(value) =>
+                                setNewProduct({ ...newProduct, category: value })
+                              }
+                            >
+                              <SelectTrigger id="product-category">
+                                <SelectValue placeholder="Categoria" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {categories.map((category) => (
+                                  <SelectItem key={category} value={category}>
+                                    {category}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <div>
+                          <Label htmlFor="product-image">URL da imagem</Label>
+                          <Input
+                            id="product-image"
+                            value={newProduct.imageUrl}
+                            onChange={(e) =>
+                              setNewProduct({ ...newProduct, imageUrl: e.target.value })
+                            }
+                            placeholder="https://..."
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="product-description">Descrição</Label>
+                          <Input
+                            id="product-description"
+                            value={newProduct.description}
+                            onChange={(e) =>
+                              setNewProduct({
+                                ...newProduct,
+                                description: e.target.value,
+                              })
+                            }
+                            placeholder="Breve descrição do produto"
+                          />
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            checked={newProduct.featured}
+                            onCheckedChange={(checked) =>
+                              setNewProduct({
+                                ...newProduct,
+                                featured: Boolean(checked),
+                              })
+                            }
+                            id="featured-product"
+                          />
+                          <Label htmlFor="featured-product">Produto em destaque</Label>
+                        </div>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() => setIsCreateOpen(false)}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button onClick={handleCreateProduct} disabled={creatingProduct}>
+                          {creatingProduct ? "Salvando..." : "Salvar produto"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Produto</TableHead>
+                          <TableHead>Categoria</TableHead>
+                          <TableHead>Preço</TableHead>
+                          <TableHead>Estoque</TableHead>
+                          <TableHead>Ações</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredProducts.map((product) => (
+                          <TableRow key={product.id}>
+                            <TableCell>{product.name}</TableCell>
+                            <TableCell>
+                              {product.category?.name ?? "Sem categoria"}
+                            </TableCell>
+                            <TableCell>{formatPrice(product.price)}</TableCell>
+                            <TableCell>{product.stockQty}</TableCell>
+                            <TableCell>
+                              <div className="flex flex-wrap gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setEditingProduct(product);
+                                    setIsEditOpen(true);
+                                  }}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setProductToDelete(product);
+                                    setIsDeleteOpen(true);
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+                <DialogContent className="sm:max-w-[600px]">
+                  <DialogHeader>
+                    <DialogTitle>Editar produto</DialogTitle>
+                  </DialogHeader>
+                  {editingProduct && (
+                    <div className="space-y-4 py-2">
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div>
+                          <Label htmlFor="edit-product-name">Nome</Label>
+                          <Input
+                            id="edit-product-name"
+                            value={editingProduct.name}
+                            onChange={(e) =>
+                              setEditingProduct({ ...editingProduct, name: e.target.value })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="edit-product-price">Preço</Label>
+                          <Input
+                            id="edit-product-price"
+                            type="number"
+                            min={0}
+                            step={0.01}
+                            value={editingProduct.price}
+                            onChange={(e) =>
+                              setEditingProduct({
+                                ...editingProduct,
+                                price: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        <div>
+                          <Label htmlFor="edit-product-stock">Estoque</Label>
+                          <Input
+                            id="edit-product-stock"
+                            type="number"
+                            min={0}
+                            value={editingProduct.stockQty}
+                            onChange={(e) =>
+                              setEditingProduct({
+                                ...editingProduct,
+                                stockQty: Number(e.target.value),
+                              })
+                            }
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="edit-product-category">Categoria</Label>
+                          <Select
+                            value={editingProduct.category?.name ?? categories[0]}
+                            onValueChange={(value) =>
+                              setEditingProduct({
+                                ...editingProduct,
+                                category: { name: value },
+                              })
+                            }
+                          >
+                            <SelectTrigger id="edit-product-category">
+                              <SelectValue placeholder="Categoria" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {categories.map((category) => (
+                                <SelectItem key={category} value={category}>
+                                  {category}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-product-image">URL da imagem</Label>
+                        <Input
+                          id="edit-product-image"
+                          value={editingProduct.imageUrl ?? ""}
+                          onChange={(e) =>
+                            setEditingProduct({
+                              ...editingProduct,
+                              imageUrl: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="edit-product-description">Descrição</Label>
+                        <Input
+                          id="edit-product-description"
+                          value={editingProduct.description ?? ""}
+                          onChange={(e) =>
+                            setEditingProduct({
+                              ...editingProduct,
+                              description: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          checked={Boolean(editingProduct.featured)}
+                          onCheckedChange={(checked) =>
+                            setEditingProduct({
+                              ...editingProduct,
+                              featured: Boolean(checked),
+                            })
+                          }
+                          id="edit-featured-product"
+                        />
+                        <Label htmlFor="edit-featured-product">Produto em destaque</Label>
+                      </div>
+                      <DialogFooter>
+                        <Button
+                          type="button"
+                          variant="secondary"
+                          onClick={() => {
+                            setIsEditOpen(false);
+                            setEditingProduct(null);
+                          }}
+                        >
+                          Cancelar
+                        </Button>
+                        <Button onClick={handleUpdateProduct} disabled={updatingProduct}>
+                          {updatingProduct ? "Atualizando..." : "Salvar alterações"}
+                        </Button>
+                      </DialogFooter>
+                    </div>
+                  )}
+                </DialogContent>
+              </Dialog>
+
+              <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
+                <DialogContent className="sm:max-w-[520px]">
+                  <DialogHeader>
+                    <DialogTitle>Excluir produto</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-2">
+                    <p>
+                      Tem certeza que deseja excluir o produto{' '}
+                      <strong>{productToDelete?.name}</strong>? Essa ação não pode ser desfeita.
+                    </p>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      onClick={() => setIsDeleteOpen(false)}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={handleDeleteProduct}
+                      disabled={deletingProduct}
+                    >
+                      {deletingProduct ? "Excluindo..." : "Excluir"}
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
+
+          {activeTab === "orders" && (
+            <div className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+                <Card className="bg-warning/5 border-warning/20">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-sm text-muted-foreground">Pedidos pendentes</p>
+                    <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "PENDING").length}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-primary/5 border-primary/20">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-sm text-muted-foreground">Em processamento</p>
+                    <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "PROCESSING").length}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-success/5 border-success/20">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-sm text-muted-foreground">Pedidos pagos</p>
+                    <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "PAID").length}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-accent/5 border-accent/20">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-sm text-muted-foreground">Enviados</p>
+                    <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "SHIPPED").length}</p>
+                  </CardContent>
+                </Card>
+                <Card className="bg-muted">
+                  <CardContent className="p-4 text-center">
+                    <p className="text-sm text-muted-foreground">Receita total</p>
+                    <p className="text-2xl font-semibold">{formatPrice(totalRevenue)}</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <CardTitle>Acompanhamento de Pedidos</CardTitle>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filtrar status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Todos</SelectItem>
+                      {Object.entries(orderStatusLabels).map(([value, label]) => (
+                        <SelectItem key={value} value={value}>
+                          {label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </CardHeader>
+                <CardContent>
+                  <Dialog open={isViewOrderOpen} onOpenChange={setIsViewOrderOpen}>
+                    <DialogContent className="sm:max-w-[700px]">
+                      <DialogHeader>
+                        <DialogTitle>Detalhes do pedido</DialogTitle>
+                      </DialogHeader>
+                      {viewingOrder && (
+                        <div className="space-y-4 py-2">
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <p className="text-sm text-muted-foreground">Número do pedido</p>
+                              <p className="text-base font-semibold">{viewingOrder.orderNumber}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">Status</p>
+                              <Badge className={orderStatusClasses[viewingOrder.status] || "bg-muted text-muted-foreground"}>
+                                {orderStatusLabels[viewingOrder.status]}
+                              </Badge>
+                            </div>
+                          </div>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <p className="text-sm text-muted-foreground">Cliente</p>
+                              <p>{viewingOrder.user.name}</p>
+                              <p className="text-sm text-muted-foreground">{viewingOrder.user.email}</p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">Pagamento</p>
+                              <p>{paymentLabel[viewingOrder.paymentMethod] || viewingOrder.paymentMethod}</p>
+                            </div>
+                          </div>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <p className="text-sm text-muted-foreground">Endereço</p>
+                              <p>
+                                {viewingOrder.address.street}, {viewingOrder.address.number}
+                              </p>
+                              <p>
+                                {viewingOrder.address.neighborhood} - {viewingOrder.address.city}/{viewingOrder.address.state}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-sm text-muted-foreground">Total</p>
+                              <p className="text-lg font-semibold">{formatPrice(viewingOrder.totalAmount)}</p>
+                            </div>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">Itens</p>
+                            <div className="space-y-2">
+                              {viewingOrder.items.map((item) => (
+                                <div key={item.id} className="rounded-lg border border-border p-3">
+                                  <p className="font-medium">{item.productName}</p>
+                                  <p className="text-sm text-muted-foreground">
+                                    {item.quantity}x {formatPrice(item.unitPrice)}
+                                  </p>
+                                  {item.variantInfo && (
+                                    <p className="text-sm text-muted-foreground">{item.variantInfo}</p>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button onClick={() => setIsViewOrderOpen(false)}>Fechar</Button>
+                          </DialogFooter>
+                        </div>
+                      )}
+                    </DialogContent>
+                  </Dialog>
+
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Pedido</TableHead>
+                          <TableHead>Cliente</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Pagamento</TableHead>
+                          <TableHead>Ações</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredOrders.map((order) => (
+                          <TableRow key={order.id}>
+                            <TableCell>{order.orderNumber}</TableCell>
+                            <TableCell>{order.user.name}</TableCell>
+                            <TableCell>{formatPrice(order.totalAmount)}</TableCell>
+                            <TableCell>
+                              <Badge className={orderStatusClasses[order.status] || "bg-muted text-muted-foreground"}>
+                                {orderStatusLabels[order.status]}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{paymentLabel[order.paymentMethod] || order.paymentMethod}</TableCell>
+                            <TableCell>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => {
+                                  setViewingOrder(order);
+                                  setIsViewOrderOpen(true);
+                                }}
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {activeTab === "reports" && (
+            <div className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                      <BarChart3 className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Produtos ativos</p>
+                      <p className="text-2xl font-semibold">{totalProducts}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-success/10 p-3 text-success">
+                      <TrendingUp className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Pedidos finalizados</p>
+                      <p className="text-2xl font-semibold">{orders.filter((order) => order.status === "DELIVERED").length}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-warning/10 p-3 text-warning">
+                      <Clock className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Pedidos em espera</p>
+                      <p className="text-2xl font-semibold">{orders.filter((order) => order.status === "PENDING").length}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="flex items-center gap-4 p-6">
+                    <div className="rounded-xl bg-muted text-muted-foreground p-3">
+                      <ShieldCheck className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Taxa de conversão</p>
+                      <p className="text-2xl font-semibold">{orders.length > 0 ? `${Math.round((orders.filter((o) => o.status === "PAID").length / orders.length) * 100)}%` : "0%"}</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid gap-6 lg:grid-cols-2">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Resumo de vendas</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">Este painel mostra o volume de vendas e o crescimento do seu ecommerce.</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Estoque crítico</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground">Produtos com estoque menor que 10 unidades precisam de reposição urgente.</p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "settings" && (
+            <div className="max-w-2xl space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Configurações da Loja</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Nome da loja</Label>
+                    <Input value="Ecommerce Eletrônicos" readOnly />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>E-mail de contato</Label>
+                    <Input value="contato@lojaeletronicos.com" readOnly />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Endereço da loja</Label>
+                    <Input value="Av. Tecnologia, 1234 - Fortaleza" readOnly />
+                  </div>
+                  <Button>Salvar Alterações</Button>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notificações</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2">
+                    <Label>Notificações por e-mail</Label>
+                    <p className="text-sm text-muted-foreground">Sincronize alertas de novos pedidos, estoque baixo e pagamento aprovado.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Permissões de administrador</Label>
+                    <p className="text-sm text-muted-foreground">Acesso restrito a usuários com credenciais administrativas válidas.</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
