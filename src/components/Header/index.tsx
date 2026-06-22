@@ -4,16 +4,32 @@ import {
   ChevronDown,
   HeadphonesIcon,
   Heart,
+  LogOut,
+  Package,
   Search,
+  Shield,
+  ShieldUser,
   ShoppingCart,
   User,
+  UserCog,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { signOut, useSession } from "next-auth/react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"; 
 import { categories, products } from "@/data/products";
 import { useCart } from "@/providers/CartProvider";
+import { toastLogout } from "../ui/toast-sonner";
+import { Button } from "../ui/button";
 import logoImg from "../../../public/Logo/LogoCompleta-ElectronicSolve_Store.png";
 import { Input } from "../ui/input";
 
@@ -23,10 +39,10 @@ export function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const { data: session, status } = useSession();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const desktopSuggestionRef = useRef<HTMLDivElement>(null);
   const mobileSuggestionRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -44,9 +60,6 @@ export function Header() {
 
       if (isOutsideDesktop && isOutsideMobile) {
         setShowSuggestions(false);
-      }
-      if (profileRef.current && !profileRef.current.contains(target)) {
-        setIsProfileOpen(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -236,61 +249,81 @@ export function Header() {
             </div>
 
             <div className="flex items-center gap-1 md:gap-3 shrink-0">
-              <Link
-                href="/login"
-                className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-white hover:text-black"
-                title="Entrar"
-              >
-                <User size={18} />
-              </Link>
-     
-              {/* Seção de perfil - Será ativada quando o sistema de autenticação estiver implementado
-              <div className="relative" ref={profileRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="group flex items-center gap-2 hover:bg-gray-100 p-2 rounded-md transition-colors text-white hover:text-black"
-                >
-                  <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center text-white transition-colors">
-                    <User size={18} />
-                  </div>
-                  <div className="hidden lg:flex items-center gap-1">
-                    <span className="text-sm font-medium">Minha Conta</span>
-                    <ChevronDown
-                      size={14}
-                      className="text-white group-hover:text-black transition-colors"
-                    />
-                  </div>
-                </button>
+              {status === "loading" && (
+                <div className="h-9 w-24 animate-pulse rounded-md bg-gray-200" />
+              )}
 
-                {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 border border-gray-200 z-50">
-                    <Link
-                      href="/conta"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      Central Minha Conta
+              {status === "unauthenticated" && (
+                <Link
+                  href="/login"
+                  className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-white hover:text-black"
+                  title="Entrar"
+                >
+                  <User size={18} />
+                </Link>
+              )}
+
+              {status === "authenticated" && (
+                <div className="hidden md:flex items-center gap-2">
+                  {session?.user?.role === "ADMIN" && (
+                    <Link href="/admin">
+                      <Button variant="outline" size="sm">
+                        <Shield className="mr-2 h-4 w-4" />
+                        Admin
+                      </Button>
                     </Link>
-                    <Link
-                      href="/pedidos"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      Meus pedidos
-                    </Link>
-                    <div className="border-t border-gray-100 my-1"></div>
-                    <button
-                      type="button"
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      Sair
-                    </button>
-                  </div>
-                )}
-              </div>
-              */}
+                  )}
+
+                  <Select
+                    value=""
+                    onValueChange={(val) => {
+                      if (val === "conta") router.push("/conta");
+                      if (val === "pedidos") router.push("/pedidos");
+                    }}
+                  >
+                    <SelectTrigger className="group h-9 w-auto gap-2 border-none bg-transparent px-3 text-sm font-medium text-white shadow-sm hover:bg-gray-100 hover:!text-white data-[state=open]:bg-gray-100 data-[state=open]:!text-black focus:ring-0 transition-colors">
+                      <User className="h-4 w-4 shrink-0 text-white group-hover:text-white group-data-[state=open]:text-black transition-colors" />
+                      <SelectValue
+                        placeholder={session.user.name || "Minha Conta"}
+                      />
+                    </SelectTrigger>
+                    <SelectContent align="end">
+                      <SelectItem
+                        value="conta"
+                        className="group cursor-pointer"
+                      >
+                        <div className="flex items-center">
+                          <UserCog className="mr-2 h-4 w-4" />
+                          Perfil
+                        </div>
+                      </SelectItem>
+                      <SelectItem
+                        value="pedidos"
+                        className="group cursor-pointer"
+                      >
+                        <div className="flex items-center">
+                          <Package className="mr-2 h-4 w-4" />
+                          Meus pedidos
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      toastLogout();
+                      setTimeout(async () => {
+                        await signOut({ callbackUrl: "/" });
+                      }, 2000);
+                    }}
+                    className="hover:bg-gray-100 hover:!text-black transition-colors text-white"
+                  >
+                    <LogOut className="h-5 w-5" />
+                  </Button>
+                </div>
+              )}
 
               <Link
                 href="/atendimento"

@@ -32,7 +32,9 @@ export function Login() {
       toastLoginError(result.error);
     } else {
       toastLoginSuccess();
-      router.push("/");
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   };
 

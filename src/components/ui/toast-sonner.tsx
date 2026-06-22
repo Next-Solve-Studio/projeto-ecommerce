@@ -5,7 +5,7 @@ import {
   AlertTriangle,
   CheckCircle2,
   Heart,
-  Sparkles,
+  Check,
   UserCheck,
 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -212,7 +212,7 @@ export function toastAddFavorito(productName: string) {
       <ToastContent
         icon={<Heart size={18} />}
         title="Produto adicionado aos favoritos"
-        description={`${productName} foi adicionado aos seus favoritos.`}
+        description={`${productName} foi adicionado aos seus favoritos`}
         tone="green"
         toastId={toastId}
       />
@@ -223,7 +223,7 @@ export function toastAddFavorito(productName: string) {
   );
 }
 
-export function toastLoginSuccess() {
+export function toastLoginSuccess(onAutoClose?: () => void) {
   toast.custom(
     (toastId) => (
       <ToastContent
@@ -235,6 +235,7 @@ export function toastLoginSuccess() {
       />
     ),
     {
+      onAutoClose,
       duration: Infinity,
     },
   );
@@ -261,9 +262,9 @@ export function toastCadastroSuccess() {
   toast.custom(
     (toastId) => (
       <ToastContent
-        icon={<Sparkles size={18} />}
+        icon={<Check size={18} />}
         title="Cadastro realizado com sucesso"
-        description="Sua conta foi criada com sucesso."
+        description="Sua conta foi criada com sucesso"
         tone="success"
         toastId={toastId}
       />
@@ -293,13 +294,30 @@ export function toastCadastroError(
   );
 }
 
+export function toastLogout() {
+  toast.custom(
+    (toastId) => (
+      <ToastContent
+        icon={<UserCheck size={18} />}
+        title="Logout efetuado com sucesso"
+        description="Você foi desconectado. Até a próxima!"
+        tone="success"
+        toastId={toastId}
+      />
+    ),
+    {
+      duration: Infinity,
+    },
+  );
+}
+
 export function toastCompraConcluida() {
   toast.custom(
     (toastId) => (
       <ToastContent
         icon={<CheckCircle2 size={18} />}
         title="Compra concluída"
-        description="Seu pedido foi finalizado com sucesso."
+        description="Seu pedido foi finalizado com sucesso"
         tone="info"
         toastId={toastId}
       />
@@ -316,7 +334,7 @@ export function toastEnderecoAdicionado() {
       <ToastContent
         icon={<CheckCircle2 size={18} />}
         title="Endereço adicionado"
-        description="Endereço salvo com sucesso."
+        description="Endereço salvo com sucesso"
         tone="green"
         toastId={toastId}
       />

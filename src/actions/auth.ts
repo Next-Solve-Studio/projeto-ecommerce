@@ -37,16 +37,14 @@ export async function cadastrar(data: {
 }
 
 export async function login(data: { email: string; password: string }) {
-  try {
-    await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-    });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return { error: "E-mail ou senha incorretos." };
-    }
-    throw error; 
+  const result = await signIn("credentials", {
+    email: data.email,
+    password: data.password,
+    redirect: false,
+  });
+
+  if (result?.error) {
+    return { error: "E-mail ou senha incorretos." };
   }
 }
 
