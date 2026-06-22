@@ -7,7 +7,6 @@ import {
   Package,
   ShoppingCart,
   BarChart3,
-  Settings,
   Home,
   Menu,
   X,
@@ -22,6 +21,9 @@ import {
   ShieldCheck,
   AlertCircle,
 } from "lucide-react";
+import { Controller, Resolver, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -81,7 +83,41 @@ const orderStatusClasses: Record<string, string> = {
   CANCELLED: "bg-destructive/10 text-destructive border-destructive/20",
 };
 
+const newProductSchema = yup.object({
+  name: yup
+    .string()
+    .required("Nome é obrigatório")
+    .max(50, "Máximo de 50 caracteres"),
+  price: yup
+    .string()
+    .required("Preço é obrigatório")
+    .test("money-format", "Preço inválido", (value) => {
+      if (!value) return false;
+      const digits = value.replace(/\D/g, "");
+      return digits.length >= 1 && digits.length <= 8;
+    }),
+  stockQty: yup
+    .string()
+    .required("Estoque é obrigatório")
+    .matches(/^[0-9]+$/, "Apenas números")
+    .max(4, "Máximo de 4 dígitos"),
+  category: yup.string().required("Categoria é obrigatória"),
+  imageUrl: yup
+    .string()
+    .transform((value) => (value === "" ? undefined : value))
+    .nullable()
+    .notRequired()
+    .url("URL inválida"),
+  description: yup
+    .string()
+    .required("Descrição é obrigatória")
+    .max(1000, "Máximo de 1000 caracteres"),
+  featured: yup.boolean().default(false).notRequired(),
+});
+
 type OrderStatus = keyof typeof orderStatusLabels;
+
+type NewProductFormData = yup.InferType<typeof newProductSchema>;
 
 type AdminProduct = {
   id: string;
@@ -133,15 +169,6 @@ export default function AdminComponent() {
   const [loadingOrders, setLoadingOrders] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [creatingProduct, setCreatingProduct] = useState(false);
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    price: "",
-    stockQty: "0",
-    category: categories[0] ?? "Eletrônicos",
-    imageUrl: "",
-    description: "",
-    featured: false,
-  });
   const [editingProduct, setEditingProduct] = useState<AdminProduct | null>(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [updatingProduct, setUpdatingProduct] = useState(false);
@@ -151,6 +178,28 @@ export default function AdminComponent() {
   const [viewingOrder, setViewingOrder] = useState<AdminOrder | null>(null);
   const [isViewOrderOpen, setIsViewOrderOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors, isValid },
+  } = useForm<NewProductFormData>({
+    resolver: yupResolver(newProductSchema) as Resolver<NewProductFormData>,
+    mode: "onTouched",
+    defaultValues: {
+      name: "",
+      price: "",
+      stockQty: "0",
+      category: categories[0] ?? "Eletrônicos",
+      imageUrl: "",
+      description: "",
+      featured: false,
+    },
+  });
 
   const formatPrice = (value: number) =>
     new Intl.NumberFormat("pt-BR", {
@@ -164,6 +213,12 @@ export default function AdminComponent() {
       month: "2-digit",
       year: "numeric",
     }).format(new Date(value));
+
+  const getStockClass = (stockQty: number) => {
+    if (stockQty < 10) return "text-destructive font-semibold";
+    if (stockQty < 20) return "text-amber-600 font-semibold";
+    return "text-foreground font-semibold";
+  };
 
   const loadProducts = async () => {
     try {
@@ -231,18 +286,32 @@ export default function AdminComponent() {
   const totalProducts = products.length;
   const totalOrders = orders.length;
 
-  const handleCreateProduct = async () => {
+  const formatCurrencyInput = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    const limited = digits.slice(0, 8);
+    const amount = Number(limited || "0");
+    const cents = (amount % 100).toString().padStart(2, "0");
+    const integerPart = Math.floor(amount / 100)
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return `${integerPart},${cents}`;
+  };
+
+  const handleCreateProduct = async (data: NewProductFormData) => {
     setCreatingProduct(true);
     setMessage(null);
     try {
+      const price = parseFloat(
+        data.price.replace(/\./g, "").replace(",", ".") || "0",
+      );
       const payload = {
-        name: newProduct.name,
-        price: parseFloat(newProduct.price.replace(",", ".") || "0"),
-        stockQty: Number(newProduct.stockQty),
-        category: newProduct.category,
-        imageUrl: newProduct.imageUrl,
-        description: newProduct.description,
-        featured: newProduct.featured,
+        name: data.name,
+        price,
+        stockQty: Number(data.stockQty),
+        category: data.category,
+        imageUrl: data.imageUrl || undefined,
+        description: data.description,
+        featured: data.featured,
       };
 
       const response = await fetch("/api/admin/produtos", {
@@ -258,7 +327,7 @@ export default function AdminComponent() {
 
       await loadProducts();
       setIsCreateOpen(false);
-      setNewProduct({
+      reset({
         name: "",
         price: "",
         stockQty: "0",
@@ -344,15 +413,14 @@ export default function AdminComponent() {
     { id: "products", label: "Produtos", icon: Package },
     { id: "orders", label: "Pedidos", icon: ShoppingCart },
     { id: "reports", label: "Relatórios", icon: BarChart3 },
-    { id: "settings", label: "Configurações", icon: Settings },
   ];
 
   return (
     <div className="flex min-h-screen bg-[#F4F9FA]">
       <div className="hidden lg:block w-56 flex-shrink-0">
-        <aside className="fixed top-0 bottom-0 left-0 w-[72px] hover:w-56 flex-shrink-0 border-r border-sidebar-border bg-[#07121D] transition-all duration-300 overflow-hidden group z-50">
+        <aside className="fixed top-0 bottom-0 left-0 w-[72px] hover:w-56 flex-shrink-0 border-r border-gray-300/40 bg-[#07121D] transition-all duration-300 overflow-hidden group z-50">
           <div className="flex h-full flex-col w-full">
-            <div className="flex h-16 items-center gap-3 border-b border-sidebar-border px-5 overflow-hidden">
+            <div className="flex h-16 items-center gap-3 border-b border-gray-300/40 px-5 overflow-hidden">
               <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg">
                 <img 
                 src="/Logo/Logo-ElectronicSolve_Store.png" 
@@ -361,7 +429,7 @@ export default function AdminComponent() {
                 />
               </div>
               <span className="text-lg font-bold text-sidebar-foreground whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                Admin Eletrônicos
+                Admin
               </span>
             </div>
             <nav className="flex-1 space-y-2 p-3">
@@ -373,8 +441,8 @@ export default function AdminComponent() {
                     onClick={() => setActiveTab(item.id)}
                     className={`group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition-all duration-150 ${
                       activeTab === item.id
-                        ? "bg-primary/10 text-primary"
-                        : "text-muted-foreground hover:bg-secondary"
+                        ? "bg-[#122334] text-[#43C180]"
+                        : "text-[#939DA9] hover:bg-[#122334]"
                     }`}
                     title={item.label}
                   >
@@ -386,7 +454,7 @@ export default function AdminComponent() {
                 );
               })}
             </nav>
-            <div className="border-t border-sidebar-border p-3">
+            <div className="border-t border-gray-300/40 p-3">
               <Link href="/">
                 <Button
                   variant="outline"
@@ -410,9 +478,9 @@ export default function AdminComponent() {
             className="absolute inset-0 bg-background/80 backdrop-blur-sm"
             onClick={() => setSidebarOpen(false)}
           />
-          <aside className="absolute left-0 top-0 h-full w-64 border-r border-sidebar-border bg-sidebar">
+          <aside className="absolute left-0 top-0 h-full w-64 border-r border-gray-300/40 bg-sidebar">
             <div className="flex h-full flex-col">
-              <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-6">
+              <div className="flex h-16 items-center justify-between border-b border-gray-300/40 px-6">
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-sidebar-primary">
                     <span className="text-sm font-bold text-sidebar-primary-foreground">E</span>
@@ -440,8 +508,8 @@ export default function AdminComponent() {
                       }}
                       className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition-all duration-150 ${
                         activeTab === item.id
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-secondary"
+                          ? "bg-[#122334] text-[#43C180]"
+                          : "text-[#939DA9] hover:bg-[#122334]"
                       }`}
                     >
                       <Icon className="h-5 w-5" />
@@ -450,7 +518,7 @@ export default function AdminComponent() {
                   );
                 })}
               </nav>
-              <div className="border-t border-sidebar-border p-4">
+              <div className="border-t border-gray-300/40 p-4">
                 <Link href="/">
                   <Button
                     variant="outline"
@@ -467,7 +535,7 @@ export default function AdminComponent() {
       )}
 
       <div className="flex flex-1 flex-col">
-        <header className="flex h-16 items-center gap-4 shadow-sm border-gray-200 border-1 rounded !bg-white px-4 mx-4 mt-4 lg:px-6 lg:mx-6">
+        <header className="flex h-16 items-center gap-4 shadow-sm border-gray-300/40 border-1 rounded !bg-white px-4 mx-4 mt-4 lg:px-6 lg:mx-6">
           <Button
             variant="ghost"
             size="icon"
@@ -504,9 +572,9 @@ export default function AdminComponent() {
           {activeTab === "products" && (
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <div className="rounded-xl bg-primary/10 p-3 text-primary">
+                    <div className="rounded-full bg-primary/10 p-3 text-primary">
                       <Package className="h-6 w-6" />
                     </div>
                     <div>
@@ -515,9 +583,9 @@ export default function AdminComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <div className="rounded-xl bg-success/10 p-3 text-success">
+                    <div className="rounded-full bg-success/10 p-3 text-success">
                       <DollarSign className="h-6 w-6" />
                     </div>
                     <div>
@@ -526,9 +594,9 @@ export default function AdminComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <div className="rounded-xl bg-warning/10 p-3 text-warning">
+                    <div className="rounded-full bg-warning/10 p-3 text-warning">
                       <TrendingUp className="h-6 w-6" />
                     </div>
                     <div>
@@ -537,9 +605,9 @@ export default function AdminComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card className="shadow-sm border-gray-200 border-1 rounded">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
-                    <div className="rounded-xl bg-destructive/10 p-3 text-destructive">
+                    <div className="rounded-full bg-warning/10 p-3 text-warning">
                       <AlertCircle className="h-6 w-6" />
                     </div>
                     <div>
@@ -560,122 +628,171 @@ export default function AdminComponent() {
                         Novo produto
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px]">
+                    <DialogContent className="sm:max-w-[600px] rounded border border-gray-300/40 bg-white">
                       <DialogHeader>
                         <DialogTitle>Adicionar produto</DialogTitle>
                       </DialogHeader>
-                      <div className="space-y-4 py-2">
-                        <div className="grid gap-4 sm:grid-cols-2">
+                      <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6 py-2">
+                        <div className="bg-white p-6 rounded shadow-md border border-gray-300/50">
+                          <div className="mb-6 border-b border-gray-300/50 pb-4">
+                            <h2 className="text-xl font-semibold">Adicionar novo produto</h2>
+                          </div>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <Label htmlFor="product-name">Nome</Label>
+                              <Input
+                                id="product-name"
+                                className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
+                                placeholder="Nome do produto"
+                                {...register("name")}
+                              />
+                              {errors.name && (
+                                <p className="text-red-500 text-sm mt-1">
+                                  {errors.name.message}
+                                </p>
+                              )}
+                            </div>
+                            <div>
+                              <Label htmlFor="product-price">Preço</Label>
+                              <Input
+                                id="product-price"
+                                className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
+                                placeholder="0,00"
+                                value={watch("price")}
+                                onChange={(e) =>
+                                  setValue(
+                                    "price",
+                                    formatCurrencyInput(e.target.value),
+                                    { shouldValidate: true },
+                                  )
+                                }
+                              />
+                              {errors.price && (
+                                <p className="text-red-500 text-sm mt-1">
+                                  {errors.price.message}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <div>
+                              <Label htmlFor="product-stock">Estoque</Label>
+                              <Input
+                                id="product-stock"
+                                className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
+                                type="text"
+                                placeholder="0"
+                                value={watch("stockQty")}
+                                onChange={(e) => {
+                                  const digits = e.target.value.replace(/\D/g, "");
+                                  setValue("stockQty", digits.slice(0, 4), {
+                                    shouldValidate: true,
+                                  });
+                                }}
+                              />
+                              {errors.stockQty && (
+                                <p className="text-red-500 text-sm mt-1">
+                                  {errors.stockQty.message}
+                                </p>
+                              )}
+                            </div>
+                            <div>
+                              <Label htmlFor="product-category">Categoria</Label>
+                              <Controller
+                                name="category"
+                                control={control}
+                                render={({ field }) => (
+                                  <Select
+                                    value={field.value}
+                                    onValueChange={(value) => field.onChange(value)}
+                                  >
+                                    <SelectTrigger id="product-category">
+                                      <SelectValue placeholder="Categoria" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {categories.map((category) => (
+                                        <SelectItem key={category} value={category}>
+                                          {category}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                )}
+                              />
+                              {errors.category && (
+                                <p className="text-red-500 text-sm mt-1">
+                                  {errors.category.message}
+                                </p>
+                              )}
+                            </div>
+                          </div>
                           <div>
-                            <Label htmlFor="product-name">
-                              Nome
-                            </Label>
+                            <Label htmlFor="product-image">URL da imagem</Label>
                             <Input
-                              id="product-name"
-                              value={newProduct.name}
-                              onChange={(e) =>
-                                setNewProduct({ ...newProduct, name: e.target.value })
-                              }
-                              placeholder="Nome do produto"
+                              id="product-image"
+                              className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
+                              placeholder="https://..."
+                              {...register("imageUrl")}
                             />
+                            {errors.imageUrl && (
+                              <p className="text-red-500 text-sm mt-1">
+                                {errors.imageUrl.message}
+                              </p>
+                            )}
                           </div>
                           <div>
-                            <Label htmlFor="product-price">Preço</Label>
+                            <Label htmlFor="product-description">Descrição</Label>
                             <Input
-                              id="product-price"
-                              value={newProduct.price}
-                              onChange={(e) =>
-                                setNewProduct({ ...newProduct, price: e.target.value })
-                              }
-                              placeholder="0,00"
+                              id="product-description"
+                              className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
+                              placeholder="Breve descrição do produto"
+                              {...register("description")}
                             />
+                            {errors.description && (
+                              <p className="text-red-500 text-sm mt-1">
+                                {errors.description.message}
+                              </p>
+                            )}
                           </div>
-                        </div>
-                        <div className="grid gap-4 sm:grid-cols-2">
-                          <div>
-                            <Label htmlFor="product-stock">Estoque</Label>
-                            <Input
-                              id="product-stock"
-                              type="number"
-                              min={0}
-                              value={newProduct.stockQty}
-                              onChange={(e) =>
-                                setNewProduct({ ...newProduct, stockQty: e.target.value })
-                              }
+                          <div className="flex items-center gap-3">
+                            <Controller
+                              name="featured"
+                              control={control}
+                              render={({ field }) => (
+                                <Checkbox
+                                  checked={Boolean(field.value)}
+                                  onCheckedChange={(checked) => field.onChange(Boolean(checked))}
+                                  id="featured-product"
+                                />
+                              )}
                             />
-                          </div>
-                          <div>
-                            <Label htmlFor="product-category">Categoria</Label>
-                            <Select
-                              value={newProduct.category}
-                              onValueChange={(value) =>
-                                setNewProduct({ ...newProduct, category: value })
-                              }
-                            >
-                              <SelectTrigger id="product-category">
-                                <SelectValue placeholder="Categoria" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {categories.map((category) => (
-                                  <SelectItem key={category} value={category}>
-                                    {category}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
+                            <Label htmlFor="featured-product">Produto em destaque</Label>
                           </div>
                         </div>
-                        <div>
-                          <Label htmlFor="product-image">URL da imagem</Label>
-                          <Input
-                            id="product-image"
-                            value={newProduct.imageUrl}
-                            onChange={(e) =>
-                              setNewProduct({ ...newProduct, imageUrl: e.target.value })
-                            }
-                            placeholder="https://..."
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor="product-description">Descrição</Label>
-                          <Input
-                            id="product-description"
-                            value={newProduct.description}
-                            onChange={(e) =>
-                              setNewProduct({
-                                ...newProduct,
-                                description: e.target.value,
-                              })
-                            }
-                            placeholder="Breve descrição do produto"
-                          />
-                        </div>
-                        <div className="flex items-center gap-3">
-                          <Checkbox
-                            checked={newProduct.featured}
-                            onCheckedChange={(checked) =>
-                              setNewProduct({
-                                ...newProduct,
-                                featured: Boolean(checked),
-                              })
-                            }
-                            id="featured-product"
-                          />
-                          <Label htmlFor="featured-product">Produto em destaque</Label>
-                        </div>
-                      </div>
-                      <DialogFooter>
-                        <Button
-                          type="button"
-                          variant="secondary"
-                          onClick={() => setIsCreateOpen(false)}
-                        >
-                          Cancelar
-                        </Button>
-                        <Button onClick={handleCreateProduct} disabled={creatingProduct}>
-                          {creatingProduct ? "Salvando..." : "Salvar produto"}
-                        </Button>
-                      </DialogFooter>
+                        <DialogFooter className="mt-3">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => {
+                              setIsCreateOpen(false);
+                              reset({
+                                name: "",
+                                price: "",
+                                stockQty: "0",
+                                category: categories[0] ?? "Eletrônicos",
+                                imageUrl: "",
+                                description: "",
+                                featured: false,
+                              });
+                            }}
+                          >
+                            Cancelar
+                          </Button>
+                          <Button type="submit" disabled={!isValid || creatingProduct}>
+                            {creatingProduct ? "Salvando..." : "Salvar produto"}
+                          </Button>
+                        </DialogFooter>
+                      </form>
                     </DialogContent>
                   </Dialog>
                 </CardHeader>
@@ -694,12 +811,23 @@ export default function AdminComponent() {
                       <TableBody>
                         {filteredProducts.map((product) => (
                           <TableRow key={product.id}>
-                            <TableCell>{product.name}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={product.imageUrl?.trim() ? product.imageUrl : "/Logo/Logo-ElectronicSolve_Store.png"}
+                                  alt={product.name}
+                                  className="h-10 w-10 rounded border border-gray-200 object-cover"
+                                />
+                                <span>{product.name}</span>
+                              </div>
+                            </TableCell>
                             <TableCell>
                               {product.category?.name ?? "Sem categoria"}
                             </TableCell>
                             <TableCell>{formatPrice(product.price)}</TableCell>
-                            <TableCell>{product.stockQty}</TableCell>
+                            <TableCell className={getStockClass(product.stockQty)}>
+                              {product.stockQty}
+                            </TableCell>
                             <TableCell>
                               <div className="flex flex-wrap gap-2">
                                 <Button
@@ -901,31 +1029,31 @@ export default function AdminComponent() {
           {activeTab === "orders" && (
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                <Card className="bg-warning/5 border-warning/20">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-muted-foreground">Pedidos pendentes</p>
                     <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "PENDING").length}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-primary/5 border-primary/20">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-muted-foreground">Em processamento</p>
                     <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "PROCESSING").length}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-success/5 border-success/20">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-muted-foreground">Pedidos pagos</p>
                     <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "PAID").length}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-accent/5 border-accent/20">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-muted-foreground">Enviados</p>
                     <p className="text-2xl font-semibold">{orders.filter((o) => o.status === "SHIPPED").length}</p>
                   </CardContent>
                 </Card>
-                <Card className="bg-muted">
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="p-4 text-center">
                     <p className="text-sm text-muted-foreground">Receita total</p>
                     <p className="text-2xl font-semibold">{formatPrice(totalRevenue)}</p>
@@ -933,7 +1061,7 @@ export default function AdminComponent() {
                 </Card>
               </div>
 
-              <Card>
+              <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                 <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <CardTitle>Acompanhamento de Pedidos</CardTitle>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -1069,7 +1197,7 @@ export default function AdminComponent() {
           {activeTab === "reports" && (
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="rounded-xl bg-primary/10 p-3 text-primary">
                       <BarChart3 className="h-6 w-6" />
@@ -1080,7 +1208,7 @@ export default function AdminComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="rounded-xl bg-success/10 p-3 text-success">
                       <TrendingUp className="h-6 w-6" />
@@ -1091,7 +1219,7 @@ export default function AdminComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="rounded-xl bg-warning/10 p-3 text-warning">
                       <Clock className="h-6 w-6" />
@@ -1102,7 +1230,7 @@ export default function AdminComponent() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardContent className="flex items-center gap-4 p-6">
                     <div className="rounded-xl bg-muted text-muted-foreground p-3">
                       <ShieldCheck className="h-6 w-6" />
@@ -1116,7 +1244,7 @@ export default function AdminComponent() {
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
-                <Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardHeader>
                     <CardTitle>Resumo de vendas</CardTitle>
                   </CardHeader>
@@ -1124,7 +1252,7 @@ export default function AdminComponent() {
                     <p className="text-sm text-muted-foreground">Este painel mostra o volume de vendas e o crescimento do seu ecommerce.</p>
                   </CardContent>
                 </Card>
-                <Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardHeader>
                     <CardTitle>Estoque crítico</CardTitle>
                   </CardHeader>
@@ -1133,47 +1261,6 @@ export default function AdminComponent() {
                   </CardContent>
                 </Card>
               </div>
-            </div>
-          )}
-
-          {activeTab === "settings" && (
-            <div className="max-w-2xl space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Configurações da Loja</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Nome da loja</Label>
-                    <Input value="Ecommerce Eletrônicos" readOnly />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>E-mail de contato</Label>
-                    <Input value="contato@lojaeletronicos.com" readOnly />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Endereço da loja</Label>
-                    <Input value="Av. Tecnologia, 1234 - Fortaleza" readOnly />
-                  </div>
-                  <Button>Salvar Alterações</Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notificações</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <Label>Notificações por e-mail</Label>
-                    <p className="text-sm text-muted-foreground">Sincronize alertas de novos pedidos, estoque baixo e pagamento aprovado.</p>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Permissões de administrador</Label>
-                    <p className="text-sm text-muted-foreground">Acesso restrito a usuários com credenciais administrativas válidas.</p>
-                  </div>
-                </CardContent>
-              </Card>
             </div>
           )}
         </main>

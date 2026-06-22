@@ -7,7 +7,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import "./globals.css";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { Footer } from "@/components/Footer";
+import { FooterVisibility } from "@/components/FooterVisibility";
 import { ToastSonner } from "@/components/ui/toast-sonner";
 
 const geistSans = Geist({
@@ -44,7 +44,7 @@ export default function RootLayout({
             <CartProvider>
               <ToastSonner />
               {children}
-              <Footer />
+              <FooterVisibility />
             </CartProvider>
           </SessionProvider>
         </QueryProvider>
