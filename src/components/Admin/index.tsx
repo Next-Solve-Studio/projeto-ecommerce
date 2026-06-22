@@ -193,7 +193,7 @@ export default function AdminComponent() {
     defaultValues: {
       name: "",
       price: "",
-      stockQty: "0",
+      stockQty: "",
       category: categories[0] ?? "Eletrônicos",
       imageUrl: "",
       description: "",
@@ -428,7 +428,7 @@ export default function AdminComponent() {
                 className="h-16 w-auto object-contain" 
                 />
               </div>
-              <span className="text-lg font-bold text-sidebar-foreground whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="text-lg text-white font-bold text-sidebar-foreground whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 Admin
               </span>
             </div>
@@ -438,16 +438,16 @@ export default function AdminComponent() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`group flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition-all duration-150 ${
+                    onClick={() => setActiveTab(item.id)}                    
+                    className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium transition-all duration-150 ${
                       activeTab === item.id
                         ? "bg-[#122334] text-[#43C180]"
                         : "text-[#939DA9] hover:bg-[#122334]"
                     }`}
-                    title={item.label}
+                    title={item.label}                    
                   >
-                    <Icon className="h-5 w-5" />
-                    <span className="opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <Icon className="h-5 w-5 flex-shrink-0" />
+                    <span className="overflow-hidden whitespace-nowrap transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-100">
                       {item.label}
                     </span>
                   </button>
@@ -462,7 +462,7 @@ export default function AdminComponent() {
                   title="Voltar à Loja"
                 >
                   <Home className="h-5 w-5 flex-shrink-0" />
-                  <span className="whitespace-nowrap opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <span className="overflow-hidden whitespace-nowrap transition-all duration-300 w-0 opacity-0 group-hover:w-full group-hover:opacity-100">
                     Voltar à Loja
                   </span>
                 </Button>
@@ -628,19 +628,19 @@ export default function AdminComponent() {
                         Novo produto
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px] rounded border border-gray-300/40 bg-white">
+                    <DialogContent
+                      onInteractOutside={(e) => e.preventDefault()}
+                      className="sm:max-w-[600px] rounded border border-gray-300/40 bg-white"
+                    >
                       <DialogHeader>
                         <DialogTitle>Adicionar produto</DialogTitle>
                       </DialogHeader>
-                      <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-6 py-2">
-                        <div className="bg-white p-6 rounded shadow-md border border-gray-300/50">
-                          <div className="mb-6 border-b border-gray-300/50 pb-4">
-                            <h2 className="text-xl font-semibold">Adicionar novo produto</h2>
-                          </div>
-                          <div className="grid gap-4 sm:grid-cols-2">
+                      <form onSubmit={handleSubmit(handleCreateProduct)} className="space-y-4 py-2">
+                        <div className="grid gap-6 sm:grid-cols-2">
                             <div>
-                              <Label htmlFor="product-name">Nome</Label>
+                              <Label className="mb-2" htmlFor="product-name">Nome do produto</Label>
                               <Input
+                                autoFocus
                                 id="product-name"
                                 className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
                                 placeholder="Nome do produto"
@@ -653,7 +653,7 @@ export default function AdminComponent() {
                               )}
                             </div>
                             <div>
-                              <Label htmlFor="product-price">Preço</Label>
+                              <Label className="mb-2" htmlFor="product-price">Preço</Label>
                               <Input
                                 id="product-price"
                                 className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
@@ -674,14 +674,13 @@ export default function AdminComponent() {
                               )}
                             </div>
                           </div>
-                          <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="grid gap-6 sm:grid-cols-2">
                             <div>
-                              <Label htmlFor="product-stock">Estoque</Label>
+                              <Label className="mb-2" htmlFor="product-stock">Estoque</Label>
                               <Input
                                 id="product-stock"
-                                className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
-                                type="text"
-                                placeholder="0"
+                                className="!bg-[#EEF9FF] rounded-lg border border-gray-300"                                
+                                placeholder="15"
                                 value={watch("stockQty")}
                                 onChange={(e) => {
                                   const digits = e.target.value.replace(/\D/g, "");
@@ -697,7 +696,7 @@ export default function AdminComponent() {
                               )}
                             </div>
                             <div>
-                              <Label htmlFor="product-category">Categoria</Label>
+                              <Label className="mb-2" htmlFor="product-category">Categoria</Label>
                               <Controller
                                 name="category"
                                 control={control}
@@ -706,10 +705,10 @@ export default function AdminComponent() {
                                     value={field.value}
                                     onValueChange={(value) => field.onChange(value)}
                                   >
-                                    <SelectTrigger id="product-category">
+                                    <SelectTrigger className="!bg-[#EEF9FF] rounded-lg border border-gray-300"id="product-category">
                                       <SelectValue placeholder="Categoria" />
                                     </SelectTrigger>
-                                    <SelectContent>
+                                    <SelectContent className="!bg-white rounded-lg border border-gray-300">
                                       {categories.map((category) => (
                                         <SelectItem key={category} value={category}>
                                           {category}
@@ -726,8 +725,8 @@ export default function AdminComponent() {
                               )}
                             </div>
                           </div>
-                          <div>
-                            <Label htmlFor="product-image">URL da imagem</Label>
+                        <div>
+                            <Label className="mb-2" htmlFor="product-image">URL da imagem</Label>
                             <Input
                               id="product-image"
                               className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
@@ -740,8 +739,8 @@ export default function AdminComponent() {
                               </p>
                             )}
                           </div>
-                          <div>
-                            <Label htmlFor="product-description">Descrição</Label>
+                        <div>
+                            <Label className="mb-2" htmlFor="product-description">Descrição</Label>
                             <Input
                               id="product-description"
                               className="!bg-[#EEF9FF] rounded-lg border border-gray-300"
@@ -754,22 +753,7 @@ export default function AdminComponent() {
                               </p>
                             )}
                           </div>
-                          <div className="flex items-center gap-3">
-                            <Controller
-                              name="featured"
-                              control={control}
-                              render={({ field }) => (
-                                <Checkbox
-                                  checked={Boolean(field.value)}
-                                  onCheckedChange={(checked) => field.onChange(Boolean(checked))}
-                                  id="featured-product"
-                                />
-                              )}
-                            />
-                            <Label htmlFor="featured-product">Produto em destaque</Label>
-                          </div>
-                        </div>
-                        <DialogFooter className="mt-3">
+                        <DialogFooter className="!mt-8">
                           <Button
                             type="button"
                             variant="secondary"
@@ -778,7 +762,7 @@ export default function AdminComponent() {
                               reset({
                                 name: "",
                                 price: "",
-                                stockQty: "0",
+                                stockQty: "",
                                 category: categories[0] ?? "Eletrônicos",
                                 imageUrl: "",
                                 description: "",
@@ -813,11 +797,19 @@ export default function AdminComponent() {
                           <TableRow key={product.id}>
                             <TableCell>
                               <div className="flex items-center gap-3">
-                                <img
-                                  src={product.imageUrl?.trim() ? product.imageUrl : "/Logo/Logo-ElectronicSolve_Store.png"}
-                                  alt={product.name}
-                                  className="h-10 w-10 rounded border border-gray-200 object-cover"
-                                />
+                                {product.imageUrl?.trim() ? (
+                                  <img
+                                    src={product.imageUrl}
+                                    alt={product.name}
+                                    className="h-8 w-8 flex-shrink-0 rounded-lg border border-gray-200 object-cover"
+                                  />
+                                ) : (
+                                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-[#07121D]">
+                                    <span className="font-bold text-white">
+                                      {product.name.charAt(0).toUpperCase()}
+                                    </span>
+                                  </div>
+                                )}
                                 <span>{product.name}</span>
                               </div>
                             </TableCell>

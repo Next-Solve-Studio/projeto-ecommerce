@@ -256,10 +256,13 @@ export function Header() {
               {status === "unauthenticated" && (
                 <Link
                   href="/login"
-                  className="flex items-center justify-center w-10 h-10 hover:bg-gray-100 rounded-md transition-colors text-white hover:text-black"
+                  className="flex items-center gap-2 px-3 py-2 md:px-4 md:py-2 bg-black text-white rounded-md hover:bg-gray-800 transition-all"
                   title="Entrar"
                 >
                   <User size={18} />
+                  <span className="hidden lg:inline text-sm font-medium">
+                    Entrar
+                  </span>
                 </Link>
               )}
 

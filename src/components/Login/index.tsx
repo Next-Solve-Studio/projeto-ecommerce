@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();
 
@@ -26,6 +27,7 @@ export function Login() {
     const result = await login({
       email: data.email,
       password: data.password,
+      rememberMe,
     });
 
     if (result?.error) {
@@ -162,8 +164,10 @@ export function Login() {
               <div className="flex items-center justify-between mt-2 mb-2">
                 <div className="flex items-center">
                   <input 
-                    id="remember-me" 
+                    id="remember-me"
                     type="checkbox" 
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-600 border-gray-300 rounded cursor-pointer" 
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer">

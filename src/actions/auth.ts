@@ -36,11 +36,16 @@ export async function cadastrar(data: {
 
 }
 
-export async function login(data: { email: string; password: string }) {
+export async function login(data: {
+  email: string;
+  password: string;
+  rememberMe?: boolean;
+}) {
   const result = await signIn("credentials", {
     email: data.email,
     password: data.password,
     redirect: false,
+    rememberMe: data.rememberMe,
   });
 
   if (result?.error) {
