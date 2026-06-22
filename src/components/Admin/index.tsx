@@ -21,6 +21,18 @@ import {
   ShieldCheck,
   AlertCircle,
 } from "lucide-react";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 import { Controller, Resolver, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -67,7 +79,6 @@ const shippingLabel: Record<string, string> = {
 
 const orderStatusLabels: Record<string, string> = {
   PENDING: "Pendente",
-  PROCESSING: "Processando",
   PAID: "Pago",
   SHIPPED: "Enviado",
   DELIVERED: "Entregue",
@@ -285,6 +296,58 @@ export default function AdminComponent() {
 
   const totalProducts = products.length;
   const totalOrders = orders.length;
+
+  const monthlySales = useMemo(() => {
+    const sales: Record<string, number> = {};
+    orders.forEach((order) => {
+      const month = new Date(order.createdAt).toLocaleString("default", {
+        month: "short",
+        year: "2-digit",
+      });
+      if (!sales[month]) {
+        sales[month] = 0;
+      }
+      sales[month] += order.totalAmount;
+    });
+    return Object.entries(sales)
+      .map(([name, total]) => ({ name, total }))
+      .reverse();
+  }, [orders]);
+
+  const categorySales = useMemo(() => {
+    const sales: Record<string, number> = {};
+    const categoryColors: Record<string, string> = {
+      Eletrônicos: "#3b82f6",
+      Roupas: "#8b5cf6",
+      Livros: "#10b981",
+      Casa: "#f97316",
+      Esportes: "#ef4444",
+      Beleza: "#ec4899",
+    };
+
+    orders.forEach((order) => {
+      order.items.forEach((item) => {
+        const product = products.find((p) => p.name === item.productName);
+        if (product && product.category?.name) {
+          const categoryName = product.category.name;
+          if (!sales[categoryName]) {
+            sales[categoryName] = 0;
+          }
+          sales[categoryName] += item.quantity;
+        }
+      });
+    });
+
+    return Object.entries(sales).map(([name, value], index) => ({
+      name,
+      value,
+      fill:
+        categoryColors[name] ||
+        `hsl(220, ${Math.floor(Math.random() * 40 + 60)}%, ${Math.floor(Math.random() * 20 + 50)}%)`,
+    }));
+  }, [orders, products]);
+
+  const conversionRate = totalOrders > 0 ? (orders.filter((o) => o.status === "PAID" || o.status === "DELIVERED").length / totalOrders) * 100 : 0;
 
   const formatCurrencyInput = (value: string) => {
     const digits = value.replace(/\D/g, "");
@@ -550,12 +613,12 @@ export default function AdminComponent() {
           <div className="ml-auto flex items-center gap-4">
             {(activeTab === "products" || activeTab === "orders") && (
               <div className="relative bg-[#011C40] rounded-sm hidden sm:block">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
-                  placeholder="Buscar..."
+                  placeholder="Buscar..."                  
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-64 pl-9 text-white bg-secondary border-0"
+                  className="w-64 pl-9 text-white bg-secondary border-0 placeholder:text-gray-400"
                 />
               </div>
             )}
@@ -785,11 +848,11 @@ export default function AdminComponent() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Produto</TableHead>
-                          <TableHead>Categoria</TableHead>
-                          <TableHead>Preço</TableHead>
-                          <TableHead>Estoque</TableHead>
-                          <TableHead>Ações</TableHead>
+                          <TableHead className="font-semibold">Produto</TableHead>
+                          <TableHead className="font-semibold">Categoria</TableHead>
+                          <TableHead className="font-semibold">Preço</TableHead>
+                          <TableHead className="font-semibold">Estoque</TableHead>
+                          <TableHead className="font-semibold">Ações</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1055,15 +1118,15 @@ export default function AdminComponent() {
 
               <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                 <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                  <CardTitle>Acompanhamento de Pedidos</CardTitle>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger>
+                  <CardTitle className="font-semibold">Acompanhamento de Pedidos</CardTitle>
+                  <Select value={statusFilter} onValueChange={setStatusFilter} >
+                    <SelectTrigger className="w-full sm:w-auto sm:min-w-[180px] bg-[#07121D] text-white border-gray-300/40">
                       <SelectValue placeholder="Filtrar status" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-[#07121D] text-white border-gray-300/40">
                       <SelectItem value="all">Todos</SelectItem>
                       {Object.entries(orderStatusLabels).map(([value, label]) => (
-                        <SelectItem key={value} value={value}>
+                        <SelectItem key={value} value={value} className="focus:bg-slate-700">
                           {label}
                         </SelectItem>
                       ))}
@@ -1144,12 +1207,12 @@ export default function AdminComponent() {
                     <Table>
                       <TableHeader>
                         <TableRow>
-                          <TableHead>Pedido</TableHead>
-                          <TableHead>Cliente</TableHead>
-                          <TableHead>Total</TableHead>
-                          <TableHead>Status</TableHead>
-                          <TableHead>Pagamento</TableHead>
-                          <TableHead>Ações</TableHead>
+                          <TableHead className="font-semibold">Pedido</TableHead>
+                          <TableHead className="font-semibold">Cliente</TableHead>
+                          <TableHead className="font-semibold">Total</TableHead>
+                          <TableHead className="font-semibold">Status</TableHead>
+                          <TableHead className="font-semibold">Pagamento</TableHead>
+                          <TableHead className="font-semibold">Ações</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1229,7 +1292,7 @@ export default function AdminComponent() {
                     </div>
                     <div>
                       <p className="text-sm text-muted-foreground">Taxa de conversão</p>
-                      <p className="text-2xl font-semibold">{orders.length > 0 ? `${Math.round((orders.filter((o) => o.status === "PAID").length / orders.length) * 100)}%` : "0%"}</p>
+                      <p className="text-2xl font-semibold">{conversionRate.toFixed(1)}%</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -1241,15 +1304,84 @@ export default function AdminComponent() {
                     <CardTitle>Resumo de vendas</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">Este painel mostra o volume de vendas e o crescimento do seu ecommerce.</p>
+                    <div className="grid grid-cols-2 gap-4 text-center">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Receita Total</p>
+                        <p className="text-2xl font-bold">{formatPrice(totalRevenue)}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Ticket Médio</p>
+                        <p className="text-2xl font-bold">{formatPrice(totalOrders > 0 ? totalRevenue / totalOrders : 0)}</p>
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
                 <Card className="shadow-sm border-gray-200 border-1 rounded bg-white">
                   <CardHeader>
                     <CardTitle>Estoque crítico</CardTitle>
                   </CardHeader>
+                  <CardContent>                    
+                    {products.filter(p => p.stockQty < 10).length > 0 ? (
+                      <ul className="space-y-2">
+                        {products
+                          .filter(p => p.stockQty < 10)
+                          .sort((a, b) => a.stockQty - b.stockQty)
+                          .slice(0, 5)
+                          .map(product => (
+                            <li key={product.id} className="flex justify-between items-center text-sm">
+                              <span>{product.name}</span>
+                              <Badge variant="destructive">{product.stockQty} unid.</Badge>
+                            </li>
+                          ))
+                        }
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">Nenhum produto com estoque baixo.</p>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Vendas Mensais</CardTitle>
+                  </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-muted-foreground">Produtos com estoque menor que 10 unidades precisam de reposição urgente.</p>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <BarChart data={monthlySales}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis tickFormatter={(value) => formatPrice(value as number)} />
+                        <Tooltip formatter={(value) => formatPrice(value as number)} />
+                        <Legend />
+                        <Bar dataKey="total" fill="#16a34a" name="Faturamento" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+                <Card className="shadow-sm border-gray-200 border-1 rounded bg-white lg:col-span-2">
+                  <CardHeader>
+                    <CardTitle>Categorias Mais Vendidas</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex justify-center">
+                    {categorySales.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={300}>
+                        <PieChart>
+                          <Pie
+                            data={categorySales}
+                            cx="50%"
+                            cy="50%"
+                            labelLine={false}
+                            outerRadius={100}
+                            dataKey="value"
+                            nameKey="name"
+                            label={({ name, percent }) => percent ? `${name} ${(percent * 100).toFixed(0)}%` : name}
+                          />
+                          <Tooltip formatter={(value) => `${value} unidades`} />
+                          <Legend />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <p className="text-sm text-muted-foreground p-8">Não há dados de vendas por categoria.</p>
+                    )}
                   </CardContent>
                 </Card>
               </div>
