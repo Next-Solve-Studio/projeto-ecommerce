@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { User, Lock, Mail, Phone, FileText, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { Eye, EyeOff, FileText, Lock, Mail, Phone, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { cadastrar } from "@/actions/auth";
-import { toast } from "sonner";
+import { toastCadastroError, toastCadastroSuccess } from "../ui/toast-sonner";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const cpfMask = (value: string) => {
   return value
@@ -71,6 +73,14 @@ const schema = yup.object().shape({
 export function Cadastro() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
   const {
     register,
@@ -81,21 +91,22 @@ export function Cadastro() {
     mode: "onChange",
   });
 
-const onSubmit = async (data: any) => {
-  const result = await cadastrar({
-    name: data.nome,
-    email: data.email,
-    password: data.password,
-    cpf: data.cpf.replace(/\D/g, ""),
-    phone: data.telefone.replace(/\D/g, ""),
-  });
+  const onSubmit = async (data: any) => {
+    const result = await cadastrar({
+      name: data.nome,
+      email: data.email,
+      password: data.password,
+      cpf: data.cpf.replace(/\D/g, ""),
+      phone: data.telefone.replace(/\D/g, ""),
+    });
 
-  if (result?.error) {
-    toast.error(result.error);
-    return;
-  }
-};
-
+    if (result?.error) {
+      toastCadastroError(result.error);
+    } else {
+      toastCadastroSuccess();
+      router.push("/login");
+    }
+  };
 
   const { onChange: cpfOnChange, ...cpfRest } = register("cpf");
   const { onChange: phoneOnChange, ...phoneRest } = register("telefone");

@@ -133,8 +133,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="border-t border-gray-800 pt-6 mt-12">
           <p
-            className="text-xs text-gray-500 text-center
-            "
+            className="text-xs text-gray-500 text-center"
           >
             &copy; {new Date().getFullYear()} ElectronicSolve Store Comércio de
             Eletrônicos Ltda. Todos os direitos reservados.

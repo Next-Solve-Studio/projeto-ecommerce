@@ -1,27 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { Lock, Mail, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { login } from "@/actions/auth";
-import { toast } from "sonner";
+import { toastLoginError, toastLoginSuccess } from "../ui/toast-sonner";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export function Login() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const { data: session, status } = useSession();
 
   const { register, handleSubmit } = useForm();
 
-  const onSubmit = async (data: any) => {
-  const result = await login({
-    email: data.email,
-    password: data.password,
-  });
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
 
-  if (result?.error) {
-    toast.error(result.error);
-  }
-};
+  const onSubmit = async (data: any) => {
+    const result = await login({
+      email: data.email,
+      password: data.password,
+    });
+
+    if (result?.error) {
+      toastLoginError(result.error);
+    } else {
+      toastLoginSuccess();
+      router.push("/");
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 w-screen h-screen overflow-hidden flex items-center justify-center bg-gray-900">

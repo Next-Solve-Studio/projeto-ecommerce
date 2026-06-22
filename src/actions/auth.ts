@@ -34,12 +34,6 @@ export async function cadastrar(data: {
     },
   });
 
-
-  await signIn("credentials", {
-    email: data.email,
-    password: data.password,
-    redirectTo: "/",
-  });
 }
 
 export async function login(data: { email: string; password: string }) {
@@ -47,7 +41,6 @@ export async function login(data: { email: string; password: string }) {
     await signIn("credentials", {
       email: data.email,
       password: data.password,
-      redirectTo: "/",
     });
   } catch (error) {
     if (error instanceof AuthError) {

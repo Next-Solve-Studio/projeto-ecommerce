@@ -274,6 +274,25 @@ export function toastCadastroSuccess() {
   );
 }
 
+export function toastCadastroError(
+  message = "Falha ao realizar o cadastro",
+) {
+  toast.custom(
+    (toastId) => (
+      <ToastContent
+        icon={<AlertTriangle size={18} />}
+        title="Falha ao realizar o cadastro"
+        description={message}
+        tone="error"
+        toastId={toastId}
+      />
+    ),
+    {
+      duration: Infinity,
+    },
+  );
+}
+
 export function toastCompraConcluida() {
   toast.custom(
     (toastId) => (
