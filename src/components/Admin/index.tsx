@@ -187,6 +187,7 @@ export default function AdminComponent() {
   const [productToDelete, setProductToDelete] = useState<AdminProduct | null>(null);
   const [deletingProduct, setDeletingProduct] = useState(false);
   const [viewingOrder, setViewingOrder] = useState<AdminOrder | null>(null);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [isViewOrderOpen, setIsViewOrderOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -472,6 +473,32 @@ export default function AdminComponent() {
     }
   };
 
+  const handleUpdateOrderStatus = async (orderId: string, status: OrderStatus) => {
+    setUpdatingOrderId(orderId);
+    setMessage(null);
+    try {
+      const response = await fetch(
+        `/api/admin/pedidos?id=${encodeURIComponent(orderId)}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
+        },
+      );
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Erro ao atualizar status do pedido");
+      }
+
+      await loadOrders();
+    } catch (error) {
+      setMessage((error as Error).message);
+    } finally {
+      setUpdatingOrderId(null);
+    }
+  };
+
   const navItems = [
     { id: "products", label: "Produtos", icon: Package },
     { id: "orders", label: "Pedidos", icon: ShoppingCart },
@@ -626,12 +653,6 @@ export default function AdminComponent() {
         </header>
 
         <main className="flex-1 overflow-auto p-4 lg:p-6">
-          {message && (
-            <div className="mb-4 rounded-lg border border-destructive/20 bg-destructive/10 p-4 text-destructive">
-              {message}
-            </div>
-          )}
-
           {activeTab === "products" && (
             <div className="space-y-6">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -1120,7 +1141,7 @@ export default function AdminComponent() {
                 <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <CardTitle className="font-semibold">Acompanhamento de Pedidos</CardTitle>
                   <Select value={statusFilter} onValueChange={setStatusFilter} >
-                    <SelectTrigger className="w-full sm:w-auto sm:min-w-[180px] bg-[#07121D] text-white border-gray-300/40">
+                    <SelectTrigger className="w-full sm:w-auto sm:min-w-[180px] !bg-[#011C40] text-white border-gray-300/40">
                       <SelectValue placeholder="Filtrar status" />
                     </SelectTrigger>
                     <SelectContent className="bg-[#07121D] text-white border-gray-300/40">
@@ -1221,23 +1242,40 @@ export default function AdminComponent() {
                             <TableCell>{order.orderNumber}</TableCell>
                             <TableCell>{order.user.name}</TableCell>
                             <TableCell>{formatPrice(order.totalAmount)}</TableCell>
-                            <TableCell>
-                              <Badge className={orderStatusClasses[order.status] || "bg-muted text-muted-foreground"}>
-                                {orderStatusLabels[order.status]}
-                              </Badge>
+                            <TableCell className="w-[180px]">
+                              <Select
+                                value={order.status}
+                                onValueChange={(newStatus) =>
+                                  handleUpdateOrderStatus(order.id, newStatus as OrderStatus)
+                                }
+                                disabled={updatingOrderId === order.id}
+                              >
+                                <SelectTrigger className={`w-full text-xs ${orderStatusClasses[order.status] || "bg-muted text-muted-foreground"}`}>
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {Object.entries(orderStatusLabels).map(([value, label]) => (
+                                    <SelectItem key={value} value={value}>
+                                      {label}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                             </TableCell>
                             <TableCell>{paymentLabel[order.paymentMethod] || order.paymentMethod}</TableCell>
                             <TableCell>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => {
-                                  setViewingOrder(order);
-                                  setIsViewOrderOpen(true);
-                                }}
-                              >
-                                <Eye className="h-4 w-4" />
-                              </Button>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setViewingOrder(order);
+                                    setIsViewOrderOpen(true);
+                                  }}
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         ))}
@@ -1346,10 +1384,10 @@ export default function AdminComponent() {
                   </CardHeader>
                   <CardContent>
                     <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={monthlySales}>
+                      <BarChart data={monthlySales} margin={{ left: 20 }}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
-                        <YAxis tickFormatter={(value) => formatPrice(value as number)} />
+                        <YAxis tickFormatter={(value) => formatPrice(value as number)} width={80} />
                         <Tooltip formatter={(value) => formatPrice(value as number)} />
                         <Legend />
                         <Bar dataKey="total" fill="#16a34a" name="Faturamento" />
